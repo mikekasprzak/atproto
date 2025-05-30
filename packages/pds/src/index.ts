@@ -16,6 +16,7 @@ import {
   ResponseType,
   XRPCError,
 } from '@atproto/xrpc-server'
+import * as activityPub from './activitypub/server'
 import API from './api'
 import * as authRoutes from './auth-routes'
 import * as basicRoutes from './basic-routes'
@@ -136,6 +137,7 @@ export class PDS {
     app.use(cors({ maxAge: DAY / SECOND }))
     app.use(basicRoutes.createRouter(ctx))
     app.use(wellKnown.createRouter(ctx))
+    app.use(activityPub.createRouter(ctx))
     app.use(server.xrpc.router)
     app.use(error.handler)
 
