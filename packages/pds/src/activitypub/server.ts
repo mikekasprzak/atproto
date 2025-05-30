@@ -1,35 +1,24 @@
 import { Router, json } from 'express'
 import { AppContext } from '../context'
 
-export const routePrefix = '/activitypub'
+export const routePrefix = '/apub'
 const inbox: string[] = []
-
-/*
-  {
-      "@context": [
-        "https://www.w3.org/ns/activitystreams",
-        "https://w3id.org/security/v1"
-      ],
-    }
-      */
-
-// .map((m) => JSON.stringify(m))
 
 export const createRouter = (ctx: AppContext): Router => {
   const router = Router()
-  ctx
-
   router.use(json())
+
+  ctx
 
   router.post(`${routePrefix}/:actor/inbox`, async function (req, res) {
     inbox.push(JSON.stringify(req.body))
-    return res.json(['ThANKS BRUh'])
+    return res.json()
   })
 
   // hack
   router.get(`${routePrefix}/:actor/inspect`, async function (req, res) {
     console.log(inbox)
-    return res.type('application/json').send(inbox.join('\n\n'))
+    return res.type('text/plain').send(inbox.join('\n\n'))
   })
 
   router.get(`${routePrefix}/:actor/outbox`, async function (req, res) {
@@ -70,24 +59,22 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get('/.well-known/webfinger', async function (req, res) {
-    if (
-      typeof req.query.resource !== 'string' ||
-      req.query.resource.slice(0, 5) !== 'acct:'
-    ) {
-      return res.status(400).json(['Bad request'])
+    if (typeof req.query.resource !== 'string') {
+      return res.status(400).json()
     }
 
     const subject = req.query.resource
+    const [resourceType, handle] = subject.split(':')
+    if (resourceType !== 'acct') {
+      return res.status(400).json(['unsupported resource type'])
+    }
+    const [actor, domain] = handle.split('@')
+
+    if (domain !== req.hostname) {
+      return res.status(400).json(['invalid hostname'])
+    }
 
     const domPrefix = `${req.protocol}://${req.hostname}`
-
-    // TODO: confirm this is a valid account resource
-    const handle = subject.slice(5)
-    const parts = handle.split('@')
-    const actor = parts[0]
-    //const repo = parts[1]
-
-    // TODO: confirm repo exists
 
     return res.json({
       subject: subject,
