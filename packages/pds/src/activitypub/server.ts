@@ -8,7 +8,7 @@ export const createRouter = (ctx: AppContext): Router => {
   const router = Router()
   router.use(json())
 
-  ctx
+  // actor should be one of req.hostname-ctx.cfg.service.hostname or req.hostname-ctx.cfg.service.hostnameRoot
 
   router.post(`${routePrefix}/:actor/inbox`, async function (req, res) {
     inbox.push(JSON.stringify(req.body))
@@ -62,6 +62,10 @@ export const createRouter = (ctx: AppContext): Router => {
     if (typeof req.query.resource !== 'string') {
       return res.status(400).json()
     }
+
+    ctx.cfg.service.hostnameRoot
+
+    // todo look at hostname, and also hostnameRoot, an optional property I added
 
     const subject = req.query.resource
     const [resourceType, handle] = subject.split(':')

@@ -21,6 +21,7 @@ export const envToCfg = (env: ServerEnvironment): ServerConfig => {
     publicUrl,
     did,
     version: env.version, // default?
+    hostnameRoot: env.hostnameRoot,
     privacyPolicyUrl: env.privacyPolicyUrl,
     termsOfServiceUrl: env.termsOfServiceUrl,
     contactEmailAddress: env.contactEmailAddress,
@@ -370,6 +371,7 @@ export type ServiceConfig = {
   publicUrl: string
   did: string
   version?: string
+  hostnameRoot?: string
   privacyPolicyUrl?: string
   termsOfServiceUrl?: string
   acceptingImports: boolean
