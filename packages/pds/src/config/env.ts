@@ -5,6 +5,7 @@ export const readEnv = (): ServerEnvironment => {
     // service
     port: envInt('PDS_PORT'),
     hostname: envStr('PDS_HOSTNAME'),
+    hostnameRoot: envStr('PDS_HOSTNAME_ROOT'),
     serviceDid: envStr('PDS_SERVICE_DID'),
     serviceName: envStr('PDS_SERVICE_NAME'),
     version: envStr('PDS_VERSION'),
@@ -154,6 +155,7 @@ export type ServerEnvironment = {
   // service
   port?: number
   hostname?: string
+  hostnameRoot?: string
   serviceDid?: string
   serviceName?: string
   version?: string
