@@ -32,7 +32,7 @@
     "@atproto/identity": "workspace:^",
     "@atproto/lexicon": "workspace:^",
     "@atproto/ozone": "workspace:^",
-    "@atproto/pds": "workspace:^",
+    "@atproto/pds": "workspace:@mikekasprzak/pds@^",
     "@atproto/sync": "workspace:^",
     "@atproto/syntax": "workspace:^",
     "@atproto/xrpc-server": "workspace:^",
