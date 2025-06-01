@@ -11,7 +11,7 @@ import {
 
 // This file contains atproto-specific DID validation utilities.
 
-export type AtprotoIdentityDidMethods = 'plc' | 'web'
+export type AtprotoIdentityDidMethods = 'plc' | 'web' | 'apub'
 export type AtprotoDid = Did<AtprotoIdentityDidMethods>
 
 export const atprotoDidSchema = z

@@ -69,7 +69,9 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(`${routePrefix}/:actor`, async function (req, res) {
     const domPrefix = `${req.protocol}://${req.hostname}`
 
-    const atHandle = `${req.params.actor}.${req.hostname}`
+    const atHandle = ctx.cfg.service.hostnameRoot
+      ? `${req.params.actor}.${ctx.cfg.service.hostnameRoot}`
+      : `${req.params.actor}.${req.hostname}`
     //const pubHandle = `${req.params.actor}@${req.hostname}`
     const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
 
@@ -135,8 +137,8 @@ export const createRouter = (ctx: AppContext): Router => {
       icon: profile?.avatar
         ? {
             type: 'Image',
-            mediaType: 'image/png',
-            url: profile?.avatar,
+            mediaType: profile?.avatar.mimeType,
+            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${profile?.url.ref[0]}}.ref['$link']}@jpeg`,
           }
         : undefined,
     })
@@ -150,38 +152,54 @@ export const createRouter = (ctx: AppContext): Router => {
       return res.status(400).send() // Mastodon sends a blank 400
     }
     const pubSubject = req.query.resource
-    const [pubResourceType, pubHandle, pubSubjectExtra] = pubSubject.split(':')
-    if (pubSubjectExtra || !pubHandle || pubResourceType !== 'acct') {
+    const [pubResourceType, pubHandle, ...pubSubjectExtra] =
+      pubSubject.split(':')
+    if (pubSubjectExtra.length || !pubHandle || pubResourceType !== 'acct') {
       return res.status(400).send('Invalid Resource') // Mastodon sends a blank 400
     }
     // This only allows direct subdomain users (user@pds.website.com -> user.pds.website.com || pds.website.com/user)
     // TODO: allow alternate domain subdomains (user@website.com -> user.pds.website.com && user.website.com)
     // TODO: support atproto domain aliases as a child of the PDS (alias.blog@mypds.com)
-    const [pubActor, pubDomain, pubHandleExtra] = pubHandle.split('@')
+    const [pubActor, pubHost, ...pubHandleExtra] = pubHandle.split('@')
     if (
-      pubHandleExtra ||
-      !pubDomain ||
+      pubHandleExtra.length ||
+      !pubActor ||
+      !pubHost //||
       //(req.hostname.split('.')[0] === pubActor &&
       //  !req.hostname.split('.')[1].endsWith(pubDomain)) ||
-      !req.hostname.endsWith(pubDomain)
+      //!req.hostname.endsWith(pubDomain)
     ) {
       return res.status(400).send('Invalid Handle') // Mastodon sends a blank 400
     }
 
-    const atHandle =
-      req.hostname.split('.')[0] === pubActor
-        ? req.hostname
-        : `${pubActor}.${pubDomain}`
-
     let did: string | undefined
     try {
-      const user = await ctx.accountManager.getAccount(atHandle)
-      //console.log(atHandle, user)
-      did = user?.did
+      /*if (!did)*/ {
+        // Test the given hostname
+        const atHandle = `${pubActor}.${pubHost}`
+        const atUser = await ctx.accountManager.getAccount(atHandle)
+        did = atUser?.did
+      }
+
+      if (!did) {
+        // Test with the service hostname, or without if its the same as the given hostname
+        const atHandle =
+          pubHost === ctx.cfg.service.hostname
+            ? pubActor
+            : `${pubActor}.${ctx.cfg.service.hostname}`
+        const atUser = await ctx.accountManager.getAccount(atHandle)
+        did = atUser?.did
+      }
+
+      if (!did) {
+        // Test the alternate hostname
+        const atHandle = `${pubActor}.${ctx.cfg.service.hostnameRoot}`
+        const atUser = await ctx.accountManager.getAccount(atHandle)
+        did = atUser?.did
+      }
     } catch (err) {
       return res.status(500).send('Internal Server Error')
     }
-
     if (!did) {
       return res.status(404).send('Not Found') // Mastodon sends a blank 404
     }
