@@ -113,6 +113,9 @@ export const createRouter = (ctx: AppContext): Router => {
       //console.log(did, '\n', eventData, '\n', prefs, '\n', profile)
     })
 
+    const avatar = 'bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu'
+    //${profile?.url.ref['$link']}
+
     return res.json({
       '@context': [
         'https://www.w3.org/ns/activitystreams',
@@ -138,7 +141,7 @@ export const createRouter = (ctx: AppContext): Router => {
         ? {
             type: 'Image',
             mediaType: profile?.avatar.mimeType,
-            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${profile?.url.ref[0]}}.ref['$link']}@jpeg`,
+            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${avatar}@jpeg`,
           }
         : undefined,
     })
