@@ -4,20 +4,7 @@ import { AppContext } from '../context'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
 
 export const routePrefix = '/activitypub'
-const inbox: string[] = []
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const activityStreamResponseBase = {
-  '@context': ['https://www.w3.org/ns/activitystreams'],
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const activityStreamSecureResponseBase = {
-  '@context': [
-    'https://www.w3.org/ns/activitystreams',
-    'https://w3id.org/security/v1',
-  ],
-}
+//const inbox: string[] = []
 
 export const createRouter = (ctx: AppContext): Router => {
   const router = Router()
@@ -31,10 +18,15 @@ export const createRouter = (ctx: AppContext): Router => {
     handle?: string | undefined
   }
 
-  const findDIDByActorHost = async function (req, res, actor, host) {
+  const findDIDByActorHost = async function (
+    req,
+    res,
+    actor: string,
+    host: string,
+  ) {
     const ret: DIDByActorHost = {}
 
-    /*if (!ret.did)*/ {
+    {
       // Test with the given hostname, or without if its the same as the actor
       const atHandle = actor === host ? actor : `${actor}.${host}`
       const atUser = await ctx.accountManager.getAccount(atHandle)
@@ -76,24 +68,32 @@ export const createRouter = (ctx: AppContext): Router => {
   }
 
   router.post(`${routePrefix}/:actor/inbox`, async function (req, res) {
-    inbox.push(JSON.stringify(req.body))
-    return res.json()
+    //inbox.push(JSON.stringify(req.body))
+    return res.type('application/activity+json').json({
+      '@context': ['https://www.w3.org/ns/activitystreams'],
+
+      test: `inbox ${req.params.actor}`,
+    })
   })
 
   // Messages to multiple recipients go here
   router.post(`${routePrefix}-inbox`, async function (req, res) {
-    inbox.push(JSON.stringify(req.body))
-    return res.json()
+    //inbox.push(JSON.stringify(req.body))
+    return res.type('application/activity+json').json({
+      '@context': ['https://www.w3.org/ns/activitystreams'],
+
+      test: `shared inbox`,
+    })
   })
 
   // hack
-  router.get(`${routePrefix}/:actor/inspect`, async function (req, res) {
-    console.log(inbox)
-    return res.type('text/plain').send(inbox.join('\n\n'))
-  })
+  //router.get(`${routePrefix}/:actor/inspect`, async function (req, res) {
+  //  console.log(inbox)
+  //  return res.type('text/plain').send(inbox.join('\n\n'))
+  //})
 
   router.get(`${routePrefix}/:actor/outbox`, async function (req, res) {
-    return res.json({
+    return res.type('application/activity+json').json({
       '@context': ['https://www.w3.org/ns/activitystreams'],
 
       test: `outbox ${req.params.actor}`,
@@ -101,7 +101,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${routePrefix}/:actor/followers`, async function (req, res) {
-    return res.json({
+    return res.type('application/activity+json').json({
       '@context': ['https://www.w3.org/ns/activitystreams'],
 
       test: `followers ${req.params.actor}`,
@@ -109,10 +109,18 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${routePrefix}/:actor/following`, async function (req, res) {
-    return res.json({
+    return res.type('application/activity+json').json({
       '@context': ['https://www.w3.org/ns/activitystreams'],
 
       test: `following ${req.params.actor}`,
+    })
+  })
+
+  router.get(`${routePrefix}/:actor/featured`, async function (req, res) {
+    return res.type('application/activity+json').json({
+      '@context': ['https://www.w3.org/ns/activitystreams'],
+
+      test: `featured ${req.params.actor}`,
     })
   })
 
@@ -143,7 +151,7 @@ export const createRouter = (ctx: AppContext): Router => {
     const avatar = 'bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu'
     //${profile?.url.ref['$link']}
 
-    return res.json({
+    return res.type('application/activity+json').json({
       '@context': [
         'https://www.w3.org/ns/activitystreams',
         'https://w3id.org/security/v1',
