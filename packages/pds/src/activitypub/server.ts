@@ -25,6 +25,56 @@ export const createRouter = (ctx: AppContext): Router => {
 
   // actor should be one of req.hostname-ctx.cfg.service.hostname or req.hostname-ctx.cfg.service.hostnameRoot
 
+  type DIDByActorHost = {
+    did?: string | undefined
+    didFoundBy?: string | undefined
+    handle?: string | undefined
+  }
+
+  const findDIDByActorHost = async function (req, res, actor, host) {
+    const ret: DIDByActorHost = {}
+
+    /*if (!ret.did)*/ {
+      // Test with the given hostname, or without if its the same as the actor
+      const atHandle = actor === host ? actor : `${actor}.${host}`
+      const atUser = await ctx.accountManager.getAccount(atHandle)
+      ret.did = atUser?.did
+      if (ret.did) {
+        ret.didFoundBy = 'given'
+        ret.handle = atHandle
+      }
+    }
+
+    if (!ret.did) {
+      // Test with the service hostname, or without if its the same as the given hostname
+      const atHandle =
+        host === ctx.cfg.service.hostname
+          ? actor
+          : `${actor}.${ctx.cfg.service.hostname}`
+      const atUser = await ctx.accountManager.getAccount(atHandle)
+      ret.did = atUser?.did
+      if (ret.did) {
+        ret.didFoundBy = 'hostname'
+        ret.handle = atHandle
+      }
+    }
+
+    if (!ret.did) {
+      // Test with the alternate hostname, or without if its the same as the given hostname
+      const atHandle =
+        host === ctx.cfg.service.hostnameRoot
+          ? actor
+          : `${actor}.${ctx.cfg.service.hostnameRoot}`
+      const atUser = await ctx.accountManager.getAccount(atHandle)
+      ret.did = atUser?.did
+      if (ret.did) {
+        ret.didFoundBy = 'althostname'
+        ret.handle = atHandle
+      }
+    }
+    return ret
+  }
+
   router.post(`${routePrefix}/:actor/inbox`, async function (req, res) {
     inbox.push(JSON.stringify(req.body))
     return res.json()
@@ -69,48 +119,25 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(`${routePrefix}/:actor`, async function (req, res) {
     const domPrefix = `${req.protocol}://${req.hostname}`
 
-    const atHandle = ctx.cfg.service.hostnameRoot
-      ? `${req.params.actor}.${ctx.cfg.service.hostnameRoot}`
-      : `${req.params.actor}.${req.hostname}`
+    //const atHandle = ctx.cfg.service.hostnameRoot
+    //  ? `${req.params.actor}.${ctx.cfg.service.hostnameRoot}`
+    //  : `${req.params.actor}.${req.hostname}`
     //const pubHandle = `${req.params.actor}@${req.hostname}`
     const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
 
-    /*
-    if (
-      !ctx.cfg.identity.serviceHandleDomains.some(
-        (host) => atHandle.endsWith(host) || atHandle === host.slice(1),
-      )
-    ) {
-      return res.status(404).send('User not found')
-    }
-    */
-
-    let did: string | undefined
+    let pub: DIDByActorHost
     try {
-      const user = await ctx.accountManager.getAccount(atHandle)
-      //console.log(user)
-      did = user?.did
+      pub = await findDIDByActorHost(req, res, req.hostname, req.params.actor)
     } catch (err) {
       return res.status(500).send('Internal Server Error')
     }
-    if (!did) {
+    if (!pub.did) {
       return res.status(404).send('User not found')
     }
 
     let profile: ProfileRecord | undefined
-
-    // lookup using did
-    await ctx.actorStore.read(did, async (actor) => {
-      /*
-      const eventData = await actor.repo.getSyncEventData()
-      const prefs = await actor.pref.getPreferences(
-        'app.bsky.actor.getPreferences',
-        AuthScope.Access,
-      )
-      */
+    await ctx.actorStore.read(pub.did, async (actor) => {
       profile = (await actor.record.getProfileRecord()) as ProfileRecord
-
-      //console.log(did, '\n', eventData, '\n', prefs, '\n', profile)
     })
 
     const avatar = 'bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu'
@@ -141,7 +168,7 @@ export const createRouter = (ctx: AppContext): Router => {
         ? {
             type: 'Image',
             mediaType: profile?.avatar.mimeType,
-            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${avatar}@jpeg`,
+            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${pub.did}/${avatar}@jpeg`,
           }
         : undefined,
     })
@@ -175,35 +202,13 @@ export const createRouter = (ctx: AppContext): Router => {
       return res.status(400).send('Invalid Handle') // Mastodon sends a blank 400
     }
 
-    let did: string | undefined
+    let ret: DIDByActorHost
     try {
-      /*if (!did)*/ {
-        // Test the given hostname
-        const atHandle = `${pubActor}.${pubHost}`
-        const atUser = await ctx.accountManager.getAccount(atHandle)
-        did = atUser?.did
-      }
-
-      if (!did) {
-        // Test with the service hostname, or without if its the same as the given hostname
-        const atHandle =
-          pubHost === ctx.cfg.service.hostname
-            ? pubActor
-            : `${pubActor}.${ctx.cfg.service.hostname}`
-        const atUser = await ctx.accountManager.getAccount(atHandle)
-        did = atUser?.did
-      }
-
-      if (!did) {
-        // Test the alternate hostname
-        const atHandle = `${pubActor}.${ctx.cfg.service.hostnameRoot}`
-        const atUser = await ctx.accountManager.getAccount(atHandle)
-        did = atUser?.did
-      }
+      ret = await findDIDByActorHost(req, res, pubActor, pubHost)
     } catch (err) {
       return res.status(500).send('Internal Server Error')
     }
-    if (!did) {
+    if (!ret.did) {
       return res.status(404).send('Not Found') // Mastodon sends a blank 404
     }
 
@@ -217,7 +222,7 @@ export const createRouter = (ctx: AppContext): Router => {
           href: `${domPrefix}${routePrefix}/${pubActor}`,
         },
       ],
-      did: did, // temporary
+      ret, // remove me
     })
   })
 
