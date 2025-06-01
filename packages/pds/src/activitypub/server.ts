@@ -153,7 +153,7 @@ export const createRouter = (ctx: AppContext): Router => {
       name: req.params.actor,
       preferredUsername: profile?.displayName,
       summary: `<p>${profile?.description}</p>`,
-      //url: '',
+      url: pubUriHandle,
       inbox: `${pubUriHandle}/inbox`,
       outbox: `${pubUriHandle}/outbox`,
       followers: `${pubUriHandle}/followers`,
@@ -222,7 +222,7 @@ export const createRouter = (ctx: AppContext): Router => {
           href: `${domPrefix}${routePrefix}/${pubActor}`,
         },
       ],
-      ret, // remove me
+      //ret, // remove me
     })
   })
 
