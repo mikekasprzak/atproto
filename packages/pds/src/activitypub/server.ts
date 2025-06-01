@@ -26,7 +26,7 @@ export const createRouter = (ctx: AppContext): Router => {
   ) {
     const ret: DIDByActorHost = {}
 
-    {
+    if (!ret.did) {
       // Test with the given hostname, or without if its the same as the actor
       const atHandle = actor === host ? actor : `${actor}.${host}`
       const atUser = await ctx.accountManager.getAccount(atHandle)
@@ -182,9 +182,6 @@ export const createRouter = (ctx: AppContext): Router => {
     })
   })
 
-  // This code should correctly identify a user when a-records are on both domains
-  //   site.com/.well-known/webfinger?resource=acct:user@site.com
-  //   user.site.com/.well-known/webfinger?resource=acct:user@site.com (but only user, not user2)
   router.get('/.well-known/webfinger', async function (req, res) {
     if (typeof req.query.resource !== 'string') {
       return res.status(400).send() // Mastodon sends a blank 400
@@ -195,34 +192,27 @@ export const createRouter = (ctx: AppContext): Router => {
     if (pubSubjectExtra.length || !pubHandle || pubResourceType !== 'acct') {
       return res.status(400).send('Invalid Resource') // Mastodon sends a blank 400
     }
-    // This only allows direct subdomain users (user@pds.website.com -> user.pds.website.com || pds.website.com/user)
-    // TODO: allow alternate domain subdomains (user@website.com -> user.pds.website.com && user.website.com)
-    // TODO: support atproto domain aliases as a child of the PDS (alias.blog@mypds.com)
     const [pubActor, pubHost, ...pubHandleExtra] = pubHandle.split('@')
-    if (
-      pubHandleExtra.length ||
-      !pubActor ||
-      !pubHost //||
-      //(req.hostname.split('.')[0] === pubActor &&
-      //  !req.hostname.split('.')[1].endsWith(pubDomain)) ||
-      //!req.hostname.endsWith(pubDomain)
-    ) {
+    if (pubHandleExtra.length || !pubActor || !pubHost) {
       return res.status(400).send('Invalid Handle') // Mastodon sends a blank 400
     }
 
-    let ret: DIDByActorHost
+    let at: DIDByActorHost
     try {
-      ret = await findDIDByActorHost(req, res, pubActor, pubHost)
+      at = await findDIDByActorHost(req, res, pubActor, pubHost)
     } catch (err) {
       return res.status(500).send('Internal Server Error')
     }
-    if (!ret.did) {
+    if (!at.did) {
       return res.status(404).send('Not Found') // Mastodon sends a blank 404
     }
 
+    // Prefer a subject that is directly derived from the handle chosen by the did
+    const newSubject = `acct:${at.handle?.substring(0, pubActor.length)}@${at.handle?.substring(pubActor.length + 1)}`
+
     const domPrefix = `${req.protocol}://${req.hostname}`
     return res.type('application/jrd+json; charset=utf-8').json({
-      subject: pubSubject,
+      subject: newSubject,
       links: [
         {
           rel: 'self',
@@ -230,7 +220,6 @@ export const createRouter = (ctx: AppContext): Router => {
           href: `${domPrefix}${routePrefix}/${pubActor}`,
         },
       ],
-      //ret, // remove me
     })
   })
 
