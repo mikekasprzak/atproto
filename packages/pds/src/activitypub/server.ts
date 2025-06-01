@@ -1,5 +1,7 @@
 import { Router, json } from 'express'
+//import { AuthScope } from '../auth-verifier'
 import { AppContext } from '../context'
+import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
 
 export const routePrefix = '/activitypub'
 const inbox: string[] = []
@@ -29,7 +31,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   // Messages to multiple recipients go here
-  router.post(`${routePrefix}-shared/inbox`, async function (req, res) {
+  router.post(`${routePrefix}-inbox`, async function (req, res) {
     inbox.push(JSON.stringify(req.body))
     return res.json()
   })
@@ -41,25 +43,35 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${routePrefix}/:actor/outbox`, async function (req, res) {
-    return res.json([`outbox ${req.params.actor}`])
+    return res.json({
+      '@context': ['https://www.w3.org/ns/activitystreams'],
+
+      test: `outbox ${req.params.actor}`,
+    })
   })
 
   router.get(`${routePrefix}/:actor/followers`, async function (req, res) {
-    return res.json([`followers ${req.params.actor}`])
+    return res.json({
+      '@context': ['https://www.w3.org/ns/activitystreams'],
+
+      test: `followers ${req.params.actor}`,
+    })
   })
 
-  /*
   router.get(`${routePrefix}/:actor/following`, async function (req, res) {
-    return res.json([`following ${req.params.actor}`])
+    return res.json({
+      '@context': ['https://www.w3.org/ns/activitystreams'],
+
+      test: `following ${req.params.actor}`,
+    })
   })
-  */
 
   router.get(`${routePrefix}/:actor`, async function (req, res) {
     const domPrefix = `${req.protocol}://${req.hostname}`
 
     const atHandle = `${req.params.actor}.${req.hostname}`
     //const pubHandle = `${req.params.actor}@${req.hostname}`
-    const uriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
+    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
 
     /*
     if (
@@ -83,25 +95,50 @@ export const createRouter = (ctx: AppContext): Router => {
       return res.status(404).send('User not found')
     }
 
+    let profile: ProfileRecord | undefined
+
+    // lookup using did
+    await ctx.actorStore.read(did, async (actor) => {
+      /*
+      const eventData = await actor.repo.getSyncEventData()
+      const prefs = await actor.pref.getPreferences(
+        'app.bsky.actor.getPreferences',
+        AuthScope.Access,
+      )
+      */
+      profile = (await actor.record.getProfileRecord()) as ProfileRecord
+
+      //console.log(did, '\n', eventData, '\n', prefs, '\n', profile)
+    })
+
     return res.json({
       '@context': [
         'https://www.w3.org/ns/activitystreams',
         'https://w3id.org/security/v1',
       ],
-      id: uriHandle,
+      id: pubUriHandle,
       type: 'Person',
       name: req.params.actor,
-      preferredUsername: req.params.actor,
-      inbox: `${uriHandle}/inbox`,
-      outbox: `${uriHandle}/outbox`,
-      followers: `${uriHandle}/followers`,
-      //following: `${uriHandle}/following`,
+      preferredUsername: profile?.displayName,
+      summary: `<p>${profile?.description}</p>`,
+      //url: '',
+      inbox: `${pubUriHandle}/inbox`,
+      outbox: `${pubUriHandle}/outbox`,
+      followers: `${pubUriHandle}/followers`,
+      following: `${pubUriHandle}/following`,
       publicKey: {
-        id: `${uriHandle}#main-key`,
-        owner: uriHandle,
+        id: `${pubUriHandle}#main-key`,
+        owner: pubUriHandle,
         publicKeyPem:
           '-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----',
       },
+      icon: profile?.avatar
+        ? {
+            type: 'Image',
+            mediaType: 'image/png',
+            url: profile?.avatar,
+          }
+        : undefined,
     })
   })
 
