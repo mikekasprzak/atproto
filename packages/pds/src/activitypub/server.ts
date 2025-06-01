@@ -127,7 +127,7 @@ export const createRouter = (ctx: AppContext): Router => {
 
     let pub: DIDByActorHost
     try {
-      pub = await findDIDByActorHost(req, res, req.hostname, req.params.actor)
+      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
     } catch (err) {
       return res.status(500).send('Internal Server Error')
     }
