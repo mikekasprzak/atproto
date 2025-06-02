@@ -67,22 +67,18 @@ export const createRouter = (ctx: AppContext): Router => {
     return ret
   }
 
-  router.post(`${routePrefix}/:actor/inbox`, async function (req, res) {
+  router.get(`${routePrefix}/:actor/inbox`, async function (req, res) {
     //inbox.push(JSON.stringify(req.body))
     return res.type('application/activity+json').json({
-      '@context': ['https://www.w3.org/ns/activitystreams'],
-
-      test: `inbox ${req.params.actor}`,
+      error: 'Not Found',
     })
   })
 
   // Messages to multiple recipients go here
-  router.post(`${routePrefix}-inbox`, async function (req, res) {
+  router.get(`${routePrefix}-inbox`, async function (req, res) {
     //inbox.push(JSON.stringify(req.body))
     return res.type('application/activity+json').json({
-      '@context': ['https://www.w3.org/ns/activitystreams'],
-
-      test: `shared inbox`,
+      error: 'Not Found',
     })
   })
 
@@ -93,44 +89,213 @@ export const createRouter = (ctx: AppContext): Router => {
   //})
 
   router.get(`${routePrefix}/:actor/outbox`, async function (req, res) {
-    return res.type('application/activity+json').json({
-      '@context': ['https://www.w3.org/ns/activitystreams'],
+    const domPrefix = `${req.protocol}://${req.hostname}`
+    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
 
-      test: `outbox ${req.params.actor}`,
-    })
+    let pub: DIDByActorHost
+    try {
+      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
+    } catch (err) {
+      return res.status(500).send('Internal Server Error')
+    }
+    if (!pub.did) {
+      return res.status(404).send('User not found')
+    }
+
+    const noteId = 1
+    const notePublished = '2025-06-01T12:50:05Z'
+    const noteContent = '<p>hello worm 🪱🍄</p>'
+
+    if (req.query.page) {
+      return res.type('application/activity+json').json({
+        '@context': 'https://www.w3.org/ns/activitystreams',
+        id: req.url,
+        type: 'OrderedCollectionPage',
+        //prev: '',
+        partOf: `${pubUriHandle}/outbox`,
+        orderedItems: [
+          {
+            id: `${pubUriHandle}/statuses/${noteId}/activity`,
+            type: 'Create',
+            actor: pubUriHandle,
+            published: notePublished,
+            to: ['https://www.w3.org/ns/activitystreams#Public'],
+            cc: [`${pubUriHandle}/followers`],
+            object: {
+              id: `${pubUriHandle}/statuses/${noteId}`,
+              type: 'Note',
+              summary: null,
+              inReplyTo: null,
+              published: notePublished,
+              //url: '',
+              attributedTo: pubUriHandle,
+              to: ['https://www.w3.org/ns/activitystreams#Public'],
+              cc: [`${pubUriHandle}/followers`],
+              sensitive: false,
+              content: noteContent,
+              contentMap: {
+                en: noteContent,
+              },
+              attachment: [],
+              tag: [],
+              replies: {
+                id: `${pubUriHandle}/statuses/${noteId}/replies`,
+                type: 'Collection',
+                first: {
+                  type: 'CollectionPage',
+                  next: `${pubUriHandle}/statuses/${noteId}/replies?page=true`,
+                  partOf: `${pubUriHandle}/statuses/${noteId}/replies`,
+                  items: [],
+                },
+              },
+              likes: {
+                id: `${pubUriHandle}/statuses/${noteId}/likes`,
+                type: 'Collection',
+                totalItems: 0,
+              },
+              shares: {
+                id: `${pubUriHandle}/statuses/${noteId}/shares`,
+                type: 'Collection',
+                totalItems: 0,
+              },
+            },
+          },
+        ],
+      })
+    } else {
+      return res.type('application/activity+json').json({
+        '@context': 'https://www.w3.org/ns/activitystreams',
+        id: `${pubUriHandle}/outbox`,
+        type: 'OrderedCollection',
+        totalItems: 0,
+        first: `${pubUriHandle}/outbox?page=true`, // placeholder
+        last: `${pubUriHandle}/outbox?min_id=0&page=true`, // placeholder
+      })
+    }
   })
 
   router.get(`${routePrefix}/:actor/followers`, async function (req, res) {
-    return res.type('application/activity+json').json({
-      '@context': ['https://www.w3.org/ns/activitystreams'],
+    const domPrefix = `${req.protocol}://${req.hostname}`
+    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
 
-      test: `followers ${req.params.actor}`,
+    let pub: DIDByActorHost
+    try {
+      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
+    } catch (err) {
+      return res.status(500).send('Internal Server Error')
+    }
+    if (!pub.did) {
+      return res.status(404).send('User not found')
+    }
+
+    return res.type('application/activity+json').json({
+      '@context': 'https://www.w3.org/ns/activitystreams',
+      id: `${pubUriHandle}/followers`,
+      type: 'OrderedCollection',
+      totalItems: 0,
+      first: `${pubUriHandle}/followers?page=1`, // placeholder
     })
   })
 
   router.get(`${routePrefix}/:actor/following`, async function (req, res) {
-    return res.type('application/activity+json').json({
-      '@context': ['https://www.w3.org/ns/activitystreams'],
+    const domPrefix = `${req.protocol}://${req.hostname}`
+    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
 
-      test: `following ${req.params.actor}`,
+    let pub: DIDByActorHost
+    try {
+      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
+    } catch (err) {
+      return res.status(500).send('Internal Server Error')
+    }
+    if (!pub.did) {
+      return res.status(404).send('User not found')
+    }
+
+    return res.type('application/activity+json').json({
+      '@context': 'https://www.w3.org/ns/activitystreams',
+      id: `${pubUriHandle}/following`,
+      type: 'OrderedCollection',
+      totalItems: 0,
+      first: `${pubUriHandle}/following?page=1`, // placeholder
     })
   })
 
   router.get(`${routePrefix}/:actor/featured`, async function (req, res) {
-    return res.type('application/activity+json').json({
-      '@context': ['https://www.w3.org/ns/activitystreams'],
+    const domPrefix = `${req.protocol}://${req.hostname}`
+    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
 
-      test: `featured ${req.params.actor}`,
+    let pub: DIDByActorHost
+    try {
+      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
+    } catch (err) {
+      return res.status(500).send('Internal Server Error')
+    }
+    if (!pub.did) {
+      return res.status(404).send('User not found')
+    }
+
+    const noteId = 1
+    const notePublished = '2025-06-01T12:50:05Z'
+    const noteContent = '<p>hello worm 🪱🍄</p>'
+
+    return res.type('application/activity+json').json({
+      '@context': 'https://www.w3.org/ns/activitystreams',
+      id: `${pubUriHandle}/featured`,
+      type: 'OrderedCollection',
+      totalItems: 1,
+      orderedItems: [
+        {
+          id: `${pubUriHandle}/statuses/${noteId}/activity`,
+          type: 'Create',
+          actor: pubUriHandle,
+          published: notePublished,
+          to: ['https://www.w3.org/ns/activitystreams#Public'],
+          cc: [`${pubUriHandle}/followers`],
+          object: {
+            id: `${pubUriHandle}/statuses/${noteId}`,
+            type: 'Note',
+            summary: null,
+            inReplyTo: null,
+            published: notePublished,
+            //url: '',
+            attributedTo: pubUriHandle,
+            to: ['https://www.w3.org/ns/activitystreams#Public'],
+            cc: [`${pubUriHandle}/followers`],
+            sensitive: false,
+            content: noteContent,
+            contentMap: {
+              en: noteContent,
+            },
+            attachment: [],
+            tag: [],
+            replies: {
+              id: `${pubUriHandle}/statuses/${noteId}/replies`,
+              type: 'Collection',
+              first: {
+                type: 'CollectionPage',
+                next: `${pubUriHandle}/statuses/${noteId}/replies?page=true`,
+                partOf: `${pubUriHandle}/statuses/${noteId}/replies`,
+                items: [],
+              },
+            },
+            likes: {
+              id: `${pubUriHandle}/statuses/${noteId}/likes`,
+              type: 'Collection',
+              totalItems: 0,
+            },
+            shares: {
+              id: `${pubUriHandle}/statuses/${noteId}/shares`,
+              type: 'Collection',
+              totalItems: 0,
+            },
+          },
+        },
+      ],
     })
   })
 
   router.get(`${routePrefix}/:actor`, async function (req, res) {
     const domPrefix = `${req.protocol}://${req.hostname}`
-
-    //const atHandle = ctx.cfg.service.hostnameRoot
-    //  ? `${req.params.actor}.${ctx.cfg.service.hostnameRoot}`
-    //  : `${req.params.actor}.${req.hostname}`
-    //const pubHandle = `${req.params.actor}@${req.hostname}`
     const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -166,6 +331,7 @@ export const createRouter = (ctx: AppContext): Router => {
       outbox: `${pubUriHandle}/outbox`,
       followers: `${pubUriHandle}/followers`,
       following: `${pubUriHandle}/following`,
+      featured: `${pubUriHandle}/featured`,
       publicKey: {
         id: `${pubUriHandle}#main-key`,
         owner: pubUriHandle,
@@ -179,6 +345,11 @@ export const createRouter = (ctx: AppContext): Router => {
             url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${pub.did}/${avatar}@jpeg`,
           }
         : undefined,
+      image: {
+        type: 'Image',
+        mediaType: 'image/jpeg',
+        url: 'https://cdn.bsky.app/img/banner/plain/did:plc:tu6g7v7tghfxkxfz6em73nob/bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu@jpeg',
+      },
     })
   })
 
