@@ -3,14 +3,33 @@ import { Router, json } from 'express'
 import { AppContext } from '../context'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
 
-export const routePrefix = '/activitypub'
-//const inbox: string[] = []
+export const pubRoutePrefix = '/activitypub'
+export const atRoutePrefix = '/atpub'
 
 export const createRouter = (ctx: AppContext): Router => {
   const router = Router()
   router.use(json())
 
   // actor should be one of req.hostname-ctx.cfg.service.hostname or req.hostname-ctx.cfg.service.hostnameRoot
+
+  const inferPubHandle = function (
+    hostname: string,
+    pubActor: string,
+    atHandle: string,
+  ) {
+    return !pubActor.startsWith('did:')
+      ? `${pubActor}@${atHandle.substring(pubActor.length + 1)}`
+      : atHandle !== ctx.cfg.service.hostname &&
+          atHandle.endsWith(ctx.cfg.service.hostname)
+        ? `${atHandle.substring(0, atHandle.length - ctx.cfg.service.hostname.length - 1)}@${ctx.cfg.service.hostname}`
+        : ctx.cfg.service.hostnameRoot &&
+            atHandle !== ctx.cfg.service.hostnameRoot &&
+            atHandle.endsWith(ctx.cfg.service.hostnameRoot)
+          ? `${atHandle.substring(0, atHandle.length - ctx.cfg.service.hostnameRoot.length - 1)}@${ctx.cfg.service.hostnameRoot}`
+          : atHandle !== hostname && atHandle.endsWith(hostname)
+            ? `${atHandle.substring(0, atHandle.length - hostname.length - 1)}@${hostname}`
+            : `${atHandle}@${hostname}`
+  }
 
   type DIDByActorHost = {
     did?: string | undefined
@@ -27,14 +46,22 @@ export const createRouter = (ctx: AppContext): Router => {
     const ret: DIDByActorHost = {}
 
     if (!ret.did) {
-      // Test with the given hostname, or without if its the same as the actor
-      const atHandle = actor === host ? actor : `${actor}.${host}`
+      // Test with the given hostname, or without if its the same as the actor or a DID
+      const atHandle =
+        actor.startsWith('did:') || actor === host ? actor : `${actor}.${host}`
       const atUser = await ctx.accountManager.getAccount(atHandle)
       ret.did = atUser?.did
       if (ret.did) {
         ret.didFoundBy = 'given'
-        ret.handle = atHandle
+        ret.handle =
+          actor.startsWith('did:') && atUser?.handle
+            ? `${atUser.handle}`
+            : atHandle
       }
+    }
+
+    if (actor.startsWith('did:')) {
+      return ret // return early
     }
 
     if (!ret.did) {
@@ -47,7 +74,7 @@ export const createRouter = (ctx: AppContext): Router => {
       ret.did = atUser?.did
       if (ret.did) {
         ret.didFoundBy = 'hostname'
-        ret.handle = atHandle
+        ret.handle = atHandle // prefer the handle we made
       }
     }
 
@@ -61,13 +88,13 @@ export const createRouter = (ctx: AppContext): Router => {
       ret.did = atUser?.did
       if (ret.did) {
         ret.didFoundBy = 'althostname'
-        ret.handle = atHandle
+        ret.handle = atHandle // prefer the handle we made
       }
     }
     return ret
   }
 
-  router.get(`${routePrefix}/:actor/inbox`, async function (req, res) {
+  router.get(`${pubRoutePrefix}/:actor/inbox`, async function (req, res) {
     //inbox.push(JSON.stringify(req.body))
     return res.type('application/activity+json').json({
       error: 'Not Found',
@@ -75,7 +102,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   // Messages to multiple recipients go here
-  router.get(`${routePrefix}-inbox`, async function (req, res) {
+  router.get(`${pubRoutePrefix}-inbox`, async function (req, res) {
     //inbox.push(JSON.stringify(req.body))
     return res.type('application/activity+json').json({
       error: 'Not Found',
@@ -88,9 +115,9 @@ export const createRouter = (ctx: AppContext): Router => {
   //  return res.type('text/plain').send(inbox.join('\n\n'))
   //})
 
-  router.get(`${routePrefix}/:actor/outbox`, async function (req, res) {
+  router.get(`${pubRoutePrefix}/:actor/outbox`, async function (req, res) {
     const domPrefix = `${req.protocol}://${req.hostname}`
-    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
+    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
     try {
@@ -174,9 +201,9 @@ export const createRouter = (ctx: AppContext): Router => {
     }
   })
 
-  router.get(`${routePrefix}/:actor/followers`, async function (req, res) {
+  router.get(`${pubRoutePrefix}/:actor/followers`, async function (req, res) {
     const domPrefix = `${req.protocol}://${req.hostname}`
-    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
+    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
     try {
@@ -197,9 +224,9 @@ export const createRouter = (ctx: AppContext): Router => {
     })
   })
 
-  router.get(`${routePrefix}/:actor/following`, async function (req, res) {
+  router.get(`${pubRoutePrefix}/:actor/following`, async function (req, res) {
     const domPrefix = `${req.protocol}://${req.hostname}`
-    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
+    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
     try {
@@ -220,9 +247,9 @@ export const createRouter = (ctx: AppContext): Router => {
     })
   })
 
-  router.get(`${routePrefix}/:actor/featured`, async function (req, res) {
+  router.get(`${pubRoutePrefix}/:actor/featured`, async function (req, res) {
     const domPrefix = `${req.protocol}://${req.hostname}`
-    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
+    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
     try {
@@ -294,9 +321,9 @@ export const createRouter = (ctx: AppContext): Router => {
     })
   })
 
-  router.get(`${routePrefix}/:actor`, async function (req, res) {
+  router.get(`${pubRoutePrefix}/:actor`, async function (req, res) {
     const domPrefix = `${req.protocol}://${req.hostname}`
-    const pubUriHandle = `${domPrefix}${routePrefix}/${req.params.actor}`
+    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
     try {
@@ -353,16 +380,82 @@ export const createRouter = (ctx: AppContext): Router => {
     })
   })
 
+  router.get(`${atRoutePrefix}/*`, async function (req, res) {
+    const pubDid = req.params[0] //.replaceAll('/', ':')
+
+    const domPrefix = `${req.protocol}://${req.hostname}`
+    const atUriHandle = `${domPrefix}${atRoutePrefix}/${pubDid}`
+
+    console.log(req.params)
+
+    let did: string | unknown
+    let pubHandle: string | unknown
+    try {
+      const atUser = await ctx.accountManager.getAccount(pubDid)
+      did = atUser?.did
+      pubHandle = atUser?.handle
+    } catch (err) {
+      return res.status(500).send('Internal Server Error')
+    }
+    if (typeof did !== 'string') {
+      return res.status(404).send('User not found')
+    }
+
+    let profile: ProfileRecord | undefined
+    await ctx.actorStore.read(did, async (actor) => {
+      profile = (await actor.record.getProfileRecord()) as ProfileRecord
+    })
+
+    const avatar = 'bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu'
+    //${profile?.url.ref['$link']}
+
+    return res.type('application/activity+json').json({
+      '@context': [
+        'https://www.w3.org/ns/activitystreams',
+        'https://w3id.org/security/v1',
+      ],
+      id: atUriHandle,
+      type: 'Person',
+      name: pubHandle,
+      preferredUsername: profile?.displayName,
+      summary: `<p>${profile?.description}</p>`,
+      url: atUriHandle,
+      inbox: `${atUriHandle}/inbox`,
+      outbox: `${atUriHandle}/outbox`,
+      followers: `${atUriHandle}/followers`,
+      following: `${atUriHandle}/following`,
+      featured: `${atUriHandle}/featured`,
+      publicKey: {
+        id: `${atUriHandle}#main-key`,
+        owner: atUriHandle,
+        publicKeyPem:
+          '-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----',
+      },
+      icon: profile?.avatar
+        ? {
+            type: 'Image',
+            mediaType: profile?.avatar.mimeType,
+            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${avatar}@jpeg`,
+          }
+        : undefined,
+      image: {
+        type: 'Image',
+        mediaType: 'image/jpeg',
+        url: 'https://cdn.bsky.app/img/banner/plain/did:plc:tu6g7v7tghfxkxfz6em73nob/bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu@jpeg',
+      },
+    })
+  })
+
   router.get('/.well-known/webfinger', async function (req, res) {
     if (typeof req.query.resource !== 'string') {
       return res.status(400).send() // Mastodon sends a blank 400
     }
     const pubSubject = req.query.resource
-    const [pubResourceType, pubHandle, ...pubSubjectExtra] =
-      pubSubject.split(':')
-    if (pubSubjectExtra.length || !pubHandle || pubResourceType !== 'acct') {
-      return res.status(400).send('Invalid Resource') // Mastodon sends a blank 400
+    const pubHandle = pubSubject.substring('acct:'.length)
+    if (!pubHandle || pubSubject.substring(0, 'acct:'.length) !== 'acct:') {
+      return res.status(400).send('Unsupported Resource') // Mastodon sends a blank 400
     }
+    // TODO: do a better validity test than merely splitting at one @
     const [pubActor, pubHost, ...pubHandleExtra] = pubHandle.split('@')
     if (pubHandleExtra.length || !pubActor || !pubHost) {
       return res.status(400).send('Invalid Handle') // Mastodon sends a blank 400
@@ -374,21 +467,46 @@ export const createRouter = (ctx: AppContext): Router => {
     } catch (err) {
       return res.status(500).send('Internal Server Error')
     }
-    if (!at.did) {
+    if (!at.did || !at.handle) {
       return res.status(404).send('Not Found') // Mastodon sends a blank 404
     }
 
-    // Prefer a subject that is directly derived from the handle chosen by the did
-    const newSubject = `acct:${at.handle?.substring(0, pubActor.length)}@${at.handle?.substring(pubActor.length + 1)}`
+    const newSubject = inferPubHandle(req.hostname, pubActor, at.handle)
+
+    /*
+    const newSubject = !pubActor.startsWith('did:')
+      ? `${pubActor}@${at.handle.substring(pubActor.length + 1)}`
+      : at.handle !== ctx.cfg.service.hostname &&
+          at.handle.endsWith(ctx.cfg.service.hostname)
+        ? `${at.handle.substring(0, at.handle.length - ctx.cfg.service.hostname.length - 1)}@${ctx.cfg.service.hostname}`
+        : ctx.cfg.service.hostnameRoot &&
+            at.handle !== ctx.cfg.service.hostnameRoot &&
+            at.handle.endsWith(ctx.cfg.service.hostnameRoot)
+          ? `${at.handle.substring(0, at.handle.length - ctx.cfg.service.hostnameRoot.length - 1)}@${ctx.cfg.service.hostnameRoot}`
+          : at.handle !== req.hostname && at.handle.endsWith(req.hostname)
+            ? `${at.handle.substring(0, at.handle.length - req.hostname.length - 1)}@${req.hostname}`
+            : `${at.handle}@${req.hostname}`
+            */
 
     const domPrefix = `${req.protocol}://${req.hostname}`
     return res.type('application/jrd+json; charset=utf-8').json({
-      subject: newSubject,
+      subject: `acct:${newSubject}`,
       links: [
+        !pubActor.startsWith('did:')
+          ? {
+              rel: 'self',
+              type: 'application/activity+json',
+              href: `${domPrefix}${pubRoutePrefix}/${pubActor}`,
+            }
+          : {
+              rel: 'self',
+              type: 'application/activity+json',
+              href: `${domPrefix}${pubRoutePrefix}/${newSubject.split('@')[0]}`,
+            },
         {
-          rel: 'self',
+          rel: 'did',
           type: 'application/activity+json',
-          href: `${domPrefix}${routePrefix}/${pubActor}`,
+          href: `${domPrefix}${atRoutePrefix}/${at.did /*.replaceAll(':', '/')*/}`,
         },
       ],
     })
