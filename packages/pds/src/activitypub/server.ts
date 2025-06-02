@@ -378,13 +378,11 @@ export const createRouter = (ctx: AppContext): Router => {
     })
   })
 
-  router.get(`${atRoutePrefix}/*`, async function (req, res) {
-    const pubDid = req.params[0] //.replaceAll('/', ':')
+  router.get(`${atRoutePrefix}/:did`, async function (req, res) {
+    const pubDid = req.params.did //.replaceAll('/', ':')
 
     const domPrefix = genDomPrefix(req)
     const atUriHandle = `${domPrefix}${atRoutePrefix}/${pubDid}`
-
-    console.log(req.params)
 
     let did: string | unknown
     let pubHandle: string | unknown
