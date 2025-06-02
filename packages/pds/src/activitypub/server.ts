@@ -418,7 +418,7 @@ export const createRouter = (ctx: AppContext): Router => {
       type: 'Person',
       name: newSubject.split('@')[0],
       preferredUsername: profile?.displayName,
-      summary: `<p>${profile?.description}</p>`,
+      summary: `<p>${profile?.description} DEBUG: ${newSubject} ${did}</p>`,
       url: atUriHandle,
       inbox: `${atUriHandle}/inbox`,
       outbox: `${atUriHandle}/outbox`,
@@ -476,7 +476,7 @@ export const createRouter = (ctx: AppContext): Router => {
     return res.type('application/jrd+json; charset=utf-8').json({
       subject: `acct:${newSubject}`,
       links: [
-        !pubActor.startsWith('did:')
+        /*!pubActor.startsWith('did:')
           ? {
               rel: 'self',
               type: 'application/activity+json',
@@ -486,9 +486,14 @@ export const createRouter = (ctx: AppContext): Router => {
               rel: 'self',
               type: 'application/activity+json',
               href: `${domPrefix}${pubRoutePrefix}/${newSubject.split('@')[0]}`,
-            },
+            },*/
         {
           rel: 'did',
+          type: 'application/activity+json',
+          href: `${domPrefix}${atRoutePrefix}/${at.did /*.replaceAll(':', '/')*/}`,
+        },
+        {
+          rel: 'self',
           type: 'application/activity+json',
           href: `${domPrefix}${atRoutePrefix}/${at.did /*.replaceAll(':', '/')*/}`,
         },
