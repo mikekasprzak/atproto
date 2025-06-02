@@ -12,24 +12,22 @@ export const createRouter = (ctx: AppContext): Router => {
 
   // actor should be one of req.hostname-ctx.cfg.service.hostname or req.hostname-ctx.cfg.service.hostnameRoot
 
-  const inferPubHandle = function (
-    hostname: string,
-    pubActor: string,
-    atHandle: string,
-  ) {
-    return !pubActor.startsWith('did:')
-      ? `${pubActor}@${atHandle.substring(pubActor.length + 1)}`
-      : atHandle !== ctx.cfg.service.hostname &&
-          atHandle.endsWith(ctx.cfg.service.hostname)
-        ? `${atHandle.substring(0, atHandle.length - ctx.cfg.service.hostname.length - 1)}@${ctx.cfg.service.hostname}`
+  const genDomPrefix = (req) =>
+    `${req.protocol}://${req.hostname}${ctx.cfg.service.port ? ':' + ctx.cfg.service.port : ''}`
+
+  const inferPubHandle = (hostname: string, handle: string, actor?: string) =>
+    actor && !actor.startsWith('did:')
+      ? `${actor}@${handle.substring(actor.length + 1)}`
+      : handle !== ctx.cfg.service.hostname &&
+          handle.endsWith(ctx.cfg.service.hostname)
+        ? `${handle.substring(0, handle.length - ctx.cfg.service.hostname.length - 1)}@${ctx.cfg.service.hostname}`
         : ctx.cfg.service.hostnameRoot &&
-            atHandle !== ctx.cfg.service.hostnameRoot &&
-            atHandle.endsWith(ctx.cfg.service.hostnameRoot)
-          ? `${atHandle.substring(0, atHandle.length - ctx.cfg.service.hostnameRoot.length - 1)}@${ctx.cfg.service.hostnameRoot}`
-          : atHandle !== hostname && atHandle.endsWith(hostname)
-            ? `${atHandle.substring(0, atHandle.length - hostname.length - 1)}@${hostname}`
-            : `${atHandle}@${hostname}`
-  }
+            handle !== ctx.cfg.service.hostnameRoot &&
+            handle.endsWith(ctx.cfg.service.hostnameRoot)
+          ? `${handle.substring(0, handle.length - ctx.cfg.service.hostnameRoot.length - 1)}@${ctx.cfg.service.hostnameRoot}`
+          : handle !== hostname && handle.endsWith(hostname)
+            ? `${handle.substring(0, handle.length - hostname.length - 1)}@${hostname}`
+            : `${handle}@${hostname}`
 
   type DIDByActorHost = {
     did?: string | undefined
@@ -116,7 +114,7 @@ export const createRouter = (ctx: AppContext): Router => {
   //})
 
   router.get(`${pubRoutePrefix}/:actor/outbox`, async function (req, res) {
-    const domPrefix = `${req.protocol}://${req.hostname}`
+    const domPrefix = genDomPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -202,7 +200,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${pubRoutePrefix}/:actor/followers`, async function (req, res) {
-    const domPrefix = `${req.protocol}://${req.hostname}`
+    const domPrefix = genDomPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -225,7 +223,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${pubRoutePrefix}/:actor/following`, async function (req, res) {
-    const domPrefix = `${req.protocol}://${req.hostname}`
+    const domPrefix = genDomPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -248,7 +246,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${pubRoutePrefix}/:actor/featured`, async function (req, res) {
-    const domPrefix = `${req.protocol}://${req.hostname}`
+    const domPrefix = genDomPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -322,7 +320,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${pubRoutePrefix}/:actor`, async function (req, res) {
-    const domPrefix = `${req.protocol}://${req.hostname}`
+    const domPrefix = genDomPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -383,7 +381,7 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(`${atRoutePrefix}/*`, async function (req, res) {
     const pubDid = req.params[0] //.replaceAll('/', ':')
 
-    const domPrefix = `${req.protocol}://${req.hostname}`
+    const domPrefix = genDomPrefix(req)
     const atUriHandle = `${domPrefix}${atRoutePrefix}/${pubDid}`
 
     console.log(req.params)
@@ -397,9 +395,11 @@ export const createRouter = (ctx: AppContext): Router => {
     } catch (err) {
       return res.status(500).send('Internal Server Error')
     }
-    if (typeof did !== 'string') {
+    if (typeof did !== 'string' || typeof pubHandle !== 'string') {
       return res.status(404).send('User not found')
     }
+
+    const newSubject = inferPubHandle(req.hostname, pubHandle)
 
     let profile: ProfileRecord | undefined
     await ctx.actorStore.read(did, async (actor) => {
@@ -416,7 +416,7 @@ export const createRouter = (ctx: AppContext): Router => {
       ],
       id: atUriHandle,
       type: 'Person',
-      name: pubHandle,
+      name: newSubject.split('@')[0],
       preferredUsername: profile?.displayName,
       summary: `<p>${profile?.description}</p>`,
       url: atUriHandle,
@@ -471,24 +471,8 @@ export const createRouter = (ctx: AppContext): Router => {
       return res.status(404).send('Not Found') // Mastodon sends a blank 404
     }
 
-    const newSubject = inferPubHandle(req.hostname, pubActor, at.handle)
-
-    /*
-    const newSubject = !pubActor.startsWith('did:')
-      ? `${pubActor}@${at.handle.substring(pubActor.length + 1)}`
-      : at.handle !== ctx.cfg.service.hostname &&
-          at.handle.endsWith(ctx.cfg.service.hostname)
-        ? `${at.handle.substring(0, at.handle.length - ctx.cfg.service.hostname.length - 1)}@${ctx.cfg.service.hostname}`
-        : ctx.cfg.service.hostnameRoot &&
-            at.handle !== ctx.cfg.service.hostnameRoot &&
-            at.handle.endsWith(ctx.cfg.service.hostnameRoot)
-          ? `${at.handle.substring(0, at.handle.length - ctx.cfg.service.hostnameRoot.length - 1)}@${ctx.cfg.service.hostnameRoot}`
-          : at.handle !== req.hostname && at.handle.endsWith(req.hostname)
-            ? `${at.handle.substring(0, at.handle.length - req.hostname.length - 1)}@${req.hostname}`
-            : `${at.handle}@${req.hostname}`
-            */
-
-    const domPrefix = `${req.protocol}://${req.hostname}`
+    const newSubject = inferPubHandle(req.hostname, at.handle, pubActor)
+    const domPrefix = genDomPrefix(req)
     return res.type('application/jrd+json; charset=utf-8').json({
       subject: `acct:${newSubject}`,
       links: [
