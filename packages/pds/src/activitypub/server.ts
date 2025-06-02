@@ -13,7 +13,7 @@ export const createRouter = (ctx: AppContext): Router => {
   // actor should be one of req.hostname-ctx.cfg.service.hostname or req.hostname-ctx.cfg.service.hostnameRoot
 
   const genDomPrefix = (req) =>
-    `${req.protocol}://${req.hostname}${ctx.cfg.service.port ? ':' + ctx.cfg.service.port : ''}`
+    `${req.protocol}://${req.hostname}${ctx.cfg.service.devMode && ctx.cfg.service.port ? ':' + ctx.cfg.service.port : ''}`
 
   const inferPubHandle = (hostname: string, handle: string, actor?: string) =>
     actor && !actor.startsWith('did:')
