@@ -30,7 +30,7 @@ export const createRouter = (ctx: AppContext): Router => {
   type DIDByActorHost = {
     did?: string
     handle?: string
-    didFoundBy?: string
+    didFoundBy?: 'given' | 'hostname' | 'althostname'
   }
 
   const findDIDByActorHost = async function (
