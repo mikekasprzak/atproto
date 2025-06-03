@@ -28,9 +28,9 @@ export const createRouter = (ctx: AppContext): Router => {
             : `${handle}@${hostname}`
 
   type DIDByActorHost = {
-    did?: string | undefined
-    didFoundBy?: string | undefined
-    handle?: string | undefined
+    did?: string
+    handle?: string
+    didFoundBy?: string
   }
 
   const findDIDByActorHost = async function (
@@ -90,309 +90,93 @@ export const createRouter = (ctx: AppContext): Router => {
     return ret
   }
 
-  router.get(`${pubRoutePrefix}/:actor/inbox`, async function (req, res) {
-    //inbox.push(JSON.stringify(req.body))
-    return res.type('application/activity+json').json({
-      error: 'Not Found',
-    })
-  })
-
-  // Messages to multiple recipients go here
-  router.get(`${pubRoutePrefix}-inbox`, async function (req, res) {
-    //inbox.push(JSON.stringify(req.body))
-    return res.type('application/activity+json').json({
-      error: 'Not Found',
-    })
-  })
-
-  // hack
-  //router.get(`${routePrefix}/:actor/inspect`, async function (req, res) {
-  //  console.log(inbox)
-  //  return res.type('text/plain').send(inbox.join('\n\n'))
-  //})
-
-  router.get(`${pubRoutePrefix}/:actor/outbox`, async function (req, res) {
-    const domPrefix = genDomainPrefix(req)
-    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
-
-    let pub: DIDByActorHost
-    try {
-      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
-    } catch (err) {
-      return res.status(500).send('Internal Server Error')
-    }
-    if (!pub.did) {
-      return res.status(404).send('User not found')
-    }
-
-    const noteId = 1
-    const notePublished = '2025-06-01T12:50:05Z'
-    const noteContent = '<p>hello worm 🪱🍄</p>'
-
-    if (req.query.page) {
-      return res.type('application/activity+json').json({
-        '@context': 'https://www.w3.org/ns/activitystreams',
-        id: req.url,
-        type: 'OrderedCollectionPage',
-        //prev: '',
-        partOf: `${pubUriHandle}/outbox`,
-        orderedItems: [
-          {
-            id: `${pubUriHandle}/statuses/${noteId}/activity`,
-            type: 'Create',
-            actor: pubUriHandle,
-            published: notePublished,
-            to: ['https://www.w3.org/ns/activitystreams#Public'],
-            cc: [`${pubUriHandle}/followers`],
-            object: {
-              id: `${pubUriHandle}/statuses/${noteId}`,
-              type: 'Note',
-              summary: null,
-              inReplyTo: null,
-              published: notePublished,
-              //url: '',
-              attributedTo: pubUriHandle,
-              to: ['https://www.w3.org/ns/activitystreams#Public'],
-              cc: [`${pubUriHandle}/followers`],
-              sensitive: false,
-              content: noteContent,
-              contentMap: {
-                en: noteContent,
-              },
-              attachment: [],
-              tag: [],
-              replies: {
-                id: `${pubUriHandle}/statuses/${noteId}/replies`,
-                type: 'Collection',
-                first: {
-                  type: 'CollectionPage',
-                  next: `${pubUriHandle}/statuses/${noteId}/replies?page=true`,
-                  partOf: `${pubUriHandle}/statuses/${noteId}/replies`,
-                  items: [],
-                },
-              },
-              likes: {
-                id: `${pubUriHandle}/statuses/${noteId}/likes`,
-                type: 'Collection',
-                totalItems: 0,
-              },
-              shares: {
-                id: `${pubUriHandle}/statuses/${noteId}/shares`,
-                type: 'Collection',
-                totalItems: 0,
-              },
-            },
-          },
-        ],
-      })
-    } else {
-      return res.type('application/activity+json').json({
-        '@context': 'https://www.w3.org/ns/activitystreams',
-        id: `${pubUriHandle}/outbox`,
-        type: 'OrderedCollection',
-        totalItems: 0,
-        first: `${pubUriHandle}/outbox?page=true`, // placeholder
-        last: `${pubUriHandle}/outbox?min_id=0&page=true`, // placeholder
-      })
-    }
-  })
-
-  router.get(`${pubRoutePrefix}/:actor/followers`, async function (req, res) {
-    const domPrefix = genDomainPrefix(req)
-    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
-
-    let pub: DIDByActorHost
-    try {
-      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
-    } catch (err) {
-      return res.status(500).send('Internal Server Error')
-    }
-    if (!pub.did) {
-      return res.status(404).send('User not found')
-    }
-
-    return res.type('application/activity+json').json({
-      '@context': 'https://www.w3.org/ns/activitystreams',
-      id: `${pubUriHandle}/followers`,
-      type: 'OrderedCollection',
-      totalItems: 0,
-      first: `${pubUriHandle}/followers?page=1`, // placeholder
-    })
-  })
-
-  router.get(`${pubRoutePrefix}/:actor/following`, async function (req, res) {
-    const domPrefix = genDomainPrefix(req)
-    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
-
-    let pub: DIDByActorHost
-    try {
-      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
-    } catch (err) {
-      return res.status(500).send('Internal Server Error')
-    }
-    if (!pub.did) {
-      return res.status(404).send('User not found')
-    }
-
-    return res.type('application/activity+json').json({
-      '@context': 'https://www.w3.org/ns/activitystreams',
-      id: `${pubUriHandle}/following`,
-      type: 'OrderedCollection',
-      totalItems: 0,
-      first: `${pubUriHandle}/following?page=1`, // placeholder
-    })
-  })
-
-  router.get(`${pubRoutePrefix}/:actor/featured`, async function (req, res) {
-    const domPrefix = genDomainPrefix(req)
-    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
-
-    let pub: DIDByActorHost
-    try {
-      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
-    } catch (err) {
-      return res.status(500).send('Internal Server Error')
-    }
-    if (!pub.did) {
-      return res.status(404).send('User not found')
-    }
-
-    const noteId = 1
-    const notePublished = '2025-06-01T12:50:05Z'
-    const noteContent = '<p>hello worm 🪱🍄</p>'
-
-    return res.type('application/activity+json').json({
-      '@context': 'https://www.w3.org/ns/activitystreams',
-      id: `${pubUriHandle}/featured`,
-      type: 'OrderedCollection',
-      totalItems: 1,
-      orderedItems: [
-        {
-          id: `${pubUriHandle}/statuses/${noteId}/activity`,
-          type: 'Create',
-          actor: pubUriHandle,
-          published: notePublished,
-          to: ['https://www.w3.org/ns/activitystreams#Public'],
-          cc: [`${pubUriHandle}/followers`],
-          object: {
-            id: `${pubUriHandle}/statuses/${noteId}`,
-            type: 'Note',
-            summary: null,
-            inReplyTo: null,
-            published: notePublished,
-            //url: '',
-            attributedTo: pubUriHandle,
-            to: ['https://www.w3.org/ns/activitystreams#Public'],
-            cc: [`${pubUriHandle}/followers`],
-            sensitive: false,
-            content: noteContent,
-            contentMap: {
-              en: noteContent,
-            },
-            attachment: [],
-            tag: [],
-            replies: {
-              id: `${pubUriHandle}/statuses/${noteId}/replies`,
-              type: 'Collection',
-              first: {
-                type: 'CollectionPage',
-                next: `${pubUriHandle}/statuses/${noteId}/replies?page=true`,
-                partOf: `${pubUriHandle}/statuses/${noteId}/replies`,
-                items: [],
-              },
-            },
-            likes: {
-              id: `${pubUriHandle}/statuses/${noteId}/likes`,
-              type: 'Collection',
-              totalItems: 0,
-            },
-            shares: {
-              id: `${pubUriHandle}/statuses/${noteId}/shares`,
-              type: 'Collection',
-              totalItems: 0,
-            },
+  const makePost = function (
+    uriHandle: string,
+    noteId: string,
+    notePublished: string,
+    noteContent: string,
+  ) {
+    return {
+      id: `${uriHandle}/statuses/${noteId}/activity`,
+      type: 'Create',
+      actor: uriHandle,
+      published: notePublished,
+      to: ['https://www.w3.org/ns/activitystreams#Public'],
+      cc: [`${uriHandle}/followers`],
+      object: {
+        id: `${uriHandle}/statuses/${noteId}`,
+        type: 'Note',
+        summary: null,
+        inReplyTo: null,
+        published: notePublished,
+        //url: '',
+        attributedTo: uriHandle,
+        to: ['https://www.w3.org/ns/activitystreams#Public'],
+        cc: [`${uriHandle}/followers`],
+        sensitive: false,
+        content: noteContent,
+        contentMap: {
+          en: noteContent,
+        },
+        attachment: [],
+        tag: [],
+        replies: {
+          id: `${uriHandle}/statuses/${noteId}/replies`,
+          type: 'Collection',
+          first: {
+            type: 'CollectionPage',
+            next: `${uriHandle}/statuses/${noteId}/replies?page=true`,
+            partOf: `${uriHandle}/statuses/${noteId}/replies`,
+            items: [],
           },
         },
-      ],
-    })
-  })
-
-  /*
-  router.get(`${pubRoutePrefix}/:actor`, async function (req, res) {
-    const domPrefix = genDomainPrefix(req)
-    const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
-
-    let pub: DIDByActorHost
-    try {
-      pub = await findDIDByActorHost(req, res, req.params.actor, req.hostname)
-    } catch (err) {
-      return res.status(500).send('Internal Server Error')
-    }
-    if (!pub.did) {
-      return res.status(404).send('User not found')
-    }
-
-    let profile: ProfileRecord | undefined
-    await ctx.actorStore.read(pub.did, async (actor) => {
-      profile = (await actor.record.getProfileRecord()) as ProfileRecord
-    })
-
-    return res.type('application/activity+json').json({
-      '@context': [
-        'https://www.w3.org/ns/activitystreams',
-        'https://w3id.org/security/v1',
-      ],
-      id: pubUriHandle,
-      type: 'Person',
-      name: req.params.actor,
-      preferredUsername: profile?.displayName,
-      summary: `<p>${profile?.description}</p>`,
-      url: pubUriHandle,
-      inbox: `${pubUriHandle}/inbox`,
-      outbox: `${pubUriHandle}/outbox`,
-      followers: `${pubUriHandle}/followers`,
-      following: `${pubUriHandle}/following`,
-      featured: `${pubUriHandle}/featured`,
-      publicKey: {
-        id: `${pubUriHandle}#main-key`,
-        owner: pubUriHandle,
-        publicKeyPem:
-          '-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----',
+        likes: {
+          id: `${uriHandle}/statuses/${noteId}/likes`,
+          type: 'Collection',
+          totalItems: 0,
+        },
+        shares: {
+          id: `${uriHandle}/statuses/${noteId}/shares`,
+          type: 'Collection',
+          totalItems: 0,
+        },
       },
-      icon: profile?.avatar
-        ? {
-            type: 'Image',
-            mediaType: profile.avatar.mimeType,
-            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${pub.did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
-          }
-        : undefined,
-      image: profile?.banner
-        ? {
-            type: 'Image',
-            mediaType: profile.banner.mimeType,
-            url: `https://cdn.bsky.app/img/banner/plain/${pub.did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
-          }
-        : undefined,
-    })
-  })
-    */
+    }
+  }
 
   router.get(
-    [`${atRoutePrefix}/:did`, `${pubRoutePrefix}/:actor`],
+    [`${atRoutePrefix}/:did/inbox`, `${pubRoutePrefix}/:actor/inbox`],
+    async function (req, res) {
+      //inbox.push(JSON.stringify(req.body))
+      return res.type('application/activity+json').json({
+        error: 'Not Found',
+      })
+    },
+  )
+
+  // Messages to multiple recipients go here
+  router.get(
+    [`${atRoutePrefix}-inbox`, `${pubRoutePrefix}-inbox`],
+    async function (req, res) {
+      //inbox.push(JSON.stringify(req.body))
+      return res.type('application/activity+json').json({
+        error: 'Not Found',
+      })
+    },
+  )
+
+  router.get(
+    [`${atRoutePrefix}/:did/outbox`, `${pubRoutePrefix}/:actor/outbox`],
     async function (req, res) {
       let did: string | unknown
       let atHandle: string | unknown
 
-      if (req.params.did) {
-        try {
+      try {
+        if (req.params.did) {
           const atUser = await ctx.accountManager.getAccount(req.params.did)
           did = atUser?.did
           atHandle = atUser?.handle
-        } catch (err) {
-          return res.status(500).send('Internal Server Error')
-        }
-      } else if (req.params.actor) {
-        try {
+        } else if (req.params.actor) {
           const pub = await findDIDByActorHost(
             req,
             res,
@@ -401,9 +185,217 @@ export const createRouter = (ctx: AppContext): Router => {
           )
           did = pub?.did
           atHandle = pub?.handle
-        } catch (err) {
-          return res.status(500).send('Internal Server Error')
         }
+      } catch (err) {
+        return res.status(500).send('Internal Server Error')
+      }
+      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+        return res.status(404).send('User not found')
+      }
+
+      const domainPrefix = genDomainPrefix(req)
+      const pubUriHandle = req.params.did
+        ? `${domainPrefix}${atRoutePrefix}/${did}`
+        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
+      /*const pubHandle = req.params.did
+        ? inferPubHandle(req.hostname, atHandle)
+        : `${req.params.actor}@${req.hostname}`*/
+
+      const noteId = (1).toString()
+      const notePublished = '2025-06-01T12:50:05Z'
+      const noteContent = '<p>hello worm 🪱🍄</p>'
+
+      if (req.query.page) {
+        return res.type('application/activity+json').json({
+          '@context': 'https://www.w3.org/ns/activitystreams',
+          id: req.url,
+          type: 'OrderedCollectionPage',
+          //prev: '',
+          partOf: `${pubUriHandle}/outbox`,
+          orderedItems: [
+            makePost(pubUriHandle, noteId, notePublished, noteContent),
+          ],
+        })
+      } else {
+        return res.type('application/activity+json').json({
+          '@context': 'https://www.w3.org/ns/activitystreams',
+          id: `${pubUriHandle}/outbox`,
+          type: 'OrderedCollection',
+          totalItems: 0,
+          first: `${pubUriHandle}/outbox?page=true`, // placeholder
+          last: `${pubUriHandle}/outbox?min_id=0&page=true`, // placeholder
+        })
+      }
+    },
+  )
+
+  router.get(
+    [`${atRoutePrefix}/:did/followers`, `${pubRoutePrefix}/:actor/followers`],
+    async function (req, res) {
+      let did: string | unknown
+      let atHandle: string | unknown
+
+      try {
+        if (req.params.did) {
+          const atUser = await ctx.accountManager.getAccount(req.params.did)
+          did = atUser?.did
+          atHandle = atUser?.handle
+        } else if (req.params.actor) {
+          const pub = await findDIDByActorHost(
+            req,
+            res,
+            req.params.actor,
+            req.hostname,
+          )
+          did = pub?.did
+          atHandle = pub?.handle
+        }
+      } catch (err) {
+        return res.status(500).send('Internal Server Error')
+      }
+      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+        return res.status(404).send('User not found')
+      }
+
+      const domainPrefix = genDomainPrefix(req)
+      const pubUriHandle = req.params.did
+        ? `${domainPrefix}${atRoutePrefix}/${did}`
+        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
+      /*const pubHandle = req.params.did
+        ? inferPubHandle(req.hostname, atHandle)
+        : `${req.params.actor}@${req.hostname}`*/
+
+      return res.type('application/activity+json').json({
+        '@context': 'https://www.w3.org/ns/activitystreams',
+        id: `${pubUriHandle}/followers`,
+        type: 'OrderedCollection',
+        totalItems: 0,
+        first: `${pubUriHandle}/followers?page=1`, // placeholder
+      })
+    },
+  )
+
+  router.get(
+    [`${atRoutePrefix}/:did/following`, `${pubRoutePrefix}/:actor/following`],
+    async function (req, res) {
+      let did: string | unknown
+      let atHandle: string | unknown
+
+      try {
+        if (req.params.did) {
+          const atUser = await ctx.accountManager.getAccount(req.params.did)
+          did = atUser?.did
+          atHandle = atUser?.handle
+        } else if (req.params.actor) {
+          const pub = await findDIDByActorHost(
+            req,
+            res,
+            req.params.actor,
+            req.hostname,
+          )
+          did = pub?.did
+          atHandle = pub?.handle
+        }
+      } catch (err) {
+        return res.status(500).send('Internal Server Error')
+      }
+      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+        return res.status(404).send('User not found')
+      }
+
+      const domainPrefix = genDomainPrefix(req)
+      const pubUriHandle = req.params.did
+        ? `${domainPrefix}${atRoutePrefix}/${did}`
+        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
+      /*const pubHandle = req.params.did
+        ? inferPubHandle(req.hostname, atHandle)
+        : `${req.params.actor}@${req.hostname}`*/
+
+      return res.type('application/activity+json').json({
+        '@context': 'https://www.w3.org/ns/activitystreams',
+        id: `${pubUriHandle}/following`,
+        type: 'OrderedCollection',
+        totalItems: 0,
+        first: `${pubUriHandle}/following?page=1`, // placeholder
+      })
+    },
+  )
+
+  router.get(
+    [`${atRoutePrefix}/:did/featured`, `${pubRoutePrefix}/:actor/featured`],
+    async function (req, res) {
+      let did: string | unknown
+      let atHandle: string | unknown
+
+      try {
+        if (req.params.did) {
+          const atUser = await ctx.accountManager.getAccount(req.params.did)
+          did = atUser?.did
+          atHandle = atUser?.handle
+        } else if (req.params.actor) {
+          const pub = await findDIDByActorHost(
+            req,
+            res,
+            req.params.actor,
+            req.hostname,
+          )
+          did = pub?.did
+          atHandle = pub?.handle
+        }
+      } catch (err) {
+        return res.status(500).send('Internal Server Error')
+      }
+      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+        return res.status(404).send('User not found')
+      }
+
+      const domainPrefix = genDomainPrefix(req)
+      const pubUriHandle = req.params.did
+        ? `${domainPrefix}${atRoutePrefix}/${did}`
+        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
+      /*const pubHandle = req.params.did
+        ? inferPubHandle(req.hostname, atHandle)
+        : `${req.params.actor}@${req.hostname}`*/
+
+      const noteId = (1).toString()
+      const notePublished = '2025-06-01T12:50:05Z'
+      const noteContent = '<p>hello worm 🪱🍄</p>'
+
+      return res.type('application/activity+json').json({
+        '@context': 'https://www.w3.org/ns/activitystreams',
+        id: `${pubUriHandle}/featured`,
+        type: 'OrderedCollection',
+        totalItems: 1,
+        orderedItems: [
+          makePost(pubUriHandle, noteId, notePublished, noteContent),
+        ],
+      })
+    },
+  )
+
+  router.get(
+    [`${atRoutePrefix}/:did`, `${pubRoutePrefix}/:actor`],
+    async function (req, res) {
+      let did: string | unknown
+      let atHandle: string | unknown
+
+      try {
+        if (req.params.did) {
+          const atUser = await ctx.accountManager.getAccount(req.params.did)
+          did = atUser?.did
+          atHandle = atUser?.handle
+        } else if (req.params.actor) {
+          const pub = await findDIDByActorHost(
+            req,
+            res,
+            req.params.actor,
+            req.hostname,
+          )
+          did = pub?.did
+          atHandle = pub?.handle
+        }
+      } catch (err) {
+        return res.status(500).send('Internal Server Error')
       }
       if (typeof did !== 'string' || typeof atHandle !== 'string') {
         return res.status(404).send('User not found')
