@@ -76,7 +76,6 @@
   },
   "devDependencies": {
     "@atproto/api": "workspace:^",
-    "@atproto/bsky": "workspace:^",
     "@atproto/dev-env": "workspace:^",
     "@atproto/lex-cli": "workspace:^",
     "@atproto/oauth-client-browser-example": "workspace:*",
