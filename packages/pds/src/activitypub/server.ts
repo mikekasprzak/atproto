@@ -1,5 +1,6 @@
 import { Router, json } from 'express'
 //import { AuthScope } from '../auth-verifier'
+//import { ImageUriBuilder } from '../../../bsky/src/image/uri'
 import { AppContext } from '../context'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
 
@@ -10,7 +11,7 @@ export const createRouter = (ctx: AppContext): Router => {
   const router = Router()
   router.use(json())
 
-  // actor should be one of req.hostname-ctx.cfg.service.hostname or req.hostname-ctx.cfg.service.hostnameRoot
+  //const imageUriBuilder = ImageUriBuilder('https://cdn.bsky.app/img')
 
   const genDomPrefix = (req) =>
     `${req.protocol}://${req.hostname}${ctx.cfg.service.devMode && ctx.cfg.service.port ? ':' + ctx.cfg.service.port : ''}`
@@ -404,8 +405,7 @@ export const createRouter = (ctx: AppContext): Router => {
       profile = (await actor.record.getProfileRecord()) as ProfileRecord
     })
 
-    const avatar = 'bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu'
-    //${profile?.url.ref['$link']}
+    //const avatar = 'bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu'
 
     return res.type('application/activity+json').json({
       '@context': [
@@ -432,15 +432,19 @@ export const createRouter = (ctx: AppContext): Router => {
       icon: profile?.avatar
         ? {
             type: 'Image',
-            mediaType: profile?.avatar.mimeType,
-            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${avatar}@jpeg`,
+            mediaType: profile.avatar.mimeType,
+            //url: imageUriBuilder.getPresetUri('avatar', did, avatar.toString()),
+            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
           }
         : undefined,
-      image: {
-        type: 'Image',
-        mediaType: 'image/jpeg',
-        url: 'https://cdn.bsky.app/img/banner/plain/did:plc:tu6g7v7tghfxkxfz6em73nob/bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu@jpeg',
-      },
+      image: profile?.banner
+        ? {
+            type: 'Image',
+            mediaType: profile.banner.mimeType,
+            url: `https://cdn.bsky.app/img/banner/plain/${did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
+            //url: 'https://cdn.bsky.app/img/banner/plain/did:plc:tu6g7v7tghfxkxfz6em73nob/bafkreie4clchqmbflkdr2lvtvvtotczxrgqs3rvwhqgonlwhfqwfpiiatu@jpeg',
+          }
+        : undefined,
     })
   })
 
@@ -485,11 +489,11 @@ export const createRouter = (ctx: AppContext): Router => {
               type: 'application/activity+json',
               href: `${domPrefix}${pubRoutePrefix}/${newSubject.split('@')[0]}`,
             },*/
-        {
-          rel: 'did',
-          type: 'application/activity+json',
-          href: `${domPrefix}${atRoutePrefix}/${at.did /*.replaceAll(':', '/')*/}`,
-        },
+        //{
+        //  rel: 'did',
+        //  type: 'application/activity+json',
+        //  href: `${domPrefix}${atRoutePrefix}/${at.did /*.replaceAll(':', '/')*/}`,
+        //},
         {
           rel: 'self',
           type: 'application/activity+json',

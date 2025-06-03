@@ -1,6 +1,6 @@
 {
   "name": "@mikekasprzak/pds",
-  "version": "0.4.15",
+  "version": "0.4.16",
   "license": "MIT",
   "description": "Reference implementation of atproto Personal Data Server (PDS)",
   "keywords": [
@@ -76,6 +76,7 @@
   },
   "devDependencies": {
     "@atproto/api": "workspace:^",
+    "@atproto/bsky": "workspace:^",
     "@atproto/dev-env": "workspace:^",
     "@atproto/lex-cli": "workspace:^",
     "@atproto/oauth-client-browser-example": "workspace:*",
