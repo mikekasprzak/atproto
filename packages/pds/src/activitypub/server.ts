@@ -1,4 +1,4 @@
-import { Router, json } from 'express'
+import { RequestHandler, Router, json } from 'express'
 //import { AuthScope } from '../auth-verifier'
 import { AppContext } from '../context'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
@@ -10,7 +10,7 @@ export const createRouter = (ctx: AppContext): Router => {
   const router = Router()
   router.use(json())
 
-  const genDomPrefix = (req) =>
+  const genDomainPrefix = (req) =>
     `${req.protocol}://${req.hostname}${ctx.cfg.service.devMode && ctx.cfg.service.port ? ':' + ctx.cfg.service.port : ''}`
 
   const inferPubHandle = (hostname: string, handle: string, actor?: string) =>
@@ -34,8 +34,8 @@ export const createRouter = (ctx: AppContext): Router => {
   }
 
   const findDIDByActorHost = async function (
-    req,
-    res,
+    req: Parameters<RequestHandler>[0],
+    res: Parameters<RequestHandler>[1],
     actor: string,
     host: string,
   ) {
@@ -112,7 +112,7 @@ export const createRouter = (ctx: AppContext): Router => {
   //})
 
   router.get(`${pubRoutePrefix}/:actor/outbox`, async function (req, res) {
-    const domPrefix = genDomPrefix(req)
+    const domPrefix = genDomainPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -198,7 +198,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${pubRoutePrefix}/:actor/followers`, async function (req, res) {
-    const domPrefix = genDomPrefix(req)
+    const domPrefix = genDomainPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -221,7 +221,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${pubRoutePrefix}/:actor/following`, async function (req, res) {
-    const domPrefix = genDomPrefix(req)
+    const domPrefix = genDomainPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -244,7 +244,7 @@ export const createRouter = (ctx: AppContext): Router => {
   })
 
   router.get(`${pubRoutePrefix}/:actor/featured`, async function (req, res) {
-    const domPrefix = genDomPrefix(req)
+    const domPrefix = genDomainPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -317,8 +317,9 @@ export const createRouter = (ctx: AppContext): Router => {
     })
   })
 
+  /*
   router.get(`${pubRoutePrefix}/:actor`, async function (req, res) {
-    const domPrefix = genDomPrefix(req)
+    const domPrefix = genDomainPrefix(req)
     const pubUriHandle = `${domPrefix}${pubRoutePrefix}/${req.params.actor}`
 
     let pub: DIDByActorHost
@@ -374,71 +375,92 @@ export const createRouter = (ctx: AppContext): Router => {
         : undefined,
     })
   })
+    */
 
-  router.get(`${atRoutePrefix}/:did`, async function (req, res) {
-    const pubDid = req.params.did //.replaceAll('/', ':')
+  router.get(
+    [`${atRoutePrefix}/:did`, `${pubRoutePrefix}/:actor`],
+    async function (req, res) {
+      let did: string | unknown
+      let atHandle: string | unknown
 
-    const domPrefix = genDomPrefix(req)
-    const atUriHandle = `${domPrefix}${atRoutePrefix}/${pubDid}`
+      if (req.params.did) {
+        try {
+          const atUser = await ctx.accountManager.getAccount(req.params.did)
+          did = atUser?.did
+          atHandle = atUser?.handle
+        } catch (err) {
+          return res.status(500).send('Internal Server Error')
+        }
+      } else if (req.params.actor) {
+        try {
+          const pub = await findDIDByActorHost(
+            req,
+            res,
+            req.params.actor,
+            req.hostname,
+          )
+          did = pub?.did
+          atHandle = pub?.handle
+        } catch (err) {
+          return res.status(500).send('Internal Server Error')
+        }
+      }
+      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+        return res.status(404).send('User not found')
+      }
 
-    let did: string | unknown
-    let pubHandle: string | unknown
-    try {
-      const atUser = await ctx.accountManager.getAccount(pubDid)
-      did = atUser?.did
-      pubHandle = atUser?.handle
-    } catch (err) {
-      return res.status(500).send('Internal Server Error')
-    }
-    if (typeof did !== 'string' || typeof pubHandle !== 'string') {
-      return res.status(404).send('User not found')
-    }
+      const domainPrefix = genDomainPrefix(req)
+      const pubUriHandle = req.params.did
+        ? `${domainPrefix}${atRoutePrefix}/${did}`
+        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
+      const pubHandle = req.params.did
+        ? inferPubHandle(req.hostname, atHandle)
+        : `${req.params.actor}@${req.hostname}`
 
-    const newSubject = inferPubHandle(req.hostname, pubHandle)
+      let profile: ProfileRecord | undefined
+      await ctx.actorStore.read(did, async (actor) => {
+        profile = (await actor.record.getProfileRecord()) as ProfileRecord
+      })
 
-    let profile: ProfileRecord | undefined
-    await ctx.actorStore.read(did, async (actor) => {
-      profile = (await actor.record.getProfileRecord()) as ProfileRecord
-    })
-
-    return res.type('application/activity+json').json({
-      '@context': [
-        'https://www.w3.org/ns/activitystreams',
-        'https://w3id.org/security/v1',
-      ],
-      id: atUriHandle,
-      type: 'Person',
-      name: newSubject.split('@')[0],
-      preferredUsername: profile?.displayName,
-      summary: `<p>${profile?.description} DEBUG: ${newSubject} ${did}</p>`,
-      url: atUriHandle,
-      inbox: `${atUriHandle}/inbox`,
-      outbox: `${atUriHandle}/outbox`,
-      followers: `${atUriHandle}/followers`,
-      following: `${atUriHandle}/following`,
-      featured: `${atUriHandle}/featured`,
-      publicKey: {
-        id: `${atUriHandle}#main-key`,
-        owner: atUriHandle,
-        publicKeyPem:
-          '-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----',
-      },
-      icon: profile?.avatar
-        ? {
-            type: 'Image',
-            mediaType: profile.avatar.mimeType,
-            url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
-          }
-        : undefined,
-      image: profile?.banner
-        ? {
-            type: 'Image',
-            mediaType: profile.banner.mimeType,
-            url: `https://cdn.bsky.app/img/banner/plain/${did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
-          }
-        : undefined,
-    })
-  })
+      return res.type('application/activity+json').json({
+        '@context': [
+          'https://www.w3.org/ns/activitystreams',
+          'https://w3id.org/security/v1',
+        ],
+        id: pubUriHandle,
+        type: 'Person',
+        name: pubHandle.split('@')[0],
+        preferredUsername: profile?.displayName,
+        summary: `<p>${profile?.description}<br/>DEBUG: ${pubHandle} ${did}</p>`,
+        url: pubUriHandle,
+        inbox: `${pubUriHandle}/inbox`,
+        outbox: `${pubUriHandle}/outbox`,
+        followers: `${pubUriHandle}/followers`,
+        following: `${pubUriHandle}/following`,
+        featured: `${pubUriHandle}/featured`,
+        publicKey: {
+          id: `${pubUriHandle}#main-key`,
+          owner: pubUriHandle,
+          publicKeyPem:
+            '-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----',
+        },
+        icon: profile?.avatar
+          ? {
+              type: 'Image',
+              mediaType: profile.avatar.mimeType,
+              url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
+            }
+          : undefined,
+        image: profile?.banner
+          ? {
+              type: 'Image',
+              mediaType: profile.banner.mimeType,
+              url: `https://cdn.bsky.app/img/banner/plain/${did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
+            }
+          : undefined,
+      })
+    },
+  )
 
   router.get('/.well-known/webfinger', async function (req, res) {
     if (typeof req.query.resource !== 'string') {
@@ -466,7 +488,7 @@ export const createRouter = (ctx: AppContext): Router => {
     }
 
     const newSubject = inferPubHandle(req.hostname, at.handle, pubActor)
-    const domPrefix = genDomPrefix(req)
+    const domPrefix = genDomainPrefix(req)
     return res.type('application/jrd+json; charset=utf-8').json({
       subject: `acct:${newSubject}`,
       links: [
