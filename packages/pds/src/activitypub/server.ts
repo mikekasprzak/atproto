@@ -90,7 +90,7 @@ export const createRouter = (ctx: AppContext): Router => {
     return ret
   }
 
-  type APubInfo = {
+  type AtPubInfo = {
     did: string
     domainPrefix: string
     pubUri: string
@@ -99,7 +99,7 @@ export const createRouter = (ctx: AppContext): Router => {
     atHandle: string
   }
 
-  const getAPubInfo = async function (req, res): Promise<APubInfo | null> {
+  const getAPubInfo = async function (req, res): Promise<AtPubInfo | null> {
     let did: string | unknown
     let atHandle: string | unknown
 
@@ -140,7 +140,7 @@ export const createRouter = (ctx: AppContext): Router => {
         ? inferPubHandle(req.hostname, atHandle)
         : `${req.params.actor}@${req.hostname}`,
       atHandle,
-    } as APubInfo
+    } as AtPubInfo
   }
 
   const makeActivity = function (
@@ -234,7 +234,7 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did/outbox`, `${pubRoutePrefix}/:actor/outbox`],
     async function (req, res) {
-      let info: APubInfo | null
+      let info: AtPubInfo | null
       try {
         info = await getAPubInfo(req, res)
       } catch (err) {
@@ -285,7 +285,7 @@ export const createRouter = (ctx: AppContext): Router => {
       `${pubRoutePrefix}/:actor/statuses/:id`,
     ],
     async function (req, res) {
-      let info: APubInfo | null
+      let info: AtPubInfo | null
       try {
         info = await getAPubInfo(req, res)
       } catch (err) {
@@ -312,7 +312,7 @@ export const createRouter = (ctx: AppContext): Router => {
       `${pubRoutePrefix}/:actor/statuses/:id/activity`,
     ],
     async function (req, res) {
-      let info: APubInfo | null
+      let info: AtPubInfo | null
       try {
         info = await getAPubInfo(req, res)
       } catch (err) {
@@ -342,7 +342,7 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did/followers`, `${pubRoutePrefix}/:actor/followers`],
     async function (req, res) {
-      let info: APubInfo | null
+      let info: AtPubInfo | null
       try {
         info = await getAPubInfo(req, res)
       } catch (err) {
@@ -367,7 +367,7 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did/following`, `${pubRoutePrefix}/:actor/following`],
     async function (req, res) {
-      let info: APubInfo | null
+      let info: AtPubInfo | null
       try {
         info = await getAPubInfo(req, res)
       } catch (err) {
@@ -392,7 +392,7 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did/featured`, `${pubRoutePrefix}/:actor/featured`],
     async function (req, res) {
-      let info: APubInfo | null
+      let info: AtPubInfo | null
       try {
         info = await getAPubInfo(req, res)
       } catch (err) {
@@ -421,7 +421,7 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did`, `${pubRoutePrefix}/:actor`],
     async function (req, res) {
-      let info: APubInfo | null
+      let info: AtPubInfo | null
       try {
         info = await getAPubInfo(req, res)
       } catch (err) {
