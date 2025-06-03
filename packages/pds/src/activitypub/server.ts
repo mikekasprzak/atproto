@@ -402,6 +402,9 @@ export const createRouter = (ctx: AppContext): Router => {
       }
 
       const domainPrefix = genDomainPrefix(req)
+      const pubUri = req.params.did
+        ? `${domainPrefix}${atRoutePrefix}`
+        : `${domainPrefix}${pubRoutePrefix}`
       const pubUriHandle = req.params.did
         ? `${domainPrefix}${atRoutePrefix}/${did}`
         : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
@@ -462,6 +465,11 @@ export const createRouter = (ctx: AppContext): Router => {
           owner: pubUriHandle,
           publicKeyPem:
             '-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----',
+        },
+        tag: [],
+        attachment: [],
+        endpoints: {
+          sharedInbox: `${pubUri}-inbox`,
         },
         icon: profile?.avatar
           ? {
