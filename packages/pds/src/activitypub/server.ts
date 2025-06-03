@@ -90,77 +90,143 @@ export const createRouter = (ctx: AppContext): Router => {
     return ret
   }
 
-  const makePost = function (
+  type APubInfo = {
+    did: string
+    domainPrefix: string
+    pubUri: string
+    pubUriHandle: string
+    pubHandle: string
+    atHandle: string
+  }
+
+  const getAPubInfo = async function (req, res): Promise<APubInfo | null> {
+    let did: string | unknown
+    let atHandle: string | unknown
+
+    try {
+      if (req.params.did) {
+        const atUser = await ctx.accountManager.getAccount(req.params.did)
+        did = atUser?.did
+        atHandle = atUser?.handle
+      } else if (req.params.actor) {
+        const pub = await findDIDByActorHost(
+          req,
+          res,
+          req.params.actor,
+          req.hostname,
+        )
+        did = pub?.did
+        atHandle = pub?.handle
+      }
+    } catch (err) {
+      return res.status(500).send('Internal Server Error')
+    }
+    if (typeof did !== 'string' || typeof atHandle !== 'string') {
+      return null
+    }
+
+    const domainPrefix = genDomainPrefix(req)
+
+    return {
+      did,
+      domainPrefix,
+      pubUri: req.params.did
+        ? `${domainPrefix}${atRoutePrefix}`
+        : `${domainPrefix}${pubRoutePrefix}`,
+      pubUriHandle: req.params.did
+        ? `${domainPrefix}${atRoutePrefix}/${did}`
+        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`,
+      pubHandle: req.params.did
+        ? inferPubHandle(req.hostname, atHandle)
+        : `${req.params.actor}@${req.hostname}`,
+      atHandle,
+    } as APubInfo
+  }
+
+  const makeActivity = function (
+    type: 'Create',
     uriHandle: string,
-    noteId: string,
-    notePublished: string,
-    noteContent: string,
+    id: number,
+    published: string,
+    object: object,
   ) {
     return {
-      id: `${uriHandle}/statuses/${noteId}/activity`,
-      type: 'Create',
+      id: `${uriHandle}/statuses/${id}/activity`,
+      type,
       actor: uriHandle,
-      published: notePublished,
+      published: published,
       to: ['https://www.w3.org/ns/activitystreams#Public'],
-      cc: [`${uriHandle}/followers`],
-      object: {
-        id: `${uriHandle}/statuses/${noteId}`,
-        type: 'Note',
-        summary: null,
-        inReplyTo: null,
-        published: notePublished,
-        //url: '',
-        attributedTo: uriHandle,
-        to: ['https://www.w3.org/ns/activitystreams#Public'],
-        cc: [`${uriHandle}/followers`],
-        sensitive: false,
-        content: noteContent,
-        contentMap: {
-          en: noteContent,
+      cc: [`${uriHandle}/followers`], // public
+      object,
+    }
+  }
+
+  const makeNote = function (
+    uriHandle: string,
+    id: number,
+    published: string,
+    content: string,
+  ) {
+    const totalLikes = 0
+    const totalShares = 0
+
+    return {
+      id: `${uriHandle}/statuses/${id}`,
+      type: 'Note',
+      summary: null,
+      inReplyTo: null,
+      published: published,
+      //url: '',
+      attributedTo: uriHandle,
+      to: ['https://www.w3.org/ns/activitystreams#Public'],
+      cc: [`${uriHandle}/followers`], // public
+      sensitive: false,
+      content: content,
+      contentMap: {
+        en: content,
+      },
+      attachment: [],
+      tag: [],
+      replies: {
+        id: `${uriHandle}/statuses/${id}/replies`,
+        type: 'Collection',
+        first: {
+          type: 'CollectionPage',
+          next: `${uriHandle}/statuses/${id}/replies?page=true`,
+          partOf: `${uriHandle}/statuses/${id}/replies`,
+          items: [],
         },
-        attachment: [],
-        tag: [],
-        replies: {
-          id: `${uriHandle}/statuses/${noteId}/replies`,
-          type: 'Collection',
-          first: {
-            type: 'CollectionPage',
-            next: `${uriHandle}/statuses/${noteId}/replies?page=true`,
-            partOf: `${uriHandle}/statuses/${noteId}/replies`,
-            items: [],
-          },
-        },
-        likes: {
-          id: `${uriHandle}/statuses/${noteId}/likes`,
-          type: 'Collection',
-          totalItems: 0,
-        },
-        shares: {
-          id: `${uriHandle}/statuses/${noteId}/shares`,
-          type: 'Collection',
-          totalItems: 0,
-        },
+      },
+      likes: {
+        id: `${uriHandle}/statuses/${id}/likes`,
+        type: 'Collection',
+        totalItems: totalLikes,
+      },
+      shares: {
+        id: `${uriHandle}/statuses/${id}/shares`,
+        type: 'Collection',
+        totalItems: totalShares,
       },
     }
   }
 
-  router.get(
+  router.post(
     [`${atRoutePrefix}/:did/inbox`, `${pubRoutePrefix}/:actor/inbox`],
     async function (req, res) {
       //inbox.push(JSON.stringify(req.body))
-      return res.type('application/activity+json').json({
-        error: 'Not Found',
+      return res.type('application/activity+json').status(501).json({
+        error: 'Not Currently Implemented',
       })
     },
   )
 
   // Messages to multiple recipients go here
-  router.get(
+  router.post(
     [`${atRoutePrefix}-inbox`, `${pubRoutePrefix}-inbox`],
     async function (req, res) {
       //inbox.push(JSON.stringify(req.body))
-      return res.type('application/activity+json').json({
-        error: 'Not Found',
+      return res.type('application/activity+json').status(501).json({
+        error: 'Not Currently Implemented',
       })
     },
   )
@@ -168,42 +234,28 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did/outbox`, `${pubRoutePrefix}/:actor/outbox`],
     async function (req, res) {
-      let did: string | unknown
-      let atHandle: string | unknown
-
+      let info: APubInfo | null
       try {
-        if (req.params.did) {
-          const atUser = await ctx.accountManager.getAccount(req.params.did)
-          did = atUser?.did
-          atHandle = atUser?.handle
-        } else if (req.params.actor) {
-          const pub = await findDIDByActorHost(
-            req,
-            res,
-            req.params.actor,
-            req.hostname,
-          )
-          did = pub?.did
-          atHandle = pub?.handle
-        }
+        info = await getAPubInfo(req, res)
       } catch (err) {
         return res.status(500).send('Internal Server Error')
       }
-      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+      if (!info) {
         return res.status(404).send('User not found')
       }
 
-      const domainPrefix = genDomainPrefix(req)
-      const pubUriHandle = req.params.did
-        ? `${domainPrefix}${atRoutePrefix}/${did}`
-        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
-      /*const pubHandle = req.params.did
-        ? inferPubHandle(req.hostname, atHandle)
-        : `${req.params.actor}@${req.hostname}`*/
-
-      const noteId = (1).toString()
-      const notePublished = '2025-06-01T12:50:05Z'
-      const noteContent = '<p>hello worm 🪱🍄</p>'
+      const childId = 1
+      const publishedAt = '2025-06-01T12:50:05Z'
+      const content = '<p>hello worm 🪱🍄</p>'
+      const items = [
+        makeActivity(
+          'Create',
+          info.pubUriHandle,
+          childId,
+          publishedAt,
+          makeNote(info.pubUriHandle, childId, publishedAt, content),
+        ),
+      ]
 
       if (req.query.page) {
         return res.type('application/activity+json').json({
@@ -211,66 +263,103 @@ export const createRouter = (ctx: AppContext): Router => {
           id: req.url,
           type: 'OrderedCollectionPage',
           //prev: '',
-          partOf: `${pubUriHandle}/outbox`,
-          orderedItems: [
-            makePost(pubUriHandle, noteId, notePublished, noteContent),
-          ],
+          partOf: `${info.pubUriHandle}/outbox`,
+          orderedItems: items,
         })
       } else {
         return res.type('application/activity+json').json({
           '@context': 'https://www.w3.org/ns/activitystreams',
-          id: `${pubUriHandle}/outbox`,
+          id: `${info.pubUriHandle}/outbox`,
           type: 'OrderedCollection',
-          totalItems: 0,
-          first: `${pubUriHandle}/outbox?page=true`, // placeholder
-          last: `${pubUriHandle}/outbox?min_id=0&page=true`, // placeholder
+          totalItems: items.length,
+          first: `${info.pubUriHandle}/outbox?page=true`, // placeholder
+          last: `${info.pubUriHandle}/outbox?min_id=0&page=true`, // placeholder
         })
       }
     },
   )
 
   router.get(
-    [`${atRoutePrefix}/:did/followers`, `${pubRoutePrefix}/:actor/followers`],
+    [
+      `${atRoutePrefix}/:did/statuses/:id`,
+      `${pubRoutePrefix}/:actor/statuses/:id`,
+    ],
     async function (req, res) {
-      let did: string | unknown
-      let atHandle: string | unknown
-
+      let info: APubInfo | null
       try {
-        if (req.params.did) {
-          const atUser = await ctx.accountManager.getAccount(req.params.did)
-          did = atUser?.did
-          atHandle = atUser?.handle
-        } else if (req.params.actor) {
-          const pub = await findDIDByActorHost(
-            req,
-            res,
-            req.params.actor,
-            req.hostname,
-          )
-          did = pub?.did
-          atHandle = pub?.handle
-        }
+        info = await getAPubInfo(req, res)
       } catch (err) {
         return res.status(500).send('Internal Server Error')
       }
-      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+      if (!info) {
         return res.status(404).send('User not found')
       }
 
-      const domainPrefix = genDomainPrefix(req)
-      const pubUriHandle = req.params.did
-        ? `${domainPrefix}${atRoutePrefix}/${did}`
-        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
-      /*const pubHandle = req.params.did
-        ? inferPubHandle(req.hostname, atHandle)
-        : `${req.params.actor}@${req.hostname}`*/
+      const childId = parseInt(req.params.id)
+      const publishedAt = '2025-06-01T12:50:05Z'
+      const content = '<p>hello worm 🪱🍄</p>'
 
       return res.type('application/activity+json').json({
         '@context': 'https://www.w3.org/ns/activitystreams',
-        id: `${pubUriHandle}/followers`,
+        ...makeNote(info.pubUriHandle, childId, publishedAt, content),
+      })
+    },
+  )
+
+  router.get(
+    [
+      `${atRoutePrefix}/:did/statuses/:id/activity`,
+      `${pubRoutePrefix}/:actor/statuses/:id/activity`,
+    ],
+    async function (req, res) {
+      let info: APubInfo | null
+      try {
+        info = await getAPubInfo(req, res)
+      } catch (err) {
+        return res.status(500).send('Internal Server Error')
+      }
+      if (!info) {
+        return res.status(404).send('User not found')
+      }
+
+      const childId = parseInt(req.params.id)
+      const publishedAt = '2025-06-01T12:50:05Z'
+      const content = '<p>hello worm 🪱🍄</p>'
+
+      return res.type('application/activity+json').json({
+        '@context': 'https://www.w3.org/ns/activitystreams',
+        ...makeActivity(
+          'Create',
+          info.pubUriHandle,
+          childId,
+          publishedAt,
+          makeNote(info.pubUriHandle, childId, publishedAt, content),
+        ),
+      })
+    },
+  )
+
+  router.get(
+    [`${atRoutePrefix}/:did/followers`, `${pubRoutePrefix}/:actor/followers`],
+    async function (req, res) {
+      let info: APubInfo | null
+      try {
+        info = await getAPubInfo(req, res)
+      } catch (err) {
+        return res.status(500).send('Internal Server Error')
+      }
+      if (!info) {
+        return res.status(404).send('User not found')
+      }
+
+      const items = []
+
+      return res.type('application/activity+json').json({
+        '@context': 'https://www.w3.org/ns/activitystreams',
+        id: `${info.pubUriHandle}/followers`,
         type: 'OrderedCollection',
-        totalItems: 0,
-        first: `${pubUriHandle}/followers?page=1`, // placeholder
+        totalItems: items.length,
+        first: `${info.pubUriHandle}/followers?page=1`, // placeholder
       })
     },
   )
@@ -278,45 +367,24 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did/following`, `${pubRoutePrefix}/:actor/following`],
     async function (req, res) {
-      let did: string | unknown
-      let atHandle: string | unknown
-
+      let info: APubInfo | null
       try {
-        if (req.params.did) {
-          const atUser = await ctx.accountManager.getAccount(req.params.did)
-          did = atUser?.did
-          atHandle = atUser?.handle
-        } else if (req.params.actor) {
-          const pub = await findDIDByActorHost(
-            req,
-            res,
-            req.params.actor,
-            req.hostname,
-          )
-          did = pub?.did
-          atHandle = pub?.handle
-        }
+        info = await getAPubInfo(req, res)
       } catch (err) {
         return res.status(500).send('Internal Server Error')
       }
-      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+      if (!info) {
         return res.status(404).send('User not found')
       }
 
-      const domainPrefix = genDomainPrefix(req)
-      const pubUriHandle = req.params.did
-        ? `${domainPrefix}${atRoutePrefix}/${did}`
-        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
-      /*const pubHandle = req.params.did
-        ? inferPubHandle(req.hostname, atHandle)
-        : `${req.params.actor}@${req.hostname}`*/
+      const items = []
 
       return res.type('application/activity+json').json({
         '@context': 'https://www.w3.org/ns/activitystreams',
-        id: `${pubUriHandle}/following`,
+        id: `${info.pubUriHandle}/following`,
         type: 'OrderedCollection',
-        totalItems: 0,
-        first: `${pubUriHandle}/following?page=1`, // placeholder
+        totalItems: items.length,
+        first: `${info.pubUriHandle}/following?page=1`, // placeholder
       })
     },
   )
@@ -324,51 +392,28 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did/featured`, `${pubRoutePrefix}/:actor/featured`],
     async function (req, res) {
-      let did: string | unknown
-      let atHandle: string | unknown
-
+      let info: APubInfo | null
       try {
-        if (req.params.did) {
-          const atUser = await ctx.accountManager.getAccount(req.params.did)
-          did = atUser?.did
-          atHandle = atUser?.handle
-        } else if (req.params.actor) {
-          const pub = await findDIDByActorHost(
-            req,
-            res,
-            req.params.actor,
-            req.hostname,
-          )
-          did = pub?.did
-          atHandle = pub?.handle
-        }
+        info = await getAPubInfo(req, res)
       } catch (err) {
         return res.status(500).send('Internal Server Error')
       }
-      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+      if (!info) {
         return res.status(404).send('User not found')
       }
 
-      const domainPrefix = genDomainPrefix(req)
-      const pubUriHandle = req.params.did
-        ? `${domainPrefix}${atRoutePrefix}/${did}`
-        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
-      /*const pubHandle = req.params.did
-        ? inferPubHandle(req.hostname, atHandle)
-        : `${req.params.actor}@${req.hostname}`*/
+      const childId = 1
+      const published = '2025-06-01T12:50:05Z'
+      const content = '<p>hello worm 🪱🍄</p>'
 
-      const noteId = (1).toString()
-      const notePublished = '2025-06-01T12:50:05Z'
-      const noteContent = '<p>hello worm 🪱🍄</p>'
+      const items = [makeNote(info.pubUriHandle, childId, published, content)]
 
       return res.type('application/activity+json').json({
         '@context': 'https://www.w3.org/ns/activitystreams',
-        id: `${pubUriHandle}/featured`,
+        id: `${info.pubUriHandle}/featured`,
         type: 'OrderedCollection',
-        totalItems: 1,
-        orderedItems: [
-          makePost(pubUriHandle, noteId, notePublished, noteContent),
-        ],
+        totalItems: items.length,
+        orderedItems: items,
       })
     },
   )
@@ -376,44 +421,18 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did`, `${pubRoutePrefix}/:actor`],
     async function (req, res) {
-      let did: string | unknown
-      let atHandle: string | unknown
-
+      let info: APubInfo | null
       try {
-        if (req.params.did) {
-          const atUser = await ctx.accountManager.getAccount(req.params.did)
-          did = atUser?.did
-          atHandle = atUser?.handle
-        } else if (req.params.actor) {
-          const pub = await findDIDByActorHost(
-            req,
-            res,
-            req.params.actor,
-            req.hostname,
-          )
-          did = pub?.did
-          atHandle = pub?.handle
-        }
+        info = await getAPubInfo(req, res)
       } catch (err) {
         return res.status(500).send('Internal Server Error')
       }
-      if (typeof did !== 'string' || typeof atHandle !== 'string') {
+      if (!info) {
         return res.status(404).send('User not found')
       }
 
-      const domainPrefix = genDomainPrefix(req)
-      const pubUri = req.params.did
-        ? `${domainPrefix}${atRoutePrefix}`
-        : `${domainPrefix}${pubRoutePrefix}`
-      const pubUriHandle = req.params.did
-        ? `${domainPrefix}${atRoutePrefix}/${did}`
-        : `${domainPrefix}${pubRoutePrefix}/${req.params.actor}`
-      const pubHandle = req.params.did
-        ? inferPubHandle(req.hostname, atHandle)
-        : `${req.params.actor}@${req.hostname}`
-
       let profile: ProfileRecord | undefined
-      await ctx.actorStore.read(did, async (actor) => {
+      await ctx.actorStore.read(info.did, async (actor) => {
         profile = (await actor.record.getProfileRecord()) as ProfileRecord
       })
 
@@ -449,40 +468,40 @@ export const createRouter = (ctx: AppContext): Router => {
             indexable: 'toot:indexable',
           },
         ],
-        id: pubUriHandle,
+        id: info.pubUriHandle,
         type: 'Person',
-        name: pubHandle.split('@')[0],
+        name: info.pubHandle.split('@')[0],
         preferredUsername: profile?.displayName,
-        summary: `<p>${profile?.description}<br/>DEBUG: ${pubHandle} ${did}</p>`,
-        url: pubUriHandle,
-        inbox: `${pubUriHandle}/inbox`,
-        outbox: `${pubUriHandle}/outbox`,
-        followers: `${pubUriHandle}/followers`,
-        following: `${pubUriHandle}/following`,
-        featured: `${pubUriHandle}/featured`,
+        summary: `<p>${profile?.description}<br/>DEBUG: ${info.pubHandle} ${info.did}</p>`,
+        url: info.pubUriHandle,
+        inbox: `${info.pubUriHandle}/inbox`,
+        outbox: `${info.pubUriHandle}/outbox`,
+        followers: `${info.pubUriHandle}/followers`,
+        following: `${info.pubUriHandle}/following`,
+        featured: `${info.pubUriHandle}/featured`,
         publicKey: {
-          id: `${pubUriHandle}#main-key`,
-          owner: pubUriHandle,
+          id: `${info.pubUriHandle}#main-key`,
+          owner: info.pubUriHandle,
           publicKeyPem:
             '-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----',
         },
         tag: [],
         attachment: [],
         endpoints: {
-          sharedInbox: `${pubUri}-inbox`,
+          sharedInbox: `${info.pubUri}-inbox`,
         },
         icon: profile?.avatar
           ? {
               type: 'Image',
               mediaType: profile.avatar.mimeType,
-              url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
+              url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${info.did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
             }
           : undefined,
         image: profile?.banner
           ? {
               type: 'Image',
               mediaType: profile.banner.mimeType,
-              url: `https://cdn.bsky.app/img/banner/plain/${did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
+              url: `https://cdn.bsky.app/img/banner/plain/${info.did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
             }
           : undefined,
       })
