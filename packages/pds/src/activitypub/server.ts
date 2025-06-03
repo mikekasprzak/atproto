@@ -155,6 +155,7 @@ export const createRouter = (ctx: AppContext): Router => {
       type,
       actor: uriHandle,
       published: published,
+      //url: `${uriHandle}/statuses/${id}/activity`,
       to: ['https://www.w3.org/ns/activitystreams#Public'],
       cc: [`${uriHandle}/followers`], // public
       object,
@@ -176,7 +177,7 @@ export const createRouter = (ctx: AppContext): Router => {
       summary: null,
       inReplyTo: null,
       published: published,
-      //url: '',
+      url: `${uriHandle}/statuses/${id}`,
       attributedTo: uriHandle,
       to: ['https://www.w3.org/ns/activitystreams#Public'],
       cc: [`${uriHandle}/followers`], // public
@@ -244,23 +245,44 @@ export const createRouter = (ctx: AppContext): Router => {
         return res.status(404).send('User not found')
       }
 
+      //let profile: ProfileRecord | undefined
+      let postRecord: {
+        uri: string
+        cid: string
+        value: Record<string, unknown>
+      }[] = []
+      await ctx.actorStore.read(info.did, async (actor) => {
+        //profile = (await actor.record.getProfileRecord()) as ProfileRecord
+        postRecord = await actor.record.listRecordsForCollection({
+          collection: 'app.bsky.feed.post',
+          limit: 10,
+          reverse: false,
+        })
+      })
+
       const childId = 1
-      const publishedAt = '2025-06-01T12:50:05Z'
-      const content = '<p>hello worm 🪱🍄</p>'
-      const items = [
-        makeActivity(
+      //const publishedAt = '2025-06-01T12:50:05Z'
+      //const content = '<p>hello worm 🪱🍄</p>'
+      const items = postRecord.map((key) => {
+        return makeActivity(
           'Create',
           info.pubUriHandle,
           childId,
-          publishedAt,
-          makeNote(info.pubUriHandle, childId, publishedAt, content),
-        ),
-      ]
+          key.value.createdAs as string,
+          makeNote(
+            info.pubUriHandle,
+            childId,
+            key.value.createdAs as string,
+            key.value.text as string,
+          ),
+        )
+      })
 
       if (req.query.page) {
         return res.type('application/activity+json').json({
           '@context': 'https://www.w3.org/ns/activitystreams',
           id: req.url,
+          url: req.url,
           type: 'OrderedCollectionPage',
           //prev: '',
           partOf: `${info.pubUriHandle}/outbox`,
