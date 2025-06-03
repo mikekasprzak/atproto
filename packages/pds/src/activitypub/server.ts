@@ -418,6 +418,33 @@ export const createRouter = (ctx: AppContext): Router => {
         '@context': [
           'https://www.w3.org/ns/activitystreams',
           'https://w3id.org/security/v1',
+          {
+            manuallyApprovesFollowers: 'as:manuallyApprovesFollowers',
+            schema: 'http://schema.org#',
+            PropertyValue: 'schema:PropertyValue',
+            value: 'schema:value',
+            toot: 'http://joinmastodon.org/ns#',
+            featured: {
+              '@id': 'toot:featured',
+              '@type': '@id',
+            },
+            featuredTags: {
+              '@id': 'toot:featuredTags',
+              '@type': '@id',
+            },
+            alsoKnownAs: {
+              '@id': 'as:alsoKnownAs',
+              '@type': '@id',
+            },
+            movedTo: {
+              '@id': 'as:movedTo',
+              '@type': '@id',
+            },
+            discoverable: 'toot:discoverable',
+            suspended: 'toot:suspended',
+            memorial: 'toot:memorial',
+            indexable: 'toot:indexable',
+          },
         ],
         id: pubUriHandle,
         type: 'Person',
