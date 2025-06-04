@@ -1,7 +1,10 @@
 import { RequestHandler, Router, json } from 'express'
 //import { AuthScope } from '../auth-verifier'
+import { RepoRecord } from '@atproto/lexicon'
 import { AppContext } from '../context'
+import { ids } from '../lexicon/lexicons'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
+import { Record as PostRecord } from '../lexicon/types/app/bsky/feed/post'
 
 export const pubRoutePrefix = '/activitypub'
 export const atRoutePrefix = '/atpub'
@@ -143,21 +146,39 @@ export const createRouter = (ctx: AppContext): Router => {
     } as AtPubInfo
   }
 
+  type ActivityPubActivityCreate = {
+    id: string
+    type: 'Create'
+    actor: string
+    published: string
+    url?: string
+    to: string[]
+    cc: string[]
+    object: unknown
+  }
+
+  type ActivityPubActivity = ActivityPubActivityCreate
+
   const makeActivity = function (
-    type: 'Create',
-    uriHandle: string,
-    id: number,
-    published: string,
+    type: Pick<ActivityPubActivity, 'type'>['type'],
+    options: {
+      uriHandle: string
+      postId: string
+      published: string
+      id?: string
+    },
     object: object,
-  ) {
+  ): ActivityPubActivity {
     return {
-      id: `${uriHandle}/statuses/${id}/activity`,
-      type,
-      actor: uriHandle,
-      published: published,
-      //url: `${uriHandle}/statuses/${id}/activity`,
+      id:
+        options.id ??
+        `${options.uriHandle}/statuses/${options.postId}/activity`,
+      type: type,
+      actor: options.uriHandle,
+      published: options.published,
+      url: `${options.uriHandle}/statuses/${options.postId}/activity`,
       to: ['https://www.w3.org/ns/activitystreams#Public'],
-      cc: [`${uriHandle}/followers`], // public
+      cc: [`${options.uriHandle}/followers`], // public
       object,
     }
   }
@@ -245,33 +266,37 @@ export const createRouter = (ctx: AppContext): Router => {
         return res.status(404).send('User not found')
       }
 
-      //let profile: ProfileRecord | undefined
       let postRecord: {
         uri: string
         cid: string
-        value: Record<string, unknown>
+        value: RepoRecord
       }[] = []
       await ctx.actorStore.read(info.did, async (actor) => {
-        //profile = (await actor.record.getProfileRecord()) as ProfileRecord
         postRecord = await actor.record.listRecordsForCollection({
-          collection: 'app.bsky.feed.post',
+          collection: ids.AppBskyFeedPost,
           limit: 10,
           reverse: false,
         })
       })
+      console.log(JSON.stringify(postRecord))
 
-      const childId = 1
+      const childId = '1'
       //const publishedAt = '2025-06-01T12:50:05Z'
       //const content = '<p>hello worm 🪱🍄</p>'
       const items = postRecord.map((key) => {
+        const pr = key.value as PostRecord
+
         return makeActivity(
           'Create',
-          info.pubUriHandle,
-          childId,
-          key.value.createdAs as string,
+          {
+            uriHandle: info.pubUriHandle,
+            postId: childId,
+            published: pr.createdAs as string,
+            id: key.uri,
+          },
           makeNote(
             info.pubUriHandle,
-            childId,
+            parseInt(childId),
             key.value.createdAs as string,
             key.value.text as string,
           ),
@@ -344,7 +369,7 @@ export const createRouter = (ctx: AppContext): Router => {
         return res.status(404).send('User not found')
       }
 
-      const childId = parseInt(req.params.id)
+      const childId = req.params.id
       const publishedAt = '2025-06-01T12:50:05Z'
       const content = '<p>hello worm 🪱🍄</p>'
 
@@ -352,10 +377,12 @@ export const createRouter = (ctx: AppContext): Router => {
         '@context': 'https://www.w3.org/ns/activitystreams',
         ...makeActivity(
           'Create',
-          info.pubUriHandle,
-          childId,
-          publishedAt,
-          makeNote(info.pubUriHandle, childId, publishedAt, content),
+          {
+            uriHandle: info.pubUriHandle,
+            postId: childId,
+            published: publishedAt,
+          },
+          makeNote(info.pubUriHandle, parseInt(childId), publishedAt, content),
         ),
       })
     },
