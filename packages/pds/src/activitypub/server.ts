@@ -4,10 +4,9 @@ import { RepoRecord } from '@atproto/lexicon'
 import { AppContext } from '../context'
 import { ids } from '../lexicon/lexicons'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
-import { Main as EmbedRecord } from '../lexicon/types/app/bsky/embed/record'
+//import { Main as EmbedRecord } from '../lexicon/types/app/bsky/embed/record'
 import { Record as PostRecord } from '../lexicon/types/app/bsky/feed/post'
-//import { CommitMeta } from '../lexicon/types/com/atproto/repo/defs'
-import { OutputSchema as CreateOutputSchema } from '../lexicon/types/com/atproto/repo/createRecord'
+//import { OutputSchema as CreateOutputSchema } from '../lexicon/types/com/atproto/repo/createRecord'
 
 export const pubRoutePrefix = '/activitypub'
 export const atRoutePrefix = '/atpub'
@@ -37,6 +36,19 @@ export const createRouter = (ctx: AppContext): Router => {
     did?: string
     handle?: string
     didFoundBy?: 'given' | 'hostname' | 'althostname'
+  }
+
+  const atUriToParts = function (uri: string) {
+    if (!uri.startsWith('at://')) {
+      return undefined
+    }
+    const withoutAt = uri.substring('at://'.length)
+    const [did, type, revision] = withoutAt.split('/')
+    return { did, type, tid: revision }
+  }
+
+  const atUriToTID = function (uri: string) {
+    return atUriToParts(uri)?.tid
   }
 
   const findDIDByActorHost = async function (
@@ -293,6 +305,7 @@ export const createRouter = (ctx: AppContext): Router => {
           return res.status(404).send('User not found')
         }
 
+        // Get posts belonging to the user
         let postRecord: {
           uri: string
           cid: string
@@ -305,37 +318,44 @@ export const createRouter = (ctx: AppContext): Router => {
             reverse: false,
           })
         })
+        // ?page requests
+        if (req.query.page) {
+          // Convert posts into Activities and Notes
+          const items = postRecord.map((key) => {
+            const pr = key.value as PostRecord
+            //const er = pr ? (pr.embed as EmbedRecord) : undefined
+            //const cm = er ? (er.record as CreateOutputSchema) : undefined
 
-        const items = postRecord.map((key) => {
-          const pr = key.value as PostRecord
-          const er = pr ? (pr.embed as EmbedRecord) : undefined
-          const cm = er ? (er.record as CreateOutputSchema) : undefined
+            const tid = atUriToTID(key.uri)
 
-          return makeActivity(
-            'Create',
-            {
-              uriHandle: info.pubUriHandle,
-              postId: cm && cm.commit ? cm.commit.rev : 'NOT_FOUND',
-              published: pr.createdAs as string,
-              id: `${key.uri}`,
-            },
-            makeNote(
+            return makeActivity(
+              'Create',
               {
                 uriHandle: info.pubUriHandle,
-                postId: cm && cm.commit ? cm.commit.rev : 'NOT_FOUND',
-                published: key.value.createdAs as string,
+                postId: tid ?? 'NOT_FOUND',
+                //postId: cm && cm.commit ? cm.commit.rev : 'NOT_FOUND',
+                published: pr.createdAs as string,
                 id: key.uri,
               },
-              `<p>${key.value.text as string}</p>`,
-            ),
-          )
-        })
+              makeNote(
+                {
+                  uriHandle: info.pubUriHandle,
+                  postId: tid ?? 'NOT_FOUND',
+                  //postId: cm && cm.commit ? cm.commit.rev : 'NOT_FOUND',
+                  published: key.value.createdAs as string,
+                  id: key.uri,
+                },
+                `<p>${key.value.text as string}</p>`,
+              ),
+            )
+          })
 
-        if (req.query.page) {
           return res.type('application/activity+json').json({
             '@context': 'https://www.w3.org/ns/activitystreams',
-            id: req.url,
-            url: req.url,
+            // MK: I'm not 100% sure I like ?page here, UNLESS the goal
+            //   of the outbox lexicon is to emulate ActivityPub behavior
+            id: `at://${info.did}/org.w3.activitypub.outbox?page=${req.query.page}`,
+            url: `${info.pubUriHandle}/outbox?page=${req.query.page}`,
             type: 'OrderedCollectionPage',
             //prev: '',
             partOf: `${info.pubUriHandle}/outbox`,
@@ -344,9 +364,10 @@ export const createRouter = (ctx: AppContext): Router => {
         } else {
           return res.type('application/activity+json').json({
             '@context': 'https://www.w3.org/ns/activitystreams',
-            id: `${info.pubUriHandle}/outbox`,
+            id: `at://${info.did}/org.w3.activitypub.outbox`,
+            url: `${info.pubUriHandle}/outbox`,
             type: 'OrderedCollection',
-            totalItems: items.length,
+            totalItems: postRecord.length,
             first: `${info.pubUriHandle}/outbox?page=true`,
             last: `${info.pubUriHandle}/outbox?min_id=0&page=true`,
           })
@@ -450,7 +471,7 @@ export const createRouter = (ctx: AppContext): Router => {
         id: `${info.pubUriHandle}/followers`,
         type: 'OrderedCollection',
         totalItems: items.length,
-        first: `${info.pubUriHandle}/followers?page=1`, // placeholder
+        first: `${info.pubUriHandle}/followers?page=1`,
       })
     },
   )
@@ -475,7 +496,7 @@ export const createRouter = (ctx: AppContext): Router => {
         id: `${info.pubUriHandle}/following`,
         type: 'OrderedCollection',
         totalItems: items.length,
-        first: `${info.pubUriHandle}/following?page=1`, // placeholder
+        first: `${info.pubUriHandle}/following?page=1`,
       })
     },
   )
