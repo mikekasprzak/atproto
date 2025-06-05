@@ -93,6 +93,24 @@ export const createRouter = (ctx: AppContext): Router => {
     return ret
   }
 
+  const defaultImagePrefix = 'https://cdn.bsky.app/img'
+  type BskyImageTypes = 'banner' | 'avatar'
+  const bskyImageTypePrefixs: Record<BskyImageTypes, string> = {
+    avatar: 'avatar_thumbail/plain',
+    banner: 'banner/plain',
+  }
+  // TODO: This should make URLs that fetch from the PDS.
+  //       Those URLs should look like images to any CDN's wrapping the PDS (i.e. blob-ab16d8u7etc.jpeg).
+  //       WebP is not our responsibility.
+  const makeImageURL = function (
+    type: BskyImageTypes,
+    did: string,
+    blobId: string,
+    mimeType: string,
+  ) {
+    return `${defaultImagePrefix}/${bskyImageTypePrefixs[type]}/${did}/${blobId}@${mimeType.split['/'][1]}`
+  }
+
   type AtPubInfo = {
     did: string
     domainPrefix: string
@@ -571,14 +589,26 @@ export const createRouter = (ctx: AppContext): Router => {
           ? {
               type: 'Image',
               mediaType: profile.avatar.mimeType,
-              url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${info.did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
+              url: makeImageURL(
+                'avatar',
+                info.did,
+                profile.avatar.ref.toString(),
+                profile.avatar.mimeType,
+              ),
+              //url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${info.did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
             }
           : undefined,
         image: profile?.banner
           ? {
               type: 'Image',
               mediaType: profile.banner.mimeType,
-              url: `https://cdn.bsky.app/img/banner/plain/${info.did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
+              url: makeImageURL(
+                'banner',
+                info.did,
+                profile.banner.ref.toString(),
+                profile.banner.mimeType,
+              ),
+              //url: `https://cdn.bsky.app/img/banner/plain/${info.did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
             }
           : undefined,
       })
