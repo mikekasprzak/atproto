@@ -184,24 +184,27 @@ export const createRouter = (ctx: AppContext): Router => {
   }
 
   const makeNote = function (
-    uriHandle: string,
-    id: number,
-    published: string,
+    options: {
+      uriHandle: string
+      postId: string
+      published: string
+      id?: string
+    },
     content: string,
   ) {
     const totalLikes = 0
     const totalShares = 0
 
     return {
-      id: `${uriHandle}/statuses/${id}`,
+      id: options.id ?? `${options.uriHandle}/statuses/${options.postId}`,
       type: 'Note',
       summary: null,
       inReplyTo: null,
-      published: published,
-      url: `${uriHandle}/statuses/${id}`,
-      attributedTo: uriHandle,
+      published: options.published,
+      url: `${options.uriHandle}/statuses/${options.postId}`,
+      attributedTo: options.uriHandle,
       to: ['https://www.w3.org/ns/activitystreams#Public'],
-      cc: [`${uriHandle}/followers`], // public
+      cc: [`${options.uriHandle}/followers`], // public
       sensitive: false,
       content: content,
       contentMap: {
@@ -210,22 +213,22 @@ export const createRouter = (ctx: AppContext): Router => {
       attachment: [],
       tag: [],
       replies: {
-        id: `${uriHandle}/statuses/${id}/replies`,
+        id: `${options.uriHandle}/statuses/${options.postId}/replies`,
         type: 'Collection',
         first: {
           type: 'CollectionPage',
-          next: `${uriHandle}/statuses/${id}/replies?page=true`,
-          partOf: `${uriHandle}/statuses/${id}/replies`,
+          next: `${options.uriHandle}/statuses/${options.postId}/replies?page=true`,
+          partOf: `${options.uriHandle}/statuses/${options.postId}/replies`,
           items: [],
         },
       },
       likes: {
-        id: `${uriHandle}/statuses/${id}/likes`,
+        id: `${options.uriHandle}/statuses/${options.postId}/likes`,
         type: 'Collection',
         totalItems: totalLikes,
       },
       shares: {
-        id: `${uriHandle}/statuses/${id}/shares`,
+        id: `${options.uriHandle}/statuses/${options.postId}/shares`,
         type: 'Collection',
         totalItems: totalShares,
       },
@@ -292,12 +295,14 @@ export const createRouter = (ctx: AppContext): Router => {
             uriHandle: info.pubUriHandle,
             postId: childId,
             published: pr.createdAs as string,
-            id: key.uri,
+            id: `${key.uri}/activity`,
           },
           makeNote(
-            info.pubUriHandle,
-            parseInt(childId),
-            key.value.createdAs as string,
+            {
+              uriHandle: info.pubUriHandle,
+              postId: childId,
+              published: key.value.createdAs as string,
+            },
             key.value.text as string,
           ),
         )
@@ -342,13 +347,20 @@ export const createRouter = (ctx: AppContext): Router => {
         return res.status(404).send('User not found')
       }
 
-      const childId = parseInt(req.params.id)
+      const childId = req.params.id
       const publishedAt = '2025-06-01T12:50:05Z'
       const content = '<p>hello worm 🪱🍄</p>'
 
       return res.type('application/activity+json').json({
         '@context': 'https://www.w3.org/ns/activitystreams',
-        ...makeNote(info.pubUriHandle, childId, publishedAt, content),
+        ...makeNote(
+          {
+            uriHandle: info.pubUriHandle,
+            postId: childId,
+            published: publishedAt,
+          },
+          content,
+        ),
       })
     },
   )
@@ -382,7 +394,14 @@ export const createRouter = (ctx: AppContext): Router => {
             postId: childId,
             published: publishedAt,
           },
-          makeNote(info.pubUriHandle, parseInt(childId), publishedAt, content),
+          makeNote(
+            {
+              uriHandle: info.pubUriHandle,
+              postId: childId,
+              published: publishedAt,
+            },
+            content,
+          ),
         ),
       })
     },
@@ -451,11 +470,20 @@ export const createRouter = (ctx: AppContext): Router => {
         return res.status(404).send('User not found')
       }
 
-      const childId = 1
+      const childId = '1'
       const published = '2025-06-01T12:50:05Z'
       const content = '<p>hello worm 🪱🍄</p>'
 
-      const items = [makeNote(info.pubUriHandle, childId, published, content)]
+      const items = [
+        makeNote(
+          {
+            uriHandle: info.pubUriHandle,
+            postId: childId,
+            published: published,
+          },
+          content,
+        ),
+      ]
 
       return res.type('application/activity+json').json({
         '@context': 'https://www.w3.org/ns/activitystreams',
