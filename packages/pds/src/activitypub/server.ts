@@ -567,6 +567,8 @@ export const createRouter = (ctx: AppContext): Router => {
 
         console.log(JSON.stringify(profile))
 
+        const xrpcPrefix = `${req.protocol}://${req.hostname}/xrpc/${info.did}`
+
         return res.type('application/activity+json').json({
           '@context': [
             'https://www.w3.org/ns/activitystreams', // implies as?
@@ -623,16 +625,16 @@ export const createRouter = (ctx: AppContext): Router => {
           ],
           id: `at://${info.did}/org.w3.activitypub.actor`,
           //basedOn: `at://${info.did}/app.bsky.actor.profile`, // MK: this could be part of the Lexicon for activitypub.actor
-          url: info.pubUriHandle,
+          url: `${xrpcPrefix}/org.w3.activitypub.getActor`, //info.pubUriHandle,
           type: 'Person',
           name: info.pubHandle.split('@')[0],
           preferredUsername: profile.displayName,
-          summary: `<p>${profile.description}<br/>DEBUG: ${info.pubHandle}</p>`,
-          inbox: `${info.pubUriHandle}/inbox`,
-          outbox: `${info.pubUriHandle}/outbox`,
-          followers: `${info.pubUriHandle}/followers`,
-          following: `${info.pubUriHandle}/following`,
-          featured: `${info.pubUriHandle}/featured`,
+          summary: `<p>${profile.description}</p>`,
+          inbox: `${xrpcPrefix}/org.w3.activitypub.putInbox`, //`${info.pubUriHandle}/inbox`,
+          outbox: `${xrpcPrefix}/org.w3.activitypub.getOutbox`, //`${info.pubUriHandle}/outbox`,
+          followers: `${xrpcPrefix}/org.w3.activitypub.getFollowers`, //`${info.pubUriHandle}/followers`,
+          following: `${xrpcPrefix}/org.w3.activitypub.getFollowing`, //`${info.pubUriHandle}/following`,
+          featured: `${xrpcPrefix}/org.joinmastodon.getFeatured`, //`${info.pubUriHandle}/featured`,
           publicKey: {
             id: `${info.pubUriHandle}#main-key`,
             owner: info.pubUriHandle,
