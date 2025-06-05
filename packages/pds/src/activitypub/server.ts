@@ -4,7 +4,10 @@ import { RepoRecord } from '@atproto/lexicon'
 import { AppContext } from '../context'
 import { ids } from '../lexicon/lexicons'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
+import { Main as EmbedRecord } from '../lexicon/types/app/bsky/embed/record'
 import { Record as PostRecord } from '../lexicon/types/app/bsky/feed/post'
+//import { CommitMeta } from '../lexicon/types/com/atproto/repo/defs'
+import { OutputSchema as CreateOutputSchema } from '../lexicon/types/com/atproto/repo/createRecord'
 
 export const pubRoutePrefix = '/activitypub'
 export const atRoutePrefix = '/atpub'
@@ -187,14 +190,15 @@ export const createRouter = (ctx: AppContext): Router => {
     },
     object: object,
   ): ActivityPubActivity {
+    const statusUri = `${options.uriHandle}/status/${options.postId}`
+    const baseId = options.id ?? statusUri
+
     return {
-      id:
-        options.id ??
-        `${options.uriHandle}/statuses/${options.postId}/activity`,
+      id: `${baseId}/activity`,
+      url: `${statusUri}/activity`,
       type: type,
       actor: options.uriHandle,
       published: options.published,
-      url: `${options.uriHandle}/statuses/${options.postId}/activity`,
       to: ['https://www.w3.org/ns/activitystreams#Public'],
       cc: [`${options.uriHandle}/followers`], // public
       object,
@@ -213,13 +217,16 @@ export const createRouter = (ctx: AppContext): Router => {
     const totalLikes = 0
     const totalShares = 0
 
+    const statusUri = `${options.uriHandle}/status/${options.postId}`
+    const baseId = options.id ?? statusUri
+
     return {
-      id: options.id ?? `${options.uriHandle}/statuses/${options.postId}`,
+      id: baseId,
+      url: statusUri,
       type: 'Note',
       summary: null,
       inReplyTo: null,
       published: options.published,
-      url: `${options.uriHandle}/statuses/${options.postId}`,
       attributedTo: options.uriHandle,
       to: ['https://www.w3.org/ns/activitystreams#Public'],
       cc: [`${options.uriHandle}/followers`], // public
@@ -231,22 +238,25 @@ export const createRouter = (ctx: AppContext): Router => {
       attachment: [],
       tag: [],
       replies: {
-        id: `${options.uriHandle}/statuses/${options.postId}/replies`,
+        id: `${baseId}/replies`,
+        url: `${statusUri}/replies`,
         type: 'Collection',
         first: {
           type: 'CollectionPage',
-          next: `${options.uriHandle}/statuses/${options.postId}/replies?page=true`,
-          partOf: `${options.uriHandle}/statuses/${options.postId}/replies`,
+          next: `${options.uriHandle}/status/${options.postId}/replies?page=true`,
+          partOf: `${options.uriHandle}/status/${options.postId}/replies`,
           items: [],
         },
       },
       likes: {
-        id: `${options.uriHandle}/statuses/${options.postId}/likes`,
+        id: `${baseId}/likes`,
+        url: `${statusUri}/likes`,
         type: 'Collection',
         totalItems: totalLikes,
       },
       shares: {
-        id: `${options.uriHandle}/statuses/${options.postId}/shares`,
+        id: `${baseId}/shares`,
+        url: `${statusUri}/shares`,
         type: 'Collection',
         totalItems: totalShares,
       },
@@ -277,83 +287,78 @@ export const createRouter = (ctx: AppContext): Router => {
   router.get(
     [`${atRoutePrefix}/:did/outbox`, `${pubRoutePrefix}/:actor/outbox`],
     async function (req, res) {
-      let info: AtPubInfo | null
       try {
-        info = await getAPubInfo(req, res)
-      } catch (err) {
-        return res.status(500).send('Internal Server Error')
-      }
-      if (!info) {
-        return res.status(404).send('User not found')
-      }
+        const info = await getAPubInfo(req, res)
+        if (!info) {
+          return res.status(404).send('User not found')
+        }
 
-      let postRecord: {
-        uri: string
-        cid: string
-        value: RepoRecord
-      }[] = []
-      await ctx.actorStore.read(info.did, async (actor) => {
-        postRecord = await actor.record.listRecordsForCollection({
-          collection: ids.AppBskyFeedPost,
-          limit: 10,
-          reverse: false,
+        let postRecord: {
+          uri: string
+          cid: string
+          value: RepoRecord
+        }[] = []
+        await ctx.actorStore.read(info.did, async (actor) => {
+          postRecord = await actor.record.listRecordsForCollection({
+            collection: ids.AppBskyFeedPost,
+            limit: 10,
+            reverse: false,
+          })
         })
-      })
-      console.log(JSON.stringify(postRecord))
 
-      const childId = '1'
-      //const publishedAt = '2025-06-01T12:50:05Z'
-      //const content = '<p>hello worm 🪱🍄</p>'
-      const items = postRecord.map((key) => {
-        const pr = key.value as PostRecord
+        const items = postRecord.map((key) => {
+          const pr = key.value as PostRecord
+          const er = pr ? (pr.embed as EmbedRecord) : undefined
+          const cm = er ? (er.record as CreateOutputSchema) : undefined
 
-        return makeActivity(
-          'Create',
-          {
-            uriHandle: info.pubUriHandle,
-            postId: childId,
-            published: pr.createdAs as string,
-            id: `${key.uri}/activity`,
-          },
-          makeNote(
+          return makeActivity(
+            'Create',
             {
               uriHandle: info.pubUriHandle,
-              postId: childId,
-              published: key.value.createdAs as string,
+              postId: cm && cm.commit ? cm.commit.rev : 'NOT_FOUND',
+              published: pr.createdAs as string,
+              id: `${key.uri}`,
             },
-            key.value.text as string,
-          ),
-        )
-      })
+            makeNote(
+              {
+                uriHandle: info.pubUriHandle,
+                postId: cm && cm.commit ? cm.commit.rev : 'NOT_FOUND',
+                published: key.value.createdAs as string,
+                id: key.uri,
+              },
+              `<p>${key.value.text as string}</p>`,
+            ),
+          )
+        })
 
-      if (req.query.page) {
-        return res.type('application/activity+json').json({
-          '@context': 'https://www.w3.org/ns/activitystreams',
-          id: req.url,
-          url: req.url,
-          type: 'OrderedCollectionPage',
-          //prev: '',
-          partOf: `${info.pubUriHandle}/outbox`,
-          orderedItems: items,
-        })
-      } else {
-        return res.type('application/activity+json').json({
-          '@context': 'https://www.w3.org/ns/activitystreams',
-          id: `${info.pubUriHandle}/outbox`,
-          type: 'OrderedCollection',
-          totalItems: items.length,
-          first: `${info.pubUriHandle}/outbox?page=true`, // placeholder
-          last: `${info.pubUriHandle}/outbox?min_id=0&page=true`, // placeholder
-        })
+        if (req.query.page) {
+          return res.type('application/activity+json').json({
+            '@context': 'https://www.w3.org/ns/activitystreams',
+            id: req.url,
+            url: req.url,
+            type: 'OrderedCollectionPage',
+            //prev: '',
+            partOf: `${info.pubUriHandle}/outbox`,
+            orderedItems: items,
+          })
+        } else {
+          return res.type('application/activity+json').json({
+            '@context': 'https://www.w3.org/ns/activitystreams',
+            id: `${info.pubUriHandle}/outbox`,
+            type: 'OrderedCollection',
+            totalItems: items.length,
+            first: `${info.pubUriHandle}/outbox?page=true`,
+            last: `${info.pubUriHandle}/outbox?min_id=0&page=true`,
+          })
+        }
+      } catch (err) {
+        return res.status(500).send('Internal Server Error')
       }
     },
   )
 
   router.get(
-    [
-      `${atRoutePrefix}/:did/statuses/:id`,
-      `${pubRoutePrefix}/:actor/statuses/:id`,
-    ],
+    [`${atRoutePrefix}/:did/status/:id`, `${pubRoutePrefix}/:actor/status/:id`],
     async function (req, res) {
       let info: AtPubInfo | null
       try {
@@ -385,8 +390,8 @@ export const createRouter = (ctx: AppContext): Router => {
 
   router.get(
     [
-      `${atRoutePrefix}/:did/statuses/:id/activity`,
-      `${pubRoutePrefix}/:actor/statuses/:id/activity`,
+      `${atRoutePrefix}/:did/status/:id/activity`,
+      `${pubRoutePrefix}/:actor/status/:id/activity`,
     ],
     async function (req, res) {
       let info: AtPubInfo | null
@@ -513,105 +518,111 @@ export const createRouter = (ctx: AppContext): Router => {
     },
   )
 
+  // ActivityPub actor "self" endpoint
   router.get(
     [`${atRoutePrefix}/:did`, `${pubRoutePrefix}/:actor`],
     async function (req, res) {
-      let info: AtPubInfo | null
       try {
-        info = await getAPubInfo(req, res)
+        const info = await getAPubInfo(req, res)
+        if (!info) {
+          return res.status(404).send('User not found')
+        }
+
+        let profile: ProfileRecord | undefined
+        await ctx.actorStore.read(info.did, async (actor) => {
+          profile = (await actor.record.getProfileRecord()) as ProfileRecord
+        })
+        if (!profile) {
+          // NOTE: I'm not sure if this is ever hit, as the above code may throw
+          return res.status(404).send('Profile not found')
+        }
+
+        console.log(JSON.stringify(profile))
+
+        return res.type('application/activity+json').json({
+          '@context': [
+            'https://www.w3.org/ns/activitystreams',
+            'https://w3id.org/security/v1',
+            {
+              manuallyApprovesFollowers: 'as:manuallyApprovesFollowers',
+              schema: 'http://schema.org#',
+              PropertyValue: 'schema:PropertyValue',
+              value: 'schema:value',
+              toot: 'http://joinmastodon.org/ns#',
+              featured: {
+                '@id': 'toot:featured',
+                '@type': '@id',
+              },
+              featuredTags: {
+                '@id': 'toot:featuredTags',
+                '@type': '@id',
+              },
+              alsoKnownAs: {
+                '@id': 'as:alsoKnownAs',
+                '@type': '@id',
+              },
+              movedTo: {
+                '@id': 'as:movedTo',
+                '@type': '@id',
+              },
+              discoverable: 'toot:discoverable',
+              suspended: 'toot:suspended',
+              memorial: 'toot:memorial',
+              indexable: 'toot:indexable',
+            },
+          ],
+          id: info.pubUriHandle,
+          url: info.pubUriHandle,
+          type: 'Person',
+          name: info.pubHandle.split('@')[0],
+          preferredUsername: profile.displayName,
+          summary: `<p>${profile.description}<br/>DEBUG: ${info.pubHandle} ${info.did}</p>`,
+          inbox: `${info.pubUriHandle}/inbox`,
+          outbox: `${info.pubUriHandle}/outbox`,
+          followers: `${info.pubUriHandle}/followers`,
+          following: `${info.pubUriHandle}/following`,
+          featured: `${info.pubUriHandle}/featured`,
+          publicKey: {
+            id: `${info.pubUriHandle}#main-key`,
+            owner: info.pubUriHandle,
+            publicKeyPem:
+              '-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----',
+          },
+          tag: [],
+          attachment: [],
+          endpoints: {
+            sharedInbox: `${info.pubUri}-inbox`,
+          },
+          icon: profile.avatar
+            ? {
+                type: 'Image',
+                mediaType: profile.avatar.mimeType,
+                url: makeImageURL(
+                  'avatar',
+                  info.did,
+                  profile.avatar.ref.toString(),
+                  profile.avatar.mimeType,
+                ),
+                //url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${info.did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
+              }
+            : undefined,
+          image: profile.banner
+            ? {
+                type: 'Image',
+                mediaType: profile.banner.mimeType,
+                url: makeImageURL(
+                  'banner',
+                  info.did,
+                  profile.banner.ref.toString(),
+                  profile.banner.mimeType,
+                ),
+                //url: `https://cdn.bsky.app/img/banner/plain/${info.did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
+              }
+            : undefined,
+        })
       } catch (err) {
         return res.status(500).send('Internal Server Error')
       }
-      if (!info) {
-        return res.status(404).send('User not found')
-      }
-
-      let profile: ProfileRecord | undefined
-      await ctx.actorStore.read(info.did, async (actor) => {
-        profile = (await actor.record.getProfileRecord()) as ProfileRecord
-      })
-
-      return res.type('application/activity+json').json({
-        '@context': [
-          'https://www.w3.org/ns/activitystreams',
-          'https://w3id.org/security/v1',
-          {
-            manuallyApprovesFollowers: 'as:manuallyApprovesFollowers',
-            schema: 'http://schema.org#',
-            PropertyValue: 'schema:PropertyValue',
-            value: 'schema:value',
-            toot: 'http://joinmastodon.org/ns#',
-            featured: {
-              '@id': 'toot:featured',
-              '@type': '@id',
-            },
-            featuredTags: {
-              '@id': 'toot:featuredTags',
-              '@type': '@id',
-            },
-            alsoKnownAs: {
-              '@id': 'as:alsoKnownAs',
-              '@type': '@id',
-            },
-            movedTo: {
-              '@id': 'as:movedTo',
-              '@type': '@id',
-            },
-            discoverable: 'toot:discoverable',
-            suspended: 'toot:suspended',
-            memorial: 'toot:memorial',
-            indexable: 'toot:indexable',
-          },
-        ],
-        id: info.pubUriHandle,
-        type: 'Person',
-        name: info.pubHandle.split('@')[0],
-        preferredUsername: profile?.displayName,
-        summary: `<p>${profile?.description}<br/>DEBUG: ${info.pubHandle} ${info.did}</p>`,
-        url: info.pubUriHandle,
-        inbox: `${info.pubUriHandle}/inbox`,
-        outbox: `${info.pubUriHandle}/outbox`,
-        followers: `${info.pubUriHandle}/followers`,
-        following: `${info.pubUriHandle}/following`,
-        featured: `${info.pubUriHandle}/featured`,
-        publicKey: {
-          id: `${info.pubUriHandle}#main-key`,
-          owner: info.pubUriHandle,
-          publicKeyPem:
-            '-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----',
-        },
-        tag: [],
-        attachment: [],
-        endpoints: {
-          sharedInbox: `${info.pubUri}-inbox`,
-        },
-        icon: profile?.avatar
-          ? {
-              type: 'Image',
-              mediaType: profile.avatar.mimeType,
-              url: makeImageURL(
-                'avatar',
-                info.did,
-                profile.avatar.ref.toString(),
-                profile.avatar.mimeType,
-              ),
-              //url: `https://cdn.bsky.app/img/avatar_thumbnail/plain/${info.did}/${profile.avatar.ref}@${profile.avatar.mimeType.split('/')[1]}`,
-            }
-          : undefined,
-        image: profile?.banner
-          ? {
-              type: 'Image',
-              mediaType: profile.banner.mimeType,
-              url: makeImageURL(
-                'banner',
-                info.did,
-                profile.banner.ref.toString(),
-                profile.banner.mimeType,
-              ),
-              //url: `https://cdn.bsky.app/img/banner/plain/${info.did}/${profile.banner.ref}@${profile.banner.mimeType.split('/')[1]}`,
-            }
-          : undefined,
-      })
     },
   )
 
@@ -645,21 +656,11 @@ export const createRouter = (ctx: AppContext): Router => {
     return res.type('application/jrd+json; charset=utf-8').json({
       subject: `acct:${newSubject}`,
       links: [
-        /*!pubActor.startsWith('did:')
-          ? {
-              rel: 'self',
-              type: 'application/activity+json',
-              href: `${domPrefix}${pubRoutePrefix}/${pubActor}`,
-            }
-          : {
-              rel: 'self',
-              type: 'application/activity+json',
-              href: `${domPrefix}${pubRoutePrefix}/${newSubject.split('@')[0]}`,
-            },*/
         {
           rel: 'self',
           type: 'application/activity+json',
-          href: `${domPrefix}${atRoutePrefix}/${at.did /*.replaceAll(':', '/')*/}`,
+          href: `${domPrefix}${atRoutePrefix}/${at.did}`,
+          //href: `${domPrefix}${pubRoutePrefix}/${pubActor}`,
         },
       ],
     })
