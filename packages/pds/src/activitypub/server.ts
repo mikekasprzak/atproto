@@ -185,6 +185,7 @@ export const createRouter = (ctx: AppContext): Router => {
     actor: string
     published: string
     url?: string
+    cid?: string
     to: string[]
     cc: string[]
     object: unknown
@@ -199,6 +200,7 @@ export const createRouter = (ctx: AppContext): Router => {
       postId: string
       published: string
       id?: string
+      cid?: string
     },
     object: object,
   ): ActivityPubActivity {
@@ -208,6 +210,7 @@ export const createRouter = (ctx: AppContext): Router => {
     return {
       id: `${baseId}/activity`,
       url: `${statusUri}/activity`,
+      cid: options.cid,
       type: type,
       actor: options.uriHandle,
       published: options.published,
@@ -223,6 +226,7 @@ export const createRouter = (ctx: AppContext): Router => {
       postId: string
       published: string
       id?: string
+      cid?: string
     },
     content: string,
   ) {
@@ -235,6 +239,7 @@ export const createRouter = (ctx: AppContext): Router => {
     return {
       id: baseId,
       url: statusUri,
+      cid: options.cid,
       type: 'Note',
       summary: null,
       inReplyTo: null,
@@ -336,6 +341,7 @@ export const createRouter = (ctx: AppContext): Router => {
                 //postId: cm && cm.commit ? cm.commit.rev : 'NOT_FOUND',
                 published: pr.createdAs as string,
                 id: key.uri,
+                cid: key.cid,
               },
               makeNote(
                 {
@@ -344,6 +350,7 @@ export const createRouter = (ctx: AppContext): Router => {
                   //postId: cm && cm.commit ? cm.commit.rev : 'NOT_FOUND',
                   published: key.value.createdAs as string,
                   id: key.uri,
+                  cid: key.cid,
                 },
                 `<p>${key.value.text as string}</p>`,
               ),
@@ -562,13 +569,25 @@ export const createRouter = (ctx: AppContext): Router => {
 
         return res.type('application/activity+json').json({
           '@context': [
-            'https://www.w3.org/ns/activitystreams',
-            'https://w3id.org/security/v1',
+            'https://www.w3.org/ns/activitystreams', // implies as?
+            'https://w3id.org/security/v1', // implies sec?
             {
+              // ActivityStreams extensions
+              //as: 'https://www.w3.org/ns/activitystreams#',
               manuallyApprovesFollowers: 'as:manuallyApprovesFollowers',
-              schema: 'http://schema.org#',
+              alsoKnownAs: {
+                '@id': 'as:alsoKnownAs',
+                '@type': '@id',
+              },
+              movedTo: {
+                '@id': 'as:movedTo',
+                '@type': '@id',
+              },
+              // Schema.org extensions (uses / not #)
+              schema: 'https://schema.org/',
               PropertyValue: 'schema:PropertyValue',
               value: 'schema:value',
+              // Mastodon extensions
               toot: 'http://joinmastodon.org/ns#',
               featured: {
                 '@id': 'toot:featured',
@@ -578,26 +597,37 @@ export const createRouter = (ctx: AppContext): Router => {
                 '@id': 'toot:featuredTags',
                 '@type': '@id',
               },
-              alsoKnownAs: {
-                '@id': 'as:alsoKnownAs',
-                '@type': '@id',
-              },
-              movedTo: {
-                '@id': 'as:movedTo',
-                '@type': '@id',
-              },
               discoverable: 'toot:discoverable',
               suspended: 'toot:suspended',
               memorial: 'toot:memorial',
               indexable: 'toot:indexable',
+              /*
+              atproto: 'https://atproto.com/specs/',
+              */
+              /*
+              // MK: I'm not sure who to credit for CID. AtProto or Multiformats
+              cid: {
+                '@id': 'atproto:data-model#cid',
+                '@type': '@id',
+              },
+              */
+              /*
+              cid: {
+                '@id': 'https://multiformats.io#cid',
+                '@type': '@id',
+              },
+              */
+              // W3ID Security Vocabulary
+              //sec: 'https://w3id.org/security/v1#',
             },
           ],
-          id: info.pubUriHandle,
+          id: `at://${info.did}/org.w3.activitypub.actor`,
+          //basedOn: `at://${info.did}/app.bsky.actor.profile`, // MK: this could be part of the Lexicon for activitypub.actor
           url: info.pubUriHandle,
           type: 'Person',
           name: info.pubHandle.split('@')[0],
           preferredUsername: profile.displayName,
-          summary: `<p>${profile.description}<br/>DEBUG: ${info.pubHandle} ${info.did}</p>`,
+          summary: `<p>${profile.description}<br/>DEBUG: ${info.pubHandle}</p>`,
           inbox: `${info.pubUriHandle}/inbox`,
           outbox: `${info.pubUriHandle}/outbox`,
           followers: `${info.pubUriHandle}/followers`,
