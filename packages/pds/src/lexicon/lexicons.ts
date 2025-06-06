@@ -16350,7 +16350,104 @@ export const schemaDict = {
   OrgW3ActivitypubDefs: {
     lexicon: 1,
     id: 'org.w3.activitypub.defs',
-    defs: {},
+    defs: {
+      actorTypeTypes: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'union',
+            description:
+              'References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#actor-types',
+            refs: [
+              'lex:Application',
+              'lex:Group',
+              'lex:Organization',
+              'lex:Person',
+              'lex:Service',
+            ],
+          },
+        },
+      },
+      activityTypes: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'union',
+            description:
+              'References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#activity-types',
+            refs: [
+              'lex:Accept',
+              'lex:Add',
+              'lex:Announce',
+              'lex:Arrive',
+              'lex:Block',
+              'lex:Create',
+              'lex:Delete',
+              'lex:Dislike',
+              'lex:Flag',
+              'lex:Follow',
+              'lex:Ignore',
+              'lex:Invite',
+              'lex:Join',
+              'lex:Leave',
+              'lex:Like',
+              'lex:Listen',
+              'lex:Move',
+              'lex:Offer',
+              'lex:Question',
+              'lex:Reject',
+              'lex:Read',
+              'lex:Remove',
+              'lex:TentativeReject',
+              'lex:TentativeAccept',
+              'lex:Travel',
+              'lex:Undo',
+              'lex:Update',
+              'lex:View',
+            ],
+          },
+        },
+      },
+      objectTypes: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'union',
+            description:
+              'References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#object-types\n * https://docs.joinmastodon.org/spec/activitypub/#extensions-defined-using-activitystreams-vocabulary',
+            refs: [
+              'lex:Article',
+              'lex:Audio',
+              'lex:Document',
+              'lex:Event',
+              'lex:Image',
+              'lex:Note',
+              'lex:Page',
+              'lex:Place',
+              'lex:Profile',
+              'lex:Relationship',
+              'lex:Tombstone',
+              'lex:Video',
+              'lex:Block',
+              'lex:Flag',
+              'lex:Move',
+              'lex:Question',
+            ],
+          },
+        },
+      },
+      sourceType: {
+        type: 'object',
+        properties: {
+          content: {
+            type: 'string',
+          },
+          mediaType: {
+            type: 'string',
+          },
+        },
+      },
+    },
   },
   OrgW3ActivitypubGetActor: {
     lexicon: 1,
@@ -16358,7 +16455,7 @@ export const schemaDict = {
     defs: {
       main: {
         type: 'query',
-        description: 'ActivityPub actor',
+        description: 'Fetches a user (actor) as an ActivityPub ',
         parameters: {
           type: 'params',
           required: ['repo'],
@@ -16374,9 +16471,13 @@ export const schemaDict = {
           encoding: 'application/activity+json',
           schema: {
             type: 'object',
-            required: ['id', 'type'],
+            required: ['@context', 'id', 'type', 'name', 'inbox'],
             properties: {
               '@context': {
+                type: 'union',
+                refs: ['lex:string', 'lex:array', 'lex:object'],
+              },
+              _dummy: {
                 type: 'array',
                 items: {
                   type: 'string',
@@ -16386,13 +16487,17 @@ export const schemaDict = {
                 type: 'string',
                 format: 'at-uri',
               },
+              atId: {
+                type: 'string',
+                format: 'at-uri',
+              },
               url: {
                 type: 'string',
                 format: 'uri',
               },
               type: {
-                type: 'string',
-                knownValues: ['Person'],
+                type: 'ref',
+                ref: 'lex:org.w3.activitypub.defs#actorTypeTypes.type',
               },
               name: {
                 type: 'string',

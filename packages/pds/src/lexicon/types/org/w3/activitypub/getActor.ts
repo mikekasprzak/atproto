@@ -11,6 +11,10 @@ import {
   type OmitKey,
 } from '../../../../util'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
+import type * as String from '../../../string.js'
+import type * as Array from '../../../array.js'
+import type * as Object from '../../../object.js'
+import type * as OrgW3ActivitypubDefs from './defs.js'
 
 const is$typed = _is$typed,
   validate = _validate
@@ -24,15 +28,21 @@ export interface QueryParams {
 export type InputSchema = undefined
 
 export interface OutputSchema {
-  '@context'?: string[]
+  '@context':
+    | $Typed<String.Main>
+    | $Typed<Array.Main>
+    | $Typed<Object.Main>
+    | { $type: string }
+  _dummy?: string[]
   id: string
+  atId?: string
   url?: string
-  type: 'Person' | (string & {})
-  name?: string
+  type: OrgW3ActivitypubDefs.ActorTypeTypesType
+  name: string
   preferredUsername?: string
   /** HTML encoded profile page */
   summary?: string
-  inbox?: string
+  inbox: string
   outbox?: string
   followers?: string
   following?: string

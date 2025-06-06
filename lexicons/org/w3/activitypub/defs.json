@@ -2,5 +2,95 @@
   "lexicon": 1,
   "id": "org.w3.activitypub.defs",
   "defs": {
+    "actorTypeTypes": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "union",
+          "description": "References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#actor-types",
+          "refs": [
+            "Application",
+            "Group",
+            "Organization",
+            "Person",
+            "Service"
+          ]
+        }
+      }
+    },
+    "activityTypes": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "union",
+          "description": "References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#activity-types",
+          "refs": [
+            "Accept",
+            "Add",
+            "Announce",
+            "Arrive",
+            "Block",
+            "Create",
+            "Delete",
+            "Dislike",
+            "Flag",
+            "Follow",
+            "Ignore",
+            "Invite",
+            "Join",
+            "Leave",
+            "Like",
+            "Listen",
+            "Move",
+            "Offer",
+            "Question",
+            "Reject",
+            "Read",
+            "Remove",
+            "TentativeReject",
+            "TentativeAccept",
+            "Travel",
+            "Undo",
+            "Update",
+            "View"
+          ]
+        }
+      }
+    },
+    "objectTypes": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "union",
+          "description": "References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#object-types\n * https://docs.joinmastodon.org/spec/activitypub/#extensions-defined-using-activitystreams-vocabulary",
+          "refs": [
+            "Article",
+            "Audio",
+            "Document",
+            "Event",
+            "Image",
+            "Note",
+            "Page",
+            "Place",
+            "Profile",
+            "Relationship",
+            "Tombstone",
+            "Video",
+
+            "Block",
+            "Flag",
+            "Move",
+            "Question"
+          ]
+        }
+      }
+    },
+    "sourceType" : {
+      "type": "object",
+      "properties": {
+        "content" : { "type": "string" },
+        "mediaType": { "type": "string" }
+      }
+    }
   }
 }

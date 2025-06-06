@@ -16347,90 +16347,6 @@ export const schemaDict = {
       },
     },
   },
-  OrgW3ActivitypubDefs: {
-    lexicon: 1,
-    id: 'org.w3.activitypub.defs',
-    defs: {},
-  },
-  OrgW3ActivitypubGetActor: {
-    lexicon: 1,
-    id: 'org.w3.activitypub.getActor',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'ActivityPub actor',
-        parameters: {
-          type: 'params',
-          required: ['repo'],
-          properties: {
-            repo: {
-              type: 'string',
-              format: 'at-identifier',
-              description: 'The handle or DID of the repo.',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/activity+json',
-          schema: {
-            type: 'object',
-            required: ['id', 'type'],
-            properties: {
-              '@context': {
-                type: 'array',
-                items: {
-                  type: 'string',
-                },
-              },
-              id: {
-                type: 'string',
-                format: 'at-uri',
-              },
-              url: {
-                type: 'string',
-                format: 'uri',
-              },
-              type: {
-                type: 'string',
-                knownValues: ['Person'],
-              },
-              name: {
-                type: 'string',
-                format: 'handle',
-              },
-              preferredUsername: {
-                type: 'string',
-              },
-              summary: {
-                type: 'string',
-                description: 'HTML encoded profile page',
-              },
-              inbox: {
-                type: 'string',
-                format: 'uri',
-              },
-              outbox: {
-                type: 'string',
-                format: 'uri',
-              },
-              followers: {
-                type: 'string',
-                format: 'uri',
-              },
-              following: {
-                type: 'string',
-                format: 'uri',
-              },
-              featured: {
-                type: 'string',
-                format: 'uri',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
   OrgW3ActivitypubGetOutbox: {
     lexicon: 1,
     id: 'org.w3.activitypub.getOutbox',
@@ -16845,8 +16761,6 @@ export const ids = {
     'tools.ozone.verification.listVerifications',
   ToolsOzoneVerificationRevokeVerifications:
     'tools.ozone.verification.revokeVerifications',
-  OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
-  OrgW3ActivitypubGetActor: 'org.w3.activitypub.getActor',
   OrgW3ActivitypubGetOutbox: 'org.w3.activitypub.getOutbox',
   OrgW3ActivitypubPutInbox: 'org.w3.activitypub.putInbox',
   OrgW3ActivitystreamsDefs: 'org.w3.activitystreams.defs',

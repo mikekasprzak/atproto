@@ -4,7 +4,7 @@
   "defs": {
     "main": {
       "type": "query",
-      "description": "ActivityPub actor",
+      "description": "Fetches a user (actor) as an ActivityPub ",
       "parameters": {
         "type": "params",
         "required": ["repo"],
@@ -20,12 +20,14 @@
         "encoding": "application/activity+json",
         "schema": {
           "type": "object",
-          "required": ["id", "type"],
+          "required": ["@context", "id", "type", "name", "inbox"],
           "properties": {
-            "@context": { "type": "array", "items": { "type": "string" } },
+            "@context": { "type": "union", "refs": ["string", "array", "object"] },
+            "_dummy": { "type": "array", "items": { "type": "string" } },
             "id": { "type": "string", "format": "at-uri" },
+            "atId": { "type": "string", "format": "at-uri" },
             "url": { "type": "string", "format": "uri" },
-            "type": { "type": "string", "knownValues": ["Person"] },
+            "type": { "type": "ref", "ref": "org.w3.activitypub.defs#actorTypeTypes.type" },
             "name": { "type": "string", "format": "handle" },
             "preferredUsername": { "type": "string" },
             "summary": { "type": "string", "description": "HTML encoded profile page" },
