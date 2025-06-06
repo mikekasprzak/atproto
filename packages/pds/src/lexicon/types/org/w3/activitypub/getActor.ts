@@ -11,10 +11,7 @@ import {
   type OmitKey,
 } from '../../../../util'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
-import type * as String from '../../../string.js'
-import type * as Array from '../../../array.js'
-import type * as Object from '../../../object.js'
-import type * as OrgW3ActivitypubDefs from './defs.js'
+import type * as ArgW3ActivitypubActor from '../../../arg/w3/activitypub/actor.js'
 
 const is$typed = _is$typed,
   validate = _validate
@@ -26,35 +23,7 @@ export interface QueryParams {
 }
 
 export type InputSchema = undefined
-
-export interface OutputSchema {
-  '@context':
-    | $Typed<String.Main>
-    | $Typed<Array.Main>
-    | $Typed<Object.Main>
-    | { $type: string }
-  _dummy?: string[]
-  id: string
-  /** AtProto identifier (not actually necessary) */
-  atId?: string
-  type: OrgW3ActivitypubDefs.ActorType
-  name: string
-  preferredUsername?: string
-  /** HTML encoded profile page */
-  summary?: string
-  inbox?: string
-  outbox?: string
-  followers?: string
-  following?: string
-  featured?: string
-  publicKey?: PublicKey
-  tag?: string[]
-  attachments?: string
-  endpoints?: string[]
-  icon?: string
-  image?: string
-}
-
+export type OutputSchema = ArgW3ActivitypubActor.Main
 export type HandlerInput = undefined
 
 export interface HandlerSuccess {
@@ -80,20 +49,3 @@ export type HandlerReqCtx<HA extends HandlerAuth = never> = {
 export type Handler<HA extends HandlerAuth = never> = (
   ctx: HandlerReqCtx<HA>,
 ) => Promise<HandlerOutput> | HandlerOutput
-
-export interface PublicKey {
-  $type?: 'org.w3.activitypub.getActor#publicKey'
-  id?: string
-  owner?: string
-  publicKeyPem?: string
-}
-
-const hashPublicKey = 'publicKey'
-
-export function isPublicKey<V>(v: V) {
-  return is$typed(v, id, hashPublicKey)
-}
-
-export function validatePublicKey<V>(v: V) {
-  return validate<PublicKey & V>(v, id, hashPublicKey)
-}

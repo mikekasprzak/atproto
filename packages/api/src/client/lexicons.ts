@@ -16347,6 +16347,377 @@ export const schemaDict = {
       },
     },
   },
+  OrgW3ActivitypubActor: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.actor',
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          '@context': {
+            type: 'union',
+            refs: ['lex:string', 'lex:array', 'lex:object'],
+          },
+          _dummy: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          atId: {
+            type: 'string',
+            format: 'at-uri',
+            description: 'AtProto identifier (not actually necessary)',
+          },
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.defs#actorType',
+          },
+          name: {
+            type: 'string',
+            format: 'handle',
+          },
+          preferredUsername: {
+            type: 'string',
+          },
+          summary: {
+            type: 'string',
+            description: 'HTML encoded profile page',
+          },
+          inbox: {
+            type: 'string',
+            format: 'uri',
+          },
+          outbox: {
+            type: 'string',
+            format: 'uri',
+          },
+          followers: {
+            type: 'string',
+            format: 'uri',
+          },
+          following: {
+            type: 'string',
+            format: 'uri',
+          },
+          featured: {
+            type: 'string',
+            format: 'uri',
+          },
+          publicKey: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.actor#publicKey',
+          },
+          tag: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          attachments: {
+            type: 'string',
+          },
+          endpoints: {
+            type: 'array',
+            items: {
+              type: 'string',
+              format: 'uri',
+            },
+          },
+          icon: {
+            type: 'string',
+          },
+          image: {
+            type: 'string',
+          },
+        },
+      },
+      publicKey: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          owner: {
+            type: 'string',
+            format: 'uri',
+          },
+          publicKeyPem: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitypubDefs: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.defs',
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          actorType: {
+            type: 'union',
+            description:
+              'References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#actor-types',
+            refs: [
+              'lex:Application',
+              'lex:Group',
+              'lex:Organization',
+              'lex:Person',
+              'lex:Service',
+            ],
+          },
+          activityType: {
+            type: 'union',
+            description:
+              'References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#activity-types',
+            refs: [
+              'lex:Accept',
+              'lex:Add',
+              'lex:Announce',
+              'lex:Arrive',
+              'lex:Block',
+              'lex:Create',
+              'lex:Delete',
+              'lex:Dislike',
+              'lex:Flag',
+              'lex:Follow',
+              'lex:Ignore',
+              'lex:Invite',
+              'lex:Join',
+              'lex:Leave',
+              'lex:Like',
+              'lex:Listen',
+              'lex:Move',
+              'lex:Offer',
+              'lex:Question',
+              'lex:Reject',
+              'lex:Read',
+              'lex:Remove',
+              'lex:TentativeReject',
+              'lex:TentativeAccept',
+              'lex:Travel',
+              'lex:Undo',
+              'lex:Update',
+              'lex:View',
+            ],
+          },
+          objectType: {
+            type: 'union',
+            description:
+              'References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#object-types\n * https://docs.joinmastodon.org/spec/activitypub/#extensions-defined-using-activitystreams-vocabulary',
+            refs: [
+              'lex:Article',
+              'lex:Audio',
+              'lex:Document',
+              'lex:Event',
+              'lex:Image',
+              'lex:Note',
+              'lex:Page',
+              'lex:Place',
+              'lex:Profile',
+              'lex:Relationship',
+              'lex:Tombstone',
+              'lex:Video',
+              'lex:Block',
+              'lex:Flag',
+              'lex:Move',
+              'lex:Question',
+            ],
+          },
+          mimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'application/x-bzip',
+              'application/x-bzip2',
+              'application/epub+zip',
+              'application/gzip',
+              'application/x-gzip',
+              'application/java-archive',
+              'application/json',
+              'application/ld+json',
+              'application/pdf',
+              'application/vnd.rar',
+              'application/rtf',
+              'application/x-tar',
+              'application/xml',
+              'application/atom+xml',
+              'application/rss+xml',
+              'application/xhtml+xml',
+              'application/zip',
+              'application/x-zip-compressed',
+              'application/x-7z-compressed',
+              'audio/aac',
+              'audio/midi',
+              'audio/x-midi',
+              'audio/mpeg',
+              'audio/ogg',
+              'audio/wav',
+              'audio/webm',
+              'audio/3gpp',
+              'audio/3gpp2',
+              'font/otf',
+              'font/ttf',
+              'font/woff',
+              'font/woff2',
+              'image/apng',
+              'image/avif',
+              'image/bmp',
+              'image/gif',
+              'image/vnd.microsoft.icon',
+              'image/jpeg',
+              'image/png',
+              'image/svg+xml',
+              'image/tiff',
+              'image/webp',
+              'text/css',
+              'text/csv',
+              'text/html',
+              'text/calendar',
+              'text/javascript',
+              'text/markdown',
+              'text/plain',
+              'video/x-msvideo',
+              'video/mp4',
+              'video/mpeg',
+              'video/ogg',
+              'video/mp2t',
+              'video/webm',
+              'video/3gpp',
+              'video/3gpp2',
+            ],
+          },
+          audioMimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'audio/aac',
+              'audio/midi',
+              'audio/x-midi',
+              'audio/mpeg',
+              'audio/ogg',
+              'audio/wav',
+              'audio/webm',
+              'audio/3gpp',
+              'audio/3gpp2',
+            ],
+          },
+          imageMimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'image/apng',
+              'image/avif',
+              'image/bmp',
+              'image/gif',
+              'image/vnd.microsoft.icon',
+              'image/jpeg',
+              'image/png',
+              'image/svg+xml',
+              'image/tiff',
+              'image/webp',
+            ],
+          },
+          textMimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'text/css',
+              'text/csv',
+              'text/html',
+              'text/calendar',
+              'text/javascript',
+              'text/markdown',
+              'text/plain',
+            ],
+          },
+          videoMimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'video/x-msvideo',
+              'video/mp4',
+              'video/mpeg',
+              'video/ogg',
+              'video/mp2t',
+              'video/webm',
+              'video/3gpp',
+              'video/3gpp2',
+            ],
+          },
+        },
+      },
+      sourceType: {
+        type: 'object',
+        properties: {
+          content: {
+            type: 'string',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.defs#textMimeType',
+          },
+        },
+      },
+      urlObjectType: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.defs#objectType',
+          },
+          href: {
+            type: 'string',
+            format: 'uri',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.defs#mimeType',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitypubGetActor: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.getActor',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Fetches a user (actor) as an ActivityPub ',
+        parameters: {
+          type: 'params',
+          required: ['repo'],
+          properties: {
+            repo: {
+              type: 'string',
+              format: 'at-identifier',
+              description: 'The handle or DID of the repo.',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/activity+json',
+          schema: {
+            type: 'ref',
+            ref: 'lex:arg.w3.activitypub.actor',
+          },
+        },
+      },
+    },
+  },
   OrgW3ActivitypubGetOutbox: {
     lexicon: 1,
     id: 'org.w3.activitypub.getOutbox',
@@ -16761,6 +17132,9 @@ export const ids = {
     'tools.ozone.verification.listVerifications',
   ToolsOzoneVerificationRevokeVerifications:
     'tools.ozone.verification.revokeVerifications',
+  OrgW3ActivitypubActor: 'org.w3.activitypub.actor',
+  OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
+  OrgW3ActivitypubGetActor: 'org.w3.activitypub.getActor',
   OrgW3ActivitypubGetOutbox: 'org.w3.activitypub.getOutbox',
   OrgW3ActivitypubPutInbox: 'org.w3.activitypub.putInbox',
   OrgW3ActivitystreamsDefs: 'org.w3.activitystreams.defs',

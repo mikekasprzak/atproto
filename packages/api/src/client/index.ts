@@ -271,6 +271,9 @@ import * as ToolsOzoneVerificationDefs from './types/tools/ozone/verification/de
 import * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
 import * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
 import * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
+import * as OrgW3ActivitypubActor from './types/org/w3/activitypub/actor.js'
+import * as OrgW3ActivitypubDefs from './types/org/w3/activitypub/defs.js'
+import * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
 import * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
 import * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
 import * as OrgW3ActivitystreamsDefs from './types/org/w3/activitystreams/defs.js'
@@ -538,6 +541,9 @@ export * as ToolsOzoneVerificationDefs from './types/tools/ozone/verification/de
 export * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
 export * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
 export * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
+export * as OrgW3ActivitypubActor from './types/org/w3/activitypub/actor.js'
+export * as OrgW3ActivitypubDefs from './types/org/w3/activitypub/defs.js'
+export * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
 export * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
 export * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
 export * as OrgW3ActivitystreamsDefs from './types/org/w3/activitystreams/defs.js'
@@ -4595,6 +4601,18 @@ export class OrgW3ActivitypubNS {
 
   constructor(client: XrpcClient) {
     this._client = client
+  }
+
+  getActor(
+    params?: OrgW3ActivitypubGetActor.QueryParams,
+    opts?: OrgW3ActivitypubGetActor.CallOptions,
+  ): Promise<OrgW3ActivitypubGetActor.Response> {
+    return this._client.call(
+      'org.w3.activitypub.getActor',
+      params,
+      undefined,
+      opts,
+    )
   }
 
   getOutbox(
