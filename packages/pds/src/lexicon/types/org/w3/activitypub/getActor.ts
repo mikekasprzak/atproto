@@ -37,13 +37,12 @@ export interface OutputSchema {
   followers?: string
   following?: string
   featured?: string
-  featured2?: string
 }
 
 export type HandlerInput = undefined
 
 export interface HandlerSuccess {
-  encoding: 'application/json'
+  encoding: 'application/activity+json'
   body: OutputSchema
   headers?: { [key: string]: string }
 }

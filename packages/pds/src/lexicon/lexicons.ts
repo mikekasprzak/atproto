@@ -16371,7 +16371,7 @@ export const schemaDict = {
           },
         },
         output: {
-          encoding: 'application/json',
+          encoding: 'application/activity+json',
           schema: {
             type: 'object',
             required: ['@context', 'id', 'type'],
@@ -16422,10 +16422,6 @@ export const schemaDict = {
                 format: 'uri',
               },
               featured: {
-                type: 'string',
-                format: 'uri',
-              },
-              featured2: {
                 type: 'string',
                 format: 'uri',
               },

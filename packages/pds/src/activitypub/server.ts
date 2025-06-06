@@ -712,7 +712,8 @@ export const createRouter = (ctx: AppContext): Router => {
         {
           rel: 'self',
           type: 'application/activity+json',
-          href: `${domPrefix}${atRoutePrefix}/${at.did}`,
+          href: `${domPrefix}/xrpc/org.w3.activitypub.getActor?repo=${at.did}`,
+          //href: `${domPrefix}${atRoutePrefix}/${at.did}`,
           //href: `${domPrefix}${pubRoutePrefix}/${pubActor}`,
         },
       ],

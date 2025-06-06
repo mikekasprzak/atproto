@@ -17,7 +17,7 @@
         }
       },
       "output": {
-        "encoding": "application/json",
+        "encoding": "application/activity+json",
         "schema": {
           "type": "object",
           "required": ["@context", "id", "type"],
@@ -33,8 +33,7 @@
             "outbox": { "type": "string", "format": "uri" },
             "followers": { "type": "string", "format": "uri" },
             "following": { "type": "string", "format": "uri" },
-            "featured": { "type": "string", "format": "uri" },
-            "featured2": { "type": "string", "format": "uri" }
+            "featured": { "type": "string", "format": "uri" }
           }
         }
       }
