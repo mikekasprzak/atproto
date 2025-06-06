@@ -16352,6 +16352,38 @@ export const schemaDict = {
     id: 'org.w3.activitypub.defs',
     defs: {},
   },
+  OrgW3ActivitypubGetActor: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.getActor',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'ActivityPub actor',
+        parameters: {
+          type: 'params',
+          properties: {
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            properties: {
+              animal: {
+                type: 'string',
+              },
+              cursor: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   OrgW3ActivitypubGetOutbox: {
     lexicon: 1,
     id: 'org.w3.activitypub.getOutbox',
@@ -16767,6 +16799,7 @@ export const ids = {
   ToolsOzoneVerificationRevokeVerifications:
     'tools.ozone.verification.revokeVerifications',
   OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
+  OrgW3ActivitypubGetActor: 'org.w3.activitypub.getActor',
   OrgW3ActivitypubGetOutbox: 'org.w3.activitypub.getOutbox',
   OrgW3ActivitypubPutInbox: 'org.w3.activitypub.putInbox',
   OrgW3ActivitystreamsDefs: 'org.w3.activitystreams.defs',

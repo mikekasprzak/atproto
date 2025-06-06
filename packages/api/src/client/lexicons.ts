@@ -16347,6 +16347,130 @@ export const schemaDict = {
       },
     },
   },
+  OrgW3ActivitypubDefs: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.defs',
+    defs: {},
+  },
+  OrgW3ActivitypubGetActor: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.getActor',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'ActivityPub actor',
+        parameters: {
+          type: 'params',
+          properties: {
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            properties: {
+              animal: {
+                type: 'string',
+              },
+              cursor: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitypubGetOutbox: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.getOutbox',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'ActivityPub outbox',
+        parameters: {
+          type: 'params',
+          required: [],
+          properties: {
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            properties: {},
+          },
+        },
+        errors: [],
+      },
+    },
+  },
+  OrgW3ActivitypubPutInbox: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.putInbox',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: 'ActivityPub Inbox',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: [],
+            properties: {
+              priority: {
+                type: 'boolean',
+              },
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            properties: {},
+          },
+        },
+        errors: [],
+      },
+    },
+  },
+  OrgW3ActivitystreamsDefs: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.defs',
+    defs: {},
+  },
+  OrgW3ActivitystreamsFollower: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.follower',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'Record for an ActivityPub follower',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'string',
+              format: 'uri',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
 } as const satisfies Record<string, LexiconDoc>
 export const schemas = Object.values(schemaDict) satisfies LexiconDoc[]
 export const lexicons: Lexicons = new Lexicons(schemas)
@@ -16674,4 +16798,10 @@ export const ids = {
     'tools.ozone.verification.listVerifications',
   ToolsOzoneVerificationRevokeVerifications:
     'tools.ozone.verification.revokeVerifications',
+  OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
+  OrgW3ActivitypubGetActor: 'org.w3.activitypub.getActor',
+  OrgW3ActivitypubGetOutbox: 'org.w3.activitypub.getOutbox',
+  OrgW3ActivitypubPutInbox: 'org.w3.activitypub.putInbox',
+  OrgW3ActivitystreamsDefs: 'org.w3.activitystreams.defs',
+  OrgW3ActivitystreamsFollower: 'org.w3.activitystreams.follower',
 } as const

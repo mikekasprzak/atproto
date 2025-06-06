@@ -222,6 +222,7 @@ import * as ToolsOzoneTeamUpdateMember from './types/tools/ozone/team/updateMemb
 import * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
 import * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
 import * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
+import * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
 import * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
 import * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
 
@@ -3041,6 +3042,17 @@ export class OrgW3ActivitypubNS {
 
   constructor(server: Server) {
     this._server = server
+  }
+
+  getActor<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      OrgW3ActivitypubGetActor.Handler<ExtractAuth<AV>>,
+      OrgW3ActivitypubGetActor.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'org.w3.activitypub.getActor' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
   getOutbox<AV extends AuthVerifier>(

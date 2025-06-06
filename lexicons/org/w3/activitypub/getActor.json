@@ -1,0 +1,26 @@
+{
+  "lexicon": 1,
+  "id": "org.w3.activitypub.getActor",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "ActivityPub actor",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "animal": { "type": "string" },
+            "cursor": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
