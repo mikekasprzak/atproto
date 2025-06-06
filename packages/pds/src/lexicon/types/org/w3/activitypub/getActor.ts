@@ -24,7 +24,7 @@ export interface QueryParams {
 export type InputSchema = undefined
 
 export interface OutputSchema {
-  '@context': string[]
+  '@context'?: string[]
   id: string
   url?: string
   type: 'Person' | (string & {})

@@ -1,5 +1,30 @@
 # @atproto/oauth-provider
 
+## 0.8.0
+
+### Minor Changes
+
+- [#3879](https://github.com/bluesky-social/atproto/pull/3879) [`3fa2ee3b6`](https://github.com/bluesky-social/atproto/commit/3fa2ee3b6a382709b10921da53e69a901bccbb05) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Improve validation of DPoP proofs
+
+### Patch Changes
+
+- [#3879](https://github.com/bluesky-social/atproto/pull/3879) [`3fa2ee3b6`](https://github.com/bluesky-social/atproto/commit/3fa2ee3b6a382709b10921da53e69a901bccbb05) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Return DPoP validation result from `authenticateRequest`
+
+- Updated dependencies [[`3fa2ee3b6`](https://github.com/bluesky-social/atproto/commit/3fa2ee3b6a382709b10921da53e69a901bccbb05), [`a3b24ca77`](https://github.com/bluesky-social/atproto/commit/a3b24ca77ca24ac19b17cf9ee2a5ca9612ccf96c)]:
+  - @atproto/jwk@0.2.0
+  - @atproto/oauth-types@0.2.8
+  - @atproto/jwk-jose@0.1.7
+  - @atproto/oauth-provider-api@0.1.3
+  - @atproto/oauth-provider-frontend@0.1.6
+  - @atproto/oauth-provider-ui@0.1.8
+
+## 0.7.10
+
+### Patch Changes
+
+- Updated dependencies [[`71b9dcda9`](https://github.com/bluesky-social/atproto/commit/71b9dcda9611ab3662ccb2c4e175579396f16b3a)]:
+  - @atproto/oauth-provider-ui@0.1.7
+
 ## 0.7.9
 
 ### Patch Changes

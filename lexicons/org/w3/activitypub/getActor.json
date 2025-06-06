@@ -20,7 +20,7 @@
         "encoding": "application/activity+json",
         "schema": {
           "type": "object",
-          "required": ["@context", "id", "type"],
+          "required": ["id", "type"],
           "properties": {
             "@context": { "type": "array", "items": { "type": "string" } },
             "id": { "type": "string", "format": "at-uri" },

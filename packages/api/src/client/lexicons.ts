@@ -16374,7 +16374,7 @@ export const schemaDict = {
           encoding: 'application/activity+json',
           schema: {
             type: 'object',
-            required: ['@context', 'id', 'type'],
+            required: ['id', 'type'],
             properties: {
               '@context': {
                 type: 'array',
