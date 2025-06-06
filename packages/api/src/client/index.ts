@@ -271,13 +271,6 @@ import * as ToolsOzoneVerificationDefs from './types/tools/ozone/verification/de
 import * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
 import * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
 import * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
-import * as OrgW3ActivitypubActor from './types/org/w3/activitypub/actor.js'
-import * as OrgW3ActivitypubDefs from './types/org/w3/activitypub/defs.js'
-import * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
-import * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
-import * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
-import * as OrgW3ActivitystreamsDefs from './types/org/w3/activitystreams/defs.js'
-import * as OrgW3ActivitystreamsFollower from './types/org/w3/activitystreams/follower.js'
 
 export * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs.js'
 export * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount.js'
@@ -541,13 +534,6 @@ export * as ToolsOzoneVerificationDefs from './types/tools/ozone/verification/de
 export * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
 export * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
 export * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
-export * as OrgW3ActivitypubActor from './types/org/w3/activitypub/actor.js'
-export * as OrgW3ActivitypubDefs from './types/org/w3/activitypub/defs.js'
-export * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
-export * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
-export * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
-export * as OrgW3ActivitystreamsDefs from './types/org/w3/activitystreams/defs.js'
-export * as OrgW3ActivitystreamsFollower from './types/org/w3/activitystreams/follower.js'
 
 export const COM_ATPROTO_MODERATION = {
   DefsReasonSpam: 'com.atproto.moderation.defs#reasonSpam',
@@ -600,7 +586,6 @@ export class AtpBaseClient extends XrpcClient {
   app: AppNS
   chat: ChatNS
   tools: ToolsNS
-  org: OrgNS
 
   constructor(options: FetchHandler | FetchHandlerOptions) {
     super(options, schemas)
@@ -608,7 +593,6 @@ export class AtpBaseClient extends XrpcClient {
     this.app = new AppNS(this)
     this.chat = new ChatNS(this)
     this.tools = new ToolsNS(this)
-    this.org = new OrgNS(this)
   }
 
   /** @deprecated use `this` instead */
@@ -4570,147 +4554,6 @@ export class ToolsOzoneVerificationNS {
       opts?.qp,
       data,
       opts,
-    )
-  }
-}
-
-export class OrgNS {
-  _client: XrpcClient
-  w3: OrgW3NS
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.w3 = new OrgW3NS(client)
-  }
-}
-
-export class OrgW3NS {
-  _client: XrpcClient
-  activitypub: OrgW3ActivitypubNS
-  activitystreams: OrgW3ActivitystreamsNS
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.activitypub = new OrgW3ActivitypubNS(client)
-    this.activitystreams = new OrgW3ActivitystreamsNS(client)
-  }
-}
-
-export class OrgW3ActivitypubNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  getActor(
-    params?: OrgW3ActivitypubGetActor.QueryParams,
-    opts?: OrgW3ActivitypubGetActor.CallOptions,
-  ): Promise<OrgW3ActivitypubGetActor.Response> {
-    return this._client.call(
-      'org.w3.activitypub.getActor',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getOutbox(
-    params?: OrgW3ActivitypubGetOutbox.QueryParams,
-    opts?: OrgW3ActivitypubGetOutbox.CallOptions,
-  ): Promise<OrgW3ActivitypubGetOutbox.Response> {
-    return this._client.call(
-      'org.w3.activitypub.getOutbox',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  putInbox(
-    data?: OrgW3ActivitypubPutInbox.InputSchema,
-    opts?: OrgW3ActivitypubPutInbox.CallOptions,
-  ): Promise<OrgW3ActivitypubPutInbox.Response> {
-    return this._client.call(
-      'org.w3.activitypub.putInbox',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-}
-
-export class OrgW3ActivitystreamsNS {
-  _client: XrpcClient
-  follower: OrgW3ActivitystreamsFollowerRecord
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.follower = new OrgW3ActivitystreamsFollowerRecord(client)
-  }
-}
-
-export class OrgW3ActivitystreamsFollowerRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: OrgW3ActivitystreamsFollower.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'org.w3.activitystreams.follower',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: OrgW3ActivitystreamsFollower.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'org.w3.activitystreams.follower',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<OrgW3ActivitystreamsFollower.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'org.w3.activitystreams.follower'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'org.w3.activitystreams.follower', ...params },
-      { headers },
     )
   }
 }
