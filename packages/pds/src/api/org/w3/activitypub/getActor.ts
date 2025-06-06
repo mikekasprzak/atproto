@@ -32,8 +32,8 @@ export default function (server: Server, ctx: AppContext) {
         encoding: 'application/activity+json',
         body: {
           '@context': ['https://www.w3.org/ns/activitystreams'],
-          id: `at://${did}/org.w3.activitypub.actor`,
-          url: `${uriPrefix}/org.w3.activitypub.getActor?repo=${did}`,
+          id: `${uriPrefix}/org.w3.activitypub.getActor?repo=${did}`,
+          atId: `at://${did}/org.w3.activitypub.actor`,
           type: 'Person',
           name: '???',
           preferredUsername: profile.displayName,

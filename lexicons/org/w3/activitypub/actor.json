@@ -1,0 +1,38 @@
+{
+  "lexicon": 1,
+  "id": "org.w3.activitypub.actor",
+  "defs": {
+    "main": {
+      "type": "object",
+      "properties": {
+        "@context": { "type": "union", "refs": ["string", "array", "object"] },
+        "_dummy": { "type": "array", "items": { "type": "string" } },
+        "id": { "type": "string", "format": "uri" },
+        "atId": { "type": "string", "format": "at-uri", "description": "AtProto identifier (not actually necessary)" },
+        "type": { "type": "ref", "ref": "org.w3.activitypub.defs#actorType" },
+        "name": { "type": "string", "format": "handle" },
+        "preferredUsername": { "type": "string" },
+        "summary": { "type": "string", "description": "HTML encoded profile page" },
+        "inbox": { "type": "string", "format": "uri" },
+        "outbox": { "type": "string", "format": "uri" },
+        "followers": { "type": "string", "format": "uri" },
+        "following": { "type": "string", "format": "uri" },
+        "featured": { "type": "string", "format": "uri" },
+        "publicKey": { "type": "ref", "ref": "#publicKey" },
+        "tag": { "type": "array", "items": { "type": "string" } },
+        "attachments": { "type": "string" },
+        "endpoints": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "icon": { "type": "string" },
+        "image": { "type": "string" }
+      }
+    },
+    "publicKey": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "format": "uri" },
+        "owner": { "type": "string", "format": "uri" },
+        "publicKeyPem": { "type": "string" }
+      }
+    }
+  }
+}

@@ -59,8 +59,8 @@ const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitypub.defs'
 
-export interface Unions {
-  $type?: 'org.w3.activitypub.defs#unions'
+export interface Main {
+  $type?: 'org.w3.activitypub.defs'
   actorType?:
     | $Typed<Application.Main>
     | $Typed<Group.Main>
@@ -116,22 +116,153 @@ export interface Unions {
     | $Typed<Move.Main>
     | $Typed<Question.Main>
     | { $type: string }
+  /**
+   * NOTE: Just because its here doesn't meet it's supported!
+   *
+   * References:
+   *  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
+   */
+  mimeType?:
+    | 'application/x-bzip'
+    | 'application/x-bzip2'
+    | 'application/epub+zip'
+    | 'application/gzip'
+    | 'application/x-gzip'
+    | 'application/java-archive'
+    | 'application/json'
+    | 'application/ld+json'
+    | 'application/pdf'
+    | 'application/vnd.rar'
+    | 'application/rtf'
+    | 'application/x-tar'
+    | 'application/xml'
+    | 'application/atom+xml'
+    | 'application/rss+xml'
+    | 'application/xhtml+xml'
+    | 'application/zip'
+    | 'application/x-zip-compressed'
+    | 'application/x-7z-compressed'
+    | 'audio/aac'
+    | 'audio/midi'
+    | 'audio/x-midi'
+    | 'audio/mpeg'
+    | 'audio/ogg'
+    | 'audio/wav'
+    | 'audio/webm'
+    | 'audio/3gpp'
+    | 'audio/3gpp2'
+    | 'font/otf'
+    | 'font/ttf'
+    | 'font/woff'
+    | 'font/woff2'
+    | 'image/apng'
+    | 'image/avif'
+    | 'image/bmp'
+    | 'image/gif'
+    | 'image/vnd.microsoft.icon'
+    | 'image/jpeg'
+    | 'image/png'
+    | 'image/svg+xml'
+    | 'image/tiff'
+    | 'image/webp'
+    | 'text/css'
+    | 'text/csv'
+    | 'text/html'
+    | 'text/calendar'
+    | 'text/javascript'
+    | 'text/markdown'
+    | 'text/plain'
+    | 'video/x-msvideo'
+    | 'video/mp4'
+    | 'video/mpeg'
+    | 'video/ogg'
+    | 'video/mp2t'
+    | 'video/webm'
+    | 'video/3gpp'
+    | 'video/3gpp2'
+    | (string & {})
+  /**
+   * NOTE: Just because its here doesn't meet it's supported!
+   *
+   * References:
+   *  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
+   */
+  audioMimeType?:
+    | 'audio/aac'
+    | 'audio/midi'
+    | 'audio/x-midi'
+    | 'audio/mpeg'
+    | 'audio/ogg'
+    | 'audio/wav'
+    | 'audio/webm'
+    | 'audio/3gpp'
+    | 'audio/3gpp2'
+    | (string & {})
+  /**
+   * NOTE: Just because its here doesn't meet it's supported!
+   *
+   * References:
+   *  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
+   */
+  imageMimeType?:
+    | 'image/apng'
+    | 'image/avif'
+    | 'image/bmp'
+    | 'image/gif'
+    | 'image/vnd.microsoft.icon'
+    | 'image/jpeg'
+    | 'image/png'
+    | 'image/svg+xml'
+    | 'image/tiff'
+    | 'image/webp'
+    | (string & {})
+  /**
+   * NOTE: Just because its here doesn't meet it's supported!
+   *
+   * References:
+   *  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
+   */
+  textMimeType?:
+    | 'text/css'
+    | 'text/csv'
+    | 'text/html'
+    | 'text/calendar'
+    | 'text/javascript'
+    | 'text/markdown'
+    | 'text/plain'
+    | (string & {})
+  /**
+   * NOTE: Just because its here doesn't meet it's supported!
+   *
+   * References:
+   *  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
+   */
+  videoMimeType?:
+    | 'video/x-msvideo'
+    | 'video/mp4'
+    | 'video/mpeg'
+    | 'video/ogg'
+    | 'video/mp2t'
+    | 'video/webm'
+    | 'video/3gpp'
+    | 'video/3gpp2'
+    | (string & {})
 }
 
-const hashUnions = 'unions'
+const hashMain = 'main'
 
-export function isUnions<V>(v: V) {
-  return is$typed(v, id, hashUnions)
+export function isMain<V>(v: V) {
+  return is$typed(v, id, hashMain)
 }
 
-export function validateUnions<V>(v: V) {
-  return validate<Unions & V>(v, id, hashUnions)
+export function validateMain<V>(v: V) {
+  return validate<Main & V>(v, id, hashMain)
 }
 
 export interface SourceType {
   $type?: 'org.w3.activitypub.defs#sourceType'
   content?: string
-  mediaType?: string
+  mediaType?: TextMimeType
 }
 
 const hashSourceType = 'sourceType'
@@ -142,4 +273,21 @@ export function isSourceType<V>(v: V) {
 
 export function validateSourceType<V>(v: V) {
   return validate<SourceType & V>(v, id, hashSourceType)
+}
+
+export interface UrlObjectType {
+  $type?: 'org.w3.activitypub.defs#urlObjectType'
+  type?: ObjectType
+  href?: string
+  mediaType?: MimeType
+}
+
+const hashUrlObjectType = 'urlObjectType'
+
+export function isUrlObjectType<V>(v: V) {
+  return is$typed(v, id, hashUrlObjectType)
+}
+
+export function validateUrlObjectType<V>(v: V) {
+  return validate<UrlObjectType & V>(v, id, hashUrlObjectType)
 }

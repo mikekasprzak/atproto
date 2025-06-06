@@ -16347,11 +16347,118 @@ export const schemaDict = {
       },
     },
   },
+  OrgW3ActivitypubActor: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.actor',
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          '@context': {
+            type: 'union',
+            refs: ['lex:string', 'lex:array', 'lex:object'],
+          },
+          _dummy: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          atId: {
+            type: 'string',
+            format: 'at-uri',
+            description: 'AtProto identifier (not actually necessary)',
+          },
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.defs#actorType',
+          },
+          name: {
+            type: 'string',
+            format: 'handle',
+          },
+          preferredUsername: {
+            type: 'string',
+          },
+          summary: {
+            type: 'string',
+            description: 'HTML encoded profile page',
+          },
+          inbox: {
+            type: 'string',
+            format: 'uri',
+          },
+          outbox: {
+            type: 'string',
+            format: 'uri',
+          },
+          followers: {
+            type: 'string',
+            format: 'uri',
+          },
+          following: {
+            type: 'string',
+            format: 'uri',
+          },
+          featured: {
+            type: 'string',
+            format: 'uri',
+          },
+          publicKey: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.actor#publicKey',
+          },
+          tag: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          attachments: {
+            type: 'string',
+          },
+          endpoints: {
+            type: 'array',
+            items: {
+              type: 'string',
+              format: 'uri',
+            },
+          },
+          icon: {
+            type: 'string',
+          },
+          image: {
+            type: 'string',
+          },
+        },
+      },
+      publicKey: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          owner: {
+            type: 'string',
+            format: 'uri',
+          },
+          publicKeyPem: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
   OrgW3ActivitypubDefs: {
     lexicon: 1,
     id: 'org.w3.activitypub.defs',
     defs: {
-      unions: {
+      main: {
         type: 'object',
         properties: {
           actorType: {
@@ -16424,6 +16531,132 @@ export const schemaDict = {
               'lex:Question',
             ],
           },
+          mimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'application/x-bzip',
+              'application/x-bzip2',
+              'application/epub+zip',
+              'application/gzip',
+              'application/x-gzip',
+              'application/java-archive',
+              'application/json',
+              'application/ld+json',
+              'application/pdf',
+              'application/vnd.rar',
+              'application/rtf',
+              'application/x-tar',
+              'application/xml',
+              'application/atom+xml',
+              'application/rss+xml',
+              'application/xhtml+xml',
+              'application/zip',
+              'application/x-zip-compressed',
+              'application/x-7z-compressed',
+              'audio/aac',
+              'audio/midi',
+              'audio/x-midi',
+              'audio/mpeg',
+              'audio/ogg',
+              'audio/wav',
+              'audio/webm',
+              'audio/3gpp',
+              'audio/3gpp2',
+              'font/otf',
+              'font/ttf',
+              'font/woff',
+              'font/woff2',
+              'image/apng',
+              'image/avif',
+              'image/bmp',
+              'image/gif',
+              'image/vnd.microsoft.icon',
+              'image/jpeg',
+              'image/png',
+              'image/svg+xml',
+              'image/tiff',
+              'image/webp',
+              'text/css',
+              'text/csv',
+              'text/html',
+              'text/calendar',
+              'text/javascript',
+              'text/markdown',
+              'text/plain',
+              'video/x-msvideo',
+              'video/mp4',
+              'video/mpeg',
+              'video/ogg',
+              'video/mp2t',
+              'video/webm',
+              'video/3gpp',
+              'video/3gpp2',
+            ],
+          },
+          audioMimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'audio/aac',
+              'audio/midi',
+              'audio/x-midi',
+              'audio/mpeg',
+              'audio/ogg',
+              'audio/wav',
+              'audio/webm',
+              'audio/3gpp',
+              'audio/3gpp2',
+            ],
+          },
+          imageMimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'image/apng',
+              'image/avif',
+              'image/bmp',
+              'image/gif',
+              'image/vnd.microsoft.icon',
+              'image/jpeg',
+              'image/png',
+              'image/svg+xml',
+              'image/tiff',
+              'image/webp',
+            ],
+          },
+          textMimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'text/css',
+              'text/csv',
+              'text/html',
+              'text/calendar',
+              'text/javascript',
+              'text/markdown',
+              'text/plain',
+            ],
+          },
+          videoMimeType: {
+            type: 'string',
+            description:
+              "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+            knownValues: [
+              'video/x-msvideo',
+              'video/mp4',
+              'video/mpeg',
+              'video/ogg',
+              'video/mp2t',
+              'video/webm',
+              'video/3gpp',
+              'video/3gpp2',
+            ],
+          },
         },
       },
       sourceType: {
@@ -16433,7 +16666,25 @@ export const schemaDict = {
             type: 'string',
           },
           mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.defs#textMimeType',
+          },
+        },
+      },
+      urlObjectType: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.defs#objectType',
+          },
+          href: {
             type: 'string',
+            format: 'uri',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.defs#mimeType',
           },
         },
       },
@@ -16461,7 +16712,7 @@ export const schemaDict = {
           encoding: 'application/activity+json',
           schema: {
             type: 'object',
-            required: ['@context', 'id', 'type', 'name', 'inbox'],
+            required: ['@context', 'id', 'type', 'name'],
             properties: {
               '@context': {
                 type: 'union',
@@ -16475,19 +16726,16 @@ export const schemaDict = {
               },
               id: {
                 type: 'string',
-                format: 'at-uri',
+                format: 'uri',
               },
               atId: {
                 type: 'string',
                 format: 'at-uri',
-              },
-              url: {
-                type: 'string',
-                format: 'uri',
+                description: 'AtProto identifier (not actually necessary)',
               },
               type: {
                 type: 'ref',
-                ref: 'lex:org.w3.activitypub.defs#unions.actorType',
+                ref: 'lex:org.w3.activitypub.defs#actorType',
               },
               name: {
                 type: 'string',
@@ -16520,7 +16768,49 @@ export const schemaDict = {
                 type: 'string',
                 format: 'uri',
               },
+              publicKey: {
+                type: 'ref',
+                ref: 'lex:org.w3.activitypub.getActor#publicKey',
+              },
+              tag: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                },
+              },
+              attachments: {
+                type: 'string',
+              },
+              endpoints: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                  format: 'uri',
+                },
+              },
+              icon: {
+                type: 'string',
+              },
+              image: {
+                type: 'string',
+              },
             },
+          },
+        },
+      },
+      publicKey: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          owner: {
+            type: 'string',
+            format: 'uri',
+          },
+          publicKeyPem: {
+            type: 'string',
           },
         },
       },
@@ -16940,6 +17230,7 @@ export const ids = {
     'tools.ozone.verification.listVerifications',
   ToolsOzoneVerificationRevokeVerifications:
     'tools.ozone.verification.revokeVerifications',
+  OrgW3ActivitypubActor: 'org.w3.activitypub.actor',
   OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
   OrgW3ActivitypubGetActor: 'org.w3.activitypub.getActor',
   OrgW3ActivitypubGetOutbox: 'org.w3.activitypub.getOutbox',

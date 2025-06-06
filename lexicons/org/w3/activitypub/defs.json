@@ -2,7 +2,7 @@
   "lexicon": 1,
   "id": "org.w3.activitypub.defs",
   "defs": {
-    "unions": {
+    "main": {
       "type": "object",
       "properties": {
         "actorType": {
@@ -72,6 +72,127 @@
             "Move",
             "Question"
           ]
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+          "knownValues": [
+            "application/x-bzip",
+            "application/x-bzip2",
+            "application/epub+zip",
+            "application/gzip",
+            "application/x-gzip",
+            "application/java-archive",
+            "application/json",
+            "application/ld+json",
+            "application/pdf",
+            "application/vnd.rar",
+            "application/rtf",
+            "application/x-tar",
+            "application/xml",
+            "application/atom+xml",
+            "application/rss+xml",
+            "application/xhtml+xml",
+            "application/zip",
+            "application/x-zip-compressed",
+            "application/x-7z-compressed",
+            "audio/aac",
+            "audio/midi",
+            "audio/x-midi",
+            "audio/mpeg",
+            "audio/ogg",
+            "audio/wav",
+            "audio/webm",
+            "audio/3gpp",
+            "audio/3gpp2",
+            "font/otf",
+            "font/ttf",
+            "font/woff",
+            "font/woff2",
+            "image/apng",
+            "image/avif",
+            "image/bmp",
+            "image/gif",
+            "image/vnd.microsoft.icon",
+            "image/jpeg",
+            "image/png",
+            "image/svg+xml",
+            "image/tiff",
+            "image/webp",
+            "text/css",
+            "text/csv",
+            "text/html",
+            "text/calendar",
+            "text/javascript",
+            "text/markdown",
+            "text/plain",
+            "video/x-msvideo",
+            "video/mp4",
+            "video/mpeg",
+            "video/ogg",
+            "video/mp2t",
+            "video/webm",
+            "video/3gpp",
+            "video/3gpp2"
+          ]
+        },
+        "audioMimeType": {
+          "type": "string",
+          "description": "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+          "knownValues": [
+            "audio/aac",
+            "audio/midi",
+            "audio/x-midi",
+            "audio/mpeg",
+            "audio/ogg",
+            "audio/wav",
+            "audio/webm",
+            "audio/3gpp",
+            "audio/3gpp2"
+          ]
+        },
+        "imageMimeType": {
+          "type": "string",
+          "description": "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+          "knownValues": [
+            "image/apng",
+            "image/avif",
+            "image/bmp",
+            "image/gif",
+            "image/vnd.microsoft.icon",
+            "image/jpeg",
+            "image/png",
+            "image/svg+xml",
+            "image/tiff",
+            "image/webp"
+          ]
+        },
+        "textMimeType": {
+          "type": "string",
+          "description": "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+          "knownValues": [
+            "text/css",
+            "text/csv",
+            "text/html",
+            "text/calendar",
+            "text/javascript",
+            "text/markdown",
+            "text/plain"
+          ]
+        },
+        "videoMimeType": {
+          "type": "string",
+          "description": "NOTE: Just because its here doesn't meet it's supported!\n\nReferences:\n * https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types",
+          "knownValues": [
+            "video/x-msvideo",
+            "video/mp4",
+            "video/mpeg",
+            "video/ogg",
+            "video/mp2t",
+            "video/webm",
+            "video/3gpp",
+            "video/3gpp2"
+          ]
         }
       }
     },
@@ -79,7 +200,15 @@
       "type": "object",
       "properties": {
         "content" : { "type": "string" },
-        "mediaType": { "type": "string" }
+        "mediaType": { "type": "ref", "ref": "#textMimeType" }
+      }
+    },
+    "urlObjectType" : {
+      "type": "object",
+      "properties": {
+        "type": { "type": "ref", "ref": "#objectType" },
+        "href" : { "type": "string", "format": "uri" },
+        "mediaType": { "type": "ref", "ref": "#mimeType" }
       }
     }
   }

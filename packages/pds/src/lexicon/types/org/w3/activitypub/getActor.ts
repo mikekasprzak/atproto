@@ -35,18 +35,24 @@ export interface OutputSchema {
     | { $type: string }
   _dummy?: string[]
   id: string
+  /** AtProto identifier (not actually necessary) */
   atId?: string
-  url?: string
-  type: OrgW3ActivitypubDefs.UnionsActorType
+  type: OrgW3ActivitypubDefs.ActorType
   name: string
   preferredUsername?: string
   /** HTML encoded profile page */
   summary?: string
-  inbox: string
+  inbox?: string
   outbox?: string
   followers?: string
   following?: string
   featured?: string
+  publicKey?: PublicKey
+  tag?: string[]
+  attachments?: string
+  endpoints?: string[]
+  icon?: string
+  image?: string
 }
 
 export type HandlerInput = undefined
@@ -74,3 +80,20 @@ export type HandlerReqCtx<HA extends HandlerAuth = never> = {
 export type Handler<HA extends HandlerAuth = never> = (
   ctx: HandlerReqCtx<HA>,
 ) => Promise<HandlerOutput> | HandlerOutput
+
+export interface PublicKey {
+  $type?: 'org.w3.activitypub.getActor#publicKey'
+  id?: string
+  owner?: string
+  publicKeyPem?: string
+}
+
+const hashPublicKey = 'publicKey'
+
+export function isPublicKey<V>(v: V) {
+  return is$typed(v, id, hashPublicKey)
+}
+
+export function validatePublicKey<V>(v: V) {
+  return validate<PublicKey & V>(v, id, hashPublicKey)
+}
