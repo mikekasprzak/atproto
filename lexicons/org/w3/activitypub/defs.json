@@ -2,10 +2,10 @@
   "lexicon": 1,
   "id": "org.w3.activitypub.defs",
   "defs": {
-    "actorTypeTypes": {
+    "unions": {
       "type": "object",
       "properties": {
-        "type": {
+        "actorType": {
           "type": "union",
           "description": "References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#actor-types",
           "refs": [
@@ -15,13 +15,8 @@
             "Person",
             "Service"
           ]
-        }
-      }
-    },
-    "activityTypes": {
-      "type": "object",
-      "properties": {
-        "type": {
+        },
+        "activityType": {
           "type": "union",
           "description": "References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#activity-types",
           "refs": [
@@ -54,13 +49,8 @@
             "Update",
             "View"
           ]
-        }
-      }
-    },
-    "objectTypes": {
-      "type": "object",
-      "properties": {
-        "type": {
+        },
+        "objectType": {
           "type": "union",
           "description": "References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#object-types\n * https://docs.joinmastodon.org/spec/activitypub/#extensions-defined-using-activitystreams-vocabulary",
           "refs": [

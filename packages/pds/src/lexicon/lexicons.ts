@@ -16351,10 +16351,10 @@ export const schemaDict = {
     lexicon: 1,
     id: 'org.w3.activitypub.defs',
     defs: {
-      actorTypeTypes: {
+      unions: {
         type: 'object',
         properties: {
-          type: {
+          actorType: {
             type: 'union',
             description:
               'References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#actor-types',
@@ -16366,12 +16366,7 @@ export const schemaDict = {
               'lex:Service',
             ],
           },
-        },
-      },
-      activityTypes: {
-        type: 'object',
-        properties: {
-          type: {
+          activityType: {
             type: 'union',
             description:
               'References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#activity-types',
@@ -16406,12 +16401,7 @@ export const schemaDict = {
               'lex:View',
             ],
           },
-        },
-      },
-      objectTypes: {
-        type: 'object',
-        properties: {
-          type: {
+          objectType: {
             type: 'union',
             description:
               'References:\n * https://www.w3.org/TR/activitystreams-vocabulary/#object-types\n * https://docs.joinmastodon.org/spec/activitypub/#extensions-defined-using-activitystreams-vocabulary',
@@ -16497,7 +16487,7 @@ export const schemaDict = {
               },
               type: {
                 type: 'ref',
-                ref: 'lex:org.w3.activitypub.defs#actorTypeTypes.type',
+                ref: 'lex:org.w3.activitypub.defs#unions.actorType',
               },
               name: {
                 type: 'string',

@@ -59,30 +59,16 @@ const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitypub.defs'
 
-export interface ActorTypeTypes {
-  $type?: 'org.w3.activitypub.defs#actorTypeTypes'
-  type?:
+export interface Unions {
+  $type?: 'org.w3.activitypub.defs#unions'
+  actorType?:
     | $Typed<Application.Main>
     | $Typed<Group.Main>
     | $Typed<Organization.Main>
     | $Typed<Person.Main>
     | $Typed<Service.Main>
     | { $type: string }
-}
-
-const hashActorTypeTypes = 'actorTypeTypes'
-
-export function isActorTypeTypes<V>(v: V) {
-  return is$typed(v, id, hashActorTypeTypes)
-}
-
-export function validateActorTypeTypes<V>(v: V) {
-  return validate<ActorTypeTypes & V>(v, id, hashActorTypeTypes)
-}
-
-export interface ActivityTypes {
-  $type?: 'org.w3.activitypub.defs#activityTypes'
-  type?:
+  activityType?:
     | $Typed<Accept.Main>
     | $Typed<Add.Main>
     | $Typed<Announce.Main>
@@ -112,21 +98,7 @@ export interface ActivityTypes {
     | $Typed<Update.Main>
     | $Typed<View.Main>
     | { $type: string }
-}
-
-const hashActivityTypes = 'activityTypes'
-
-export function isActivityTypes<V>(v: V) {
-  return is$typed(v, id, hashActivityTypes)
-}
-
-export function validateActivityTypes<V>(v: V) {
-  return validate<ActivityTypes & V>(v, id, hashActivityTypes)
-}
-
-export interface ObjectTypes {
-  $type?: 'org.w3.activitypub.defs#objectTypes'
-  type?:
+  objectType?:
     | $Typed<Article.Main>
     | $Typed<Audio.Main>
     | $Typed<Document.Main>
@@ -146,14 +118,14 @@ export interface ObjectTypes {
     | { $type: string }
 }
 
-const hashObjectTypes = 'objectTypes'
+const hashUnions = 'unions'
 
-export function isObjectTypes<V>(v: V) {
-  return is$typed(v, id, hashObjectTypes)
+export function isUnions<V>(v: V) {
+  return is$typed(v, id, hashUnions)
 }
 
-export function validateObjectTypes<V>(v: V) {
-  return validate<ObjectTypes & V>(v, id, hashObjectTypes)
+export function validateUnions<V>(v: V) {
+  return validate<Unions & V>(v, id, hashUnions)
 }
 
 export interface SourceType {

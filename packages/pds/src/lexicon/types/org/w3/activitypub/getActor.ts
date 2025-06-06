@@ -37,7 +37,7 @@ export interface OutputSchema {
   id: string
   atId?: string
   url?: string
-  type: OrgW3ActivitypubDefs.ActorTypeTypesType
+  type: OrgW3ActivitypubDefs.UnionsActorType
   name: string
   preferredUsername?: string
   /** HTML encoded profile page */

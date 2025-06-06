@@ -27,7 +27,7 @@
             "id": { "type": "string", "format": "at-uri" },
             "atId": { "type": "string", "format": "at-uri" },
             "url": { "type": "string", "format": "uri" },
-            "type": { "type": "ref", "ref": "org.w3.activitypub.defs#actorTypeTypes.type" },
+            "type": { "type": "ref", "ref": "org.w3.activitypub.defs#unions.actorType" },
             "name": { "type": "string", "format": "handle" },
             "preferredUsername": { "type": "string" },
             "summary": { "type": "string", "description": "HTML encoded profile page" },
