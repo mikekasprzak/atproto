@@ -385,7 +385,7 @@ export function genXrpcParams(
           paramDef.default !== undefined)
       genComment(
         iface.addProperty({
-          name: `${paramKey}${req ? '' : '?'}`,
+          name: `'${paramKey}'${req ? '' : '?'}`,
           type:
             paramDef.type === 'array'
               ? primitiveToType(paramDef.items) + '[]'
