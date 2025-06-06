@@ -16361,9 +16361,12 @@ export const schemaDict = {
         description: 'ActivityPub actor',
         parameters: {
           type: 'params',
+          required: ['repo'],
           properties: {
-            cursor: {
+            repo: {
               type: 'string',
+              format: 'at-identifier',
+              description: 'The handle or DID of the repo.',
             },
           },
         },
@@ -16371,12 +16374,60 @@ export const schemaDict = {
           encoding: 'application/json',
           schema: {
             type: 'object',
+            required: ['@context', 'id', 'type'],
             properties: {
-              animal: {
+              '@context': {
+                type: 'array',
+                items: {
+                  type: 'string',
+                },
+              },
+              id: {
+                type: 'string',
+                format: 'at-uri',
+              },
+              url: {
+                type: 'string',
+                format: 'uri',
+              },
+              type: {
+                type: 'string',
+                knownValues: ['Person'],
+              },
+              name: {
+                type: 'string',
+                format: 'handle',
+              },
+              preferredUsername: {
                 type: 'string',
               },
-              cursor: {
+              summary: {
                 type: 'string',
+                description: 'HTML encoded profile page',
+              },
+              inbox: {
+                type: 'string',
+                format: 'uri',
+              },
+              outbox: {
+                type: 'string',
+                format: 'uri',
+              },
+              followers: {
+                type: 'string',
+                format: 'uri',
+              },
+              following: {
+                type: 'string',
+                format: 'uri',
+              },
+              featured: {
+                type: 'string',
+                format: 'uri',
+              },
+              featured2: {
+                type: 'string',
+                format: 'uri',
               },
             },
           },

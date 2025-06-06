@@ -17,14 +17,27 @@ const is$typed = _is$typed,
 const id = 'org.w3.activitypub.getActor'
 
 export interface QueryParams {
-  cursor?: string
+  /** The handle or DID of the repo. */
+  repo: string
 }
 
 export type InputSchema = undefined
 
 export interface OutputSchema {
-  animal?: string
-  cursor?: string
+  '@context': string[]
+  id: string
+  url?: string
+  type: 'Person' | (string & {})
+  name?: string
+  preferredUsername?: string
+  /** HTML encoded profile page */
+  summary?: string
+  inbox?: string
+  outbox?: string
+  followers?: string
+  following?: string
+  featured?: string
+  featured2?: string
 }
 
 export type HandlerInput = undefined

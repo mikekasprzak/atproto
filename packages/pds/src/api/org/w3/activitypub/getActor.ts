@@ -1,4 +1,4 @@
-//import { InvalidRequestError } from '@atproto/oauth-provider'
+import { InvalidRequestError } from '@atproto/oauth-provider'
 //import { AtUri } from '@atproto/syntax'
 import { AppContext } from '../../../../context'
 import { Server } from '../../../../lexicon'
@@ -6,19 +6,19 @@ import { Server } from '../../../../lexicon'
 //import { pipethrough } from '../../../../pipethrough'
 
 export default function (server: Server, ctx: AppContext) {
-  //const { bskyAppView } = ctx
-  //if (!bskyAppView) return
+  const { bskyAppView } = ctx
+  if (!bskyAppView) return
 
-  server.org.w3.activitypub.getActor(
+  server.org.w3.activitypub.getActor({
     //auth: ctx.authVerifier.accessStandard(),
-    async ({ params /*,  auth, req*/ }) => {
-      ctx
-      //InvalidRequestError
+    handler: async ({ params /*, auth /*req*/ }) => {
+      const { repo } = params
 
-      //const did = await ctx.accountManager.getDidForActor(repo)
-      //if (!did) {
-      //  throw new InvalidRequestError(`Could not find repo: ${repo}`)
-      //}
+      const did = await ctx.accountManager.getDidForActor(repo)
+      if (!did) {
+        throw new InvalidRequestError(`Could not find repo: ${repo}`)
+      }
+
       //const requester = auth.credentials.did
       /*
       const feedUrl = new AtUri(params.feed)
@@ -38,15 +38,11 @@ export default function (server: Server, ctx: AppContext) {
       return {
         encoding: 'application/json',
         body: {
-          animal: 'dog',
-          cursor: params.cursor,
+          '@context': ['https://www.w3.org/ns/activitystreams'],
+          id: `${did}`,
+          type: 'Person',
         },
       }
-      /* pipethrough(ctx, req, {
-        //iss: requester,
-        aud: 'dog', //feedDid,
-        lxm: ids.AppBskyFeedGetFeedSkeleton,
-      })*/
     },
-  )
+  })
 }
