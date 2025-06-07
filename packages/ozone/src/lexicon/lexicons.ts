@@ -16347,6 +16347,297 @@ export const schemaDict = {
       },
     },
   },
+  OrgW3ActivitypubActor: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.actor',
+    defs: {
+      main: {
+        type: 'object',
+        required: ['@context', 'id', 'type', 'name'],
+        properties: {
+          '@context': {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          atId: {
+            type: 'string',
+            format: 'at-uri',
+            description: 'AtProto identifier (not actually necessary)',
+          },
+          type: {
+            type: 'string',
+            knownValues: ['Person'],
+          },
+          name: {
+            type: 'string',
+            format: 'handle',
+          },
+          preferredUsername: {
+            type: 'string',
+          },
+          summary: {
+            type: 'string',
+            description: 'HTML encoded profile page',
+          },
+          inbox: {
+            type: 'string',
+            format: 'uri',
+          },
+          outbox: {
+            type: 'string',
+            format: 'uri',
+          },
+          followers: {
+            type: 'string',
+            format: 'uri',
+          },
+          following: {
+            type: 'string',
+            format: 'uri',
+          },
+          featured: {
+            type: 'string',
+            format: 'uri',
+          },
+          publicKey: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.actor#publicKey',
+          },
+          tag: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          attachments: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          endpoints: {
+            type: 'array',
+            items: {
+              type: 'string',
+              format: 'uri',
+            },
+          },
+          icon: {
+            type: 'string',
+          },
+          image: {
+            type: 'string',
+          },
+        },
+      },
+      publicKey: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          owner: {
+            type: 'string',
+            format: 'uri',
+          },
+          publicKeyPem: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitypubDefs: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.defs',
+    defs: {
+      urlObjectType: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'string',
+          },
+          href: {
+            type: 'string',
+            format: 'uri',
+          },
+          mediaType: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitypubGetActor: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.getActor',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Fetches a user (actor) as an ActivityPub ',
+        parameters: {
+          type: 'params',
+          required: ['repo'],
+          properties: {
+            repo: {
+              type: 'string',
+              format: 'at-identifier',
+              description: 'The handle or DID of the repo.',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/activity+json',
+          schema: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.actor',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitypubGetOutbox: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.getOutbox',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'ActivityPub outbox',
+        parameters: {
+          type: 'params',
+          required: [],
+          properties: {
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            properties: {},
+          },
+        },
+        errors: [],
+      },
+    },
+  },
+  OrgW3ActivitypubPost: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.post',
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          '@context': {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          atId: {
+            type: 'string',
+            format: 'at-uri',
+            description: 'AtProto identifier (not actually necessary)',
+          },
+          type: {
+            type: 'string',
+          },
+          summary: {
+            type: 'string',
+            description: 'HTML encoded profile page',
+          },
+          source: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.post#sourceType',
+          },
+        },
+      },
+      sourceType: {
+        type: 'object',
+        properties: {
+          content: {
+            type: 'string',
+          },
+          mediaType: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitypubPutInbox: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.putInbox',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: 'ActivityPub Inbox',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: [],
+            properties: {
+              priority: {
+                type: 'boolean',
+              },
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            properties: {},
+          },
+        },
+        errors: [],
+      },
+    },
+  },
+  OrgW3ActivitystreamsDefs: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.defs',
+    defs: {},
+  },
+  OrgW3ActivitystreamsFollower: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.follower',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'Record for an ActivityPub follower',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'string',
+              format: 'uri',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
 } as const satisfies Record<string, LexiconDoc>
 export const schemas = Object.values(schemaDict) satisfies LexiconDoc[]
 export const lexicons: Lexicons = new Lexicons(schemas)
@@ -16674,4 +16965,12 @@ export const ids = {
     'tools.ozone.verification.listVerifications',
   ToolsOzoneVerificationRevokeVerifications:
     'tools.ozone.verification.revokeVerifications',
+  OrgW3ActivitypubActor: 'org.w3.activitypub.actor',
+  OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
+  OrgW3ActivitypubGetActor: 'org.w3.activitypub.getActor',
+  OrgW3ActivitypubGetOutbox: 'org.w3.activitypub.getOutbox',
+  OrgW3ActivitypubPost: 'org.w3.activitypub.post',
+  OrgW3ActivitypubPutInbox: 'org.w3.activitypub.putInbox',
+  OrgW3ActivitystreamsDefs: 'org.w3.activitystreams.defs',
+  OrgW3ActivitystreamsFollower: 'org.w3.activitystreams.follower',
 } as const

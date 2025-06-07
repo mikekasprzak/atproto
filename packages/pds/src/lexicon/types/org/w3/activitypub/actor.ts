@@ -17,11 +17,10 @@ const id = 'org.w3.activitypub.actor'
 export interface Main {
   $type?: 'org.w3.activitypub.actor'
   '@context': string[]
-  _dummy?: string[]
   id: string
   /** AtProto identifier (not actually necessary) */
   atId?: string
-  type?: string
+  type: 'Person' | (string & {})
   name: string
   preferredUsername?: string
   /** HTML encoded profile page */
@@ -33,7 +32,7 @@ export interface Main {
   featured?: string
   publicKey?: PublicKey
   tag?: string[]
-  attachments?: string
+  attachments?: string[]
   endpoints?: string[]
   icon?: string
   image?: string

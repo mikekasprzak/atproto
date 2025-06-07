@@ -16353,15 +16353,9 @@ export const schemaDict = {
     defs: {
       main: {
         type: 'object',
-        required: ['@context', 'id', 'name'],
+        required: ['@context', 'id', 'type', 'name'],
         properties: {
           '@context': {
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-          _dummy: {
             type: 'array',
             items: {
               type: 'string',
@@ -16378,6 +16372,7 @@ export const schemaDict = {
           },
           type: {
             type: 'string',
+            knownValues: ['Person'],
           },
           name: {
             type: 'string',
@@ -16421,7 +16416,10 @@ export const schemaDict = {
             },
           },
           attachments: {
-            type: 'string',
+            type: 'array',
+            items: {
+              type: 'string',
+            },
           },
           endpoints: {
             type: 'array',

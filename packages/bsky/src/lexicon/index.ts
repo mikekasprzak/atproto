@@ -186,6 +186,9 @@ import * as ChatBskyConvoUpdateRead from './types/chat/bsky/convo/updateRead.js'
 import * as ChatBskyModerationGetActorMetadata from './types/chat/bsky/moderation/getActorMetadata.js'
 import * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderation/getMessageContext.js'
 import * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
+import * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
+import * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
+import * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
 
 export const COM_ATPROTO_MODERATION = {
   DefsReasonSpam: 'com.atproto.moderation.defs#reasonSpam',
@@ -230,12 +233,14 @@ export class Server {
   com: ComNS
   app: AppNS
   chat: ChatNS
+  org: OrgNS
 
   constructor(options?: XrpcOptions) {
     this.xrpc = createXrpcServer(schemas, options)
     this.com = new ComNS(this)
     this.app = new AppNS(this)
     this.chat = new ChatNS(this)
+    this.org = new OrgNS(this)
   }
 }
 
@@ -2453,6 +2458,77 @@ export class ChatBskyModerationNS {
   ) {
     const nsid = 'chat.bsky.moderation.updateActorAccess' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class OrgNS {
+  _server: Server
+  w3: OrgW3NS
+
+  constructor(server: Server) {
+    this._server = server
+    this.w3 = new OrgW3NS(server)
+  }
+}
+
+export class OrgW3NS {
+  _server: Server
+  activitypub: OrgW3ActivitypubNS
+  activitystreams: OrgW3ActivitystreamsNS
+
+  constructor(server: Server) {
+    this._server = server
+    this.activitypub = new OrgW3ActivitypubNS(server)
+    this.activitystreams = new OrgW3ActivitystreamsNS(server)
+  }
+}
+
+export class OrgW3ActivitypubNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getActor<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      OrgW3ActivitypubGetActor.Handler<ExtractAuth<AV>>,
+      OrgW3ActivitypubGetActor.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'org.w3.activitypub.getActor' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getOutbox<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      OrgW3ActivitypubGetOutbox.Handler<ExtractAuth<AV>>,
+      OrgW3ActivitypubGetOutbox.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'org.w3.activitypub.getOutbox' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  putInbox<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      OrgW3ActivitypubPutInbox.Handler<ExtractAuth<AV>>,
+      OrgW3ActivitypubPutInbox.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'org.w3.activitypub.putInbox' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class OrgW3ActivitystreamsNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
   }
 }
 

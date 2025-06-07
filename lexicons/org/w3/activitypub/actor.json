@@ -4,13 +4,12 @@
   "defs": {
     "main": {
       "type": "object",
-      "required": ["@context", "id", "name"],
+      "required": ["@context", "id", "type", "name"],
       "properties": {
         "@context": { "type": "array", "items": { "type": "string"} },
-        "_dummy": { "type": "array", "items": { "type": "string" } },
         "id": { "type": "string", "format": "uri" },
         "atId": { "type": "string", "format": "at-uri", "description": "AtProto identifier (not actually necessary)" },
-        "type": { "type": "string" },
+        "type": { "type": "string", "knownValues": ["Person"] },
         "name": { "type": "string", "format": "handle" },
         "preferredUsername": { "type": "string" },
         "summary": { "type": "string", "description": "HTML encoded profile page" },
@@ -21,7 +20,7 @@
         "featured": { "type": "string", "format": "uri" },
         "publicKey": { "type": "ref", "ref": "#publicKey" },
         "tag": { "type": "array", "items": { "type": "string" } },
-        "attachments": { "type": "string" },
+        "attachments": { "type": "array", "items": { "type": "string" } },
         "endpoints": { "type": "array", "items": { "type": "string", "format": "uri" } },
         "icon": { "type": "string" },
         "image": { "type": "string" }
