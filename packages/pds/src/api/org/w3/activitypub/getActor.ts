@@ -6,17 +6,23 @@ import { Server } from '../../../../lexicon'
 //import { pipethrough } from '../../../../pipethrough'
 import { Record as ProfileRecord } from '../../../../lexicon/types/app/bsky/actor/profile'
 //import { Record as PostRecord } from '../lexicon/types/app/bsky/feed/post'
+import { genDomainPrefix, inferPubHandle } from '../../../../activitypub/util'
 
 export default function (server: Server, ctx: AppContext) {
   server.org.w3.activitypub.getActor({
     //auth: ctx.authVerifier.accessStandard(),
-    handler: async ({ params /*, auth /*req*/ }) => {
+    handler: async ({ params, /*auth,*/ req }) => {
       const { repo } = params
 
-      const did = await ctx.accountManager.getDidForActor(repo)
-      if (!did) {
+      //const did = await ctx.accountManager.getDidForActor(repo)
+      const atUser = await ctx.accountManager.getAccount(repo)
+      if (!atUser) {
         throw new InvalidRequestError(`Could not find repo: ${repo}`)
       }
+      else if (!atUser.handle) {
+        throw new InvalidRequestError(`Unable to read handle from repo: ${repo}`)
+      }
+      const did = atUser.did
 
       let profile: ProfileRecord | undefined
       await ctx.actorStore.read(did, async (actor) => {
@@ -26,7 +32,9 @@ export default function (server: Server, ctx: AppContext) {
         throw new InvalidRequestError(`Unable to fetch profile for: ${repo}`)
       }
 
-      const uriPrefix = `http://${ctx.cfg.service.hostname}/xrpc`
+      const uriPrefix = `${genDomainPrefix(ctx, req)}/xrpc`
+      const pubHandle = inferPubHandle(ctx, req.hostname, atUser.handle)
+      //`http://${ctx.cfg.service.hostname}/xrpc`
 
       return {
         encoding: 'application/activity+json',
@@ -35,7 +43,7 @@ export default function (server: Server, ctx: AppContext) {
           id: `${uriPrefix}/org.w3.activitypub.getActor?repo=${did}`,
           atId: `at://${did}/org.w3.activitypub.actor`,
           type: 'Person',
-          name: '???',
+          name: pubHandle.split('@')[0],
           preferredUsername: profile.displayName,
           summary: profile.description,
           inbox: `${uriPrefix}/org.w3.activitypub.putInbox?repo=${did}`,
