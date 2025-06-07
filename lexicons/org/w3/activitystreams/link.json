@@ -1,0 +1,30 @@
+{
+  "lexicon": 1,
+  "id": "org.w3.activitystreams.link",
+  "defs": {
+    "main": {
+      "type": "object",
+      "properties": {
+        "@context": { "type": "unknown", "description": "JSON-LD terms" },
+        "id": { "type": "string", "format": "uri" },
+
+        "href": { "type": "ref", "ref": "org.w3.activitystreams.properties#href" },
+        "ref": { "type": "ref", "ref": "org.w3.activitystreams.properties#ref" },
+        "mediaType": { "type": "ref", "ref": "org.w3.activitystreams.properties#mediaType" },
+        "name": { "type": "ref", "ref": "org.w3.activitystreams.properties#name" },
+        "hreflang": { "type": "ref", "ref": "org.w3.activitystreams.properties#hreflang" },
+        "height": { "type": "ref", "ref": "org.w3.activitystreams.properties#height" },
+        "width": { "type": "ref", "ref": "org.w3.activitystreams.properties#width" },
+        "preview": { "type": "ref", "ref": "org.w3.activitystreams.properties#preview" }
+      }
+    },
+    "preview2": { "type": "object",
+      "properties": {
+        "main": { "type": "ref",
+          "ref": "org.w3.activitystreams.defs#object",
+          "description": "https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link"
+        }
+      }
+    }
+  }
+}

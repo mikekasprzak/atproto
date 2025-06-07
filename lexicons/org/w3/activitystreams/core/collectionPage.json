@@ -1,0 +1,24 @@
+{
+  "lexicon": 1,
+  "id": "org.w3.activitystreams.core.collection",
+  "defs": {
+    "main": {
+      "type": "object",
+      "description": "EXTENDS object, IMPLEMENTS collection",
+      "properties": {
+        "@context": { "type": "unknown", "description": "JSON-LD terms" },
+        "id": { "type": "string", "format": "uri" },
+
+        "totalItems": { "type": "string" },
+        "current": { "type": "string" },
+        "first": { "type": "string" },
+        "last": { "type": "string" },
+        "items": { "type": "string" },
+
+        "partOf": { "type": "string" },
+        "next": { "type": "string" },
+        "prev": { "type": "string" }
+      }
+    }
+  }
+}

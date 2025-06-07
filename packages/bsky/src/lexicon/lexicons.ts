@@ -12729,6 +12729,54 @@ export const schemaDict = {
       },
     },
   },
+  OrgW3ActivitypubActivity: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.activity',
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          '@context': {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          atId: {
+            type: 'string',
+            format: 'at-uri',
+            description: 'AtProto identifier (not actually necessary)',
+          },
+          type: {
+            type: 'string',
+          },
+          summary: {
+            type: 'string',
+            description: 'HTML encoded profile page',
+          },
+          source: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.activity#sourceType',
+          },
+        },
+      },
+      sourceType: {
+        type: 'object',
+        properties: {
+          content: {
+            type: 'string',
+          },
+          mediaType: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
   OrgW3ActivitypubActor: {
     lexicon: 1,
     id: 'org.w3.activitypub.actor',
@@ -12798,7 +12846,8 @@ export const schemaDict = {
             format: 'handle',
           },
           name: {
-            type: 'string',
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
           },
           summary: {
             type: 'string',
@@ -12838,8 +12887,7 @@ export const schemaDict = {
           attachments: {
             type: 'array',
             items: {
-              type: 'ref',
-              ref: 'lex:org.w3.activitypub.actor#attachment',
+              type: 'string',
             },
           },
           endpoints: {
@@ -12992,6 +13040,58 @@ export const schemaDict = {
       },
     },
   },
+  OrgW3ActivitypubObject: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.object',
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          '@context': {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          atId: {
+            type: 'string',
+            format: 'at-uri',
+            description: 'AtProto identifier (not actually necessary)',
+          },
+          type: {
+            type: 'string',
+            knownValues: ['Note'],
+          },
+          summary: {
+            type: 'string',
+            description: 'HTML encoded profile page',
+          },
+          content: {
+            type: 'string',
+          },
+          source: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.object#sourceType',
+          },
+        },
+      },
+      sourceType: {
+        type: 'object',
+        properties: {
+          content: {
+            type: 'string',
+          },
+          mediaType: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
   OrgW3ActivitypubPost: {
     lexicon: 1,
     id: 'org.w3.activitypub.post',
@@ -13073,7 +13173,91 @@ export const schemaDict = {
   OrgW3ActivitystreamsDefs: {
     lexicon: 1,
     id: 'org.w3.activitystreams.defs',
-    defs: {},
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'union',
+            refs: [
+              'lex:org.w3.activitystreams.defs#anyURI',
+              'lex:org.w3.activitystreams.defs#arrayOfAnyURIObject',
+              'lex:org.w3.activitystreams.defs#object',
+            ],
+          },
+        },
+      },
+      string: {
+        type: 'string',
+        description: 'xsd:string | rdf:langString',
+      },
+      anyURI: {
+        type: 'string',
+        description: 'xsd:anyURI',
+        format: 'uri',
+      },
+      boolean: {
+        type: 'boolean',
+        description: 'xsd:boolean',
+      },
+      integer: {
+        type: 'integer',
+        description: 'xsd:integer',
+      },
+      nonNegativeInteger: {
+        type: 'integer',
+        description: 'xsd:nonNegativeInteger',
+        minimum: 0,
+      },
+      float: {
+        type: 'string',
+        description: "xsd:integer; Note: Lexicon doesn't support floats",
+      },
+      nonNegativeFloat: {
+        type: 'string',
+        description:
+          "xsd:float [>= 0.0f]; Note: Lexicon doesn't support floats",
+      },
+      dateTime: {
+        type: 'string',
+        description: 'xsd:dateTime',
+        format: 'datetime',
+      },
+      duration: {
+        type: 'string',
+        description: 'xsd:duration',
+      },
+      object: {
+        type: 'unknown',
+      },
+      arrayOfString: {
+        type: 'array',
+        items: {
+          type: 'ref',
+          ref: 'lex:org.w3.activitystreams.defs#string',
+        },
+      },
+      arrayOfStringObject: {
+        type: 'array',
+        items: {
+          type: 'union',
+          refs: [
+            'lex:org.w3.activitystreams.defs#string',
+            'lex:org.w3.activitystreams.defs#object',
+          ],
+        },
+      },
+      arrayOfAnyURIObject: {
+        type: 'array',
+        items: {
+          type: 'union',
+          refs: [
+            'lex:org.w3.activitystreams.defs#anyURI',
+            'lex:org.w3.activitystreams.defs#object',
+          ],
+        },
+      },
+    },
   },
   OrgW3ActivitystreamsFollower: {
     lexicon: 1,
@@ -13095,6 +13279,537 @@ export const schemaDict = {
               type: 'string',
               format: 'datetime',
             },
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsLink: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.link',
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          '@context': {
+            type: 'unknown',
+            description: 'JSON-LD terms',
+          },
+          id: {
+            type: 'string',
+            format: 'uri',
+          },
+          href: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#href',
+          },
+          ref: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#ref',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          hreflang: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#hreflang',
+          },
+          height: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#height',
+          },
+          width: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#width',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+        },
+      },
+      preview2: {
+        type: 'object',
+        properties: {
+          main: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#object',
+            description:
+              'https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsProperties: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.properties',
+    description: 'https://www.w3.org/TR/activitystreams-vocabulary/#properties',
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+            description:
+              '@id; Domain: Object | Link; Range: anyURI; Functional',
+            format: 'uri',
+          },
+          type: {
+            type: 'string',
+            description: '@type; Domain: Object | Link; Range: anyURI',
+            format: 'uri',
+          },
+          actor: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#actor; Domain: Activity; Range: Object | Link; SubpropertyOf: attributedTo',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          attachment: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#attachment; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          attributedTo: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#attributedTo; Domain: Object | Link; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          audience: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#audience; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          bcc: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#bcc; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          bto: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#bto; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          cc: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#cc; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          context: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#context; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          current: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#current; Domain: Collection; Range: CollectionPage | Link; Functional',
+            format: 'uri',
+          },
+          first: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#first; Domain: Collection; Range: CollectionPage | Link; Functional',
+            format: 'uri',
+          },
+          generator: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#generator; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          icon: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#icon; Domain: Object; Range: Image | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          image: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#image; Domain: Object; Range: Image | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          inReplyTo: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#inReplyTo; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          instrument: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#instrument; Domain: Activity; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          last: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#last; Domain: Collection; Range: CollectionPage | Link; Functional',
+            format: 'uri',
+          },
+          location: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#location; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          items: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#items; Domain: Collection; Range: Object | Link | Ordered List of [Object | Link]',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          oneOf: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#oneOf; Domain: Question; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          anyOf: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#anyOf; Domain: Question; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          closed: {
+            type: 'unknown',
+            description:
+              'https://www.w3.org/ns/activitystreams#closed; Domain: Question; Range: Object | Link | xsd:dateTime | xsd:boolean',
+          },
+          origin: {
+            type: 'unknown',
+            description:
+              'https://www.w3.org/ns/activitystreams#origin; Domain: Activity; Range: Object | Link',
+          },
+          next: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#next; Domain: CollectionPage; Range: CollectionPage | Link; Functional',
+            format: 'uri',
+          },
+          object: {
+            type: 'unknown',
+            description:
+              'https://www.w3.org/ns/activitystreams#object; Domain: Activity | Relationship; Range: Object | Link',
+          },
+          prev: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#prev; Domain: CollectionPage; Range: CollectionPage | Link; Functional',
+            format: 'uri',
+          },
+          result: {
+            type: 'unknown',
+            description:
+              'https://www.w3.org/ns/activitystreams#result; Domain: Activity; Range: Object | Link',
+          },
+          replies: {
+            type: 'unknown',
+            description:
+              'https://www.w3.org/ns/activitystreams#replies; Domain: Object; Range: Collection; Functional',
+          },
+          tag: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#tag; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          target: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#object',
+            description:
+              'https://www.w3.org/ns/activitystreams#target; Domain: Activity; Range: Object | Link',
+          },
+          to: {
+            type: 'array',
+            description:
+              'https://www.w3.org/ns/activitystreams#to; Domain: Object; Range: Object | Link',
+            items: {
+              type: 'ref',
+              ref: 'lex:org.w3.activitystreams.defs#object',
+            },
+          },
+          url: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#url; Domain: Object; Range: Link | xsd:anyURI',
+            format: 'uri',
+          },
+          accuracy: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#accuracy; Domain: Place; Range: xsd:float [>= 0.0f, <= 100.0f]; Note: Float not supported in Lexicon',
+          },
+          altitude: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#altitude; Domain: Object; Range: xsd:float; Functional; Note: Float not supported in Lexicon',
+          },
+          content: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#content; Domain: Object; Range: xsd:string | rdf:langString',
+          },
+          duration: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#duration; Domain: Object; Range: xsd:duration; Functional',
+          },
+          partOf: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#partOf; Domain: CollectionPage; Range: Link | Collection; Functional',
+          },
+          latitude: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#latitude; Domain: Object; Range: xsd:float; Functional; Note: Float not supported in Lexicon',
+          },
+          longitude: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#longitude; Domain: Object; Range: xsd:float; Functional; Note: Float not supported in Lexicon',
+          },
+          endTime: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#endTime; Domain: Object; Range: xsd:datetime; Functional',
+            format: 'datetime',
+          },
+          published: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#published; Domain: Object; Range: xsd:datetime; Functional',
+            format: 'datetime',
+          },
+          startTime: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#startTime; Domain: Object; Range: xsd:datetime; Functional',
+            format: 'datetime',
+          },
+          radius: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#radius; Domain: Place; Range: xsd:float [>= 0.0f]; Functional; Note: Float not supported in Lexicon',
+          },
+          rel: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#anyURI',
+            description:
+              'https://www.w3.org/ns/activitystreams#rel; Domain: Link; Range: [RFC5988] or [HTML5] Link Relation',
+          },
+          startIndex: {
+            type: 'integer',
+            description:
+              'https://www.w3.org/ns/activitystreams#startIndex; Domain: OrderedCollectionPage; Range: xsd:nonNegativeInteger; Functional',
+            minimum: 0,
+          },
+          summary: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#summary; Domain: Object; Range: xsd:string | rdf:langString',
+          },
+          totalItems: {
+            type: 'integer',
+            description:
+              'https://www.w3.org/ns/activitystreams#totalitems; Domain: Collection; Range: xsd:nonNegativeInteger; Functional',
+            minimum: 0,
+          },
+          units: {
+            type: 'string',
+            description:
+              "https://www.w3.org/ns/activitystreams#units; Domain: Place; Range: 'cm' | 'feet' | 'inches' | 'km' | 'm' | 'miles' | xsd:anyURI: Functional",
+          },
+          updated: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#updated; Domain: Object; Range: xsd:datetime; Functional',
+            format: 'datetime',
+          },
+          subject: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#object',
+            description:
+              'https://www.w3.org/ns/activitystreams#subject; Domain: Relationship; Range: Object | Link; Functional',
+          },
+          relationship: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#object',
+            description:
+              'https://www.w3.org/ns/activitystreams#relationship; Domain: Relationship; Range: Object',
+          },
+          describes: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#object',
+            description:
+              'https://www.w3.org/ns/activitystreams#describes; Domain: Profile; Range: Object; Functional',
+          },
+          formerType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#object',
+            description:
+              "https://www.w3.org/ns/activitystreams#formerType; Domain: Tombstone; Range: Object; Functional: false; Note: MK - I believe explicit 'Functional: false' means it a url, while syntactically correct, points to a dead resource",
+          },
+          deleted: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#deleted; Domain: Tombstone; Range: xsd:datetime; Functional',
+            format: 'datetime',
+          },
+        },
+      },
+      name: {
+        type: 'object',
+        properties: {
+          main: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#string',
+            description:
+              'https://www.w3.org/ns/activitystreams#name; Domain: Object | Link; Range: xsd:string | rdf:langString',
+          },
+        },
+      },
+      height: {
+        type: 'object',
+        properties: {
+          main: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#nonNegativeInteger',
+            description:
+              'https://www.w3.org/ns/activitystreams#height; Domain: Link; Range: xsd:nonNegativeInteger; Functional',
+          },
+        },
+      },
+      width: {
+        type: 'object',
+        properties: {
+          main: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#nonNegativeInteger',
+            description:
+              'https://www.w3.org/ns/activitystreams#width; Domain: Link; Range: xsd:nonNegativeInteger; Functional',
+          },
+        },
+      },
+      href: {
+        type: 'object',
+        properties: {
+          main: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#anyURI',
+            description:
+              'https://www.w3.org/ns/activitystreams#href; Domain: Link; Range: xsd:anyURI; Functional',
+          },
+        },
+      },
+      hreflang: {
+        type: 'object',
+        properties: {
+          main: {
+            type: 'string',
+            description:
+              "https://www.w3.org/ns/activitystreams#hreflang; Domain: Link; Range: [BCP47] Language-Tag; Functional; Note: According to [RFC5646], the maximum legal size of a 'Language-Tag' is the 'langtag' of size (3+1+3+2*(1+3))+1+(4)+1+(3)+(variantCount*(1+8))+(1+extensionCount*(3+1+8))+1+(1+privateUseCount*(1+8)), which is a lot",
+          },
+        },
+      },
+      ref: {
+        type: 'object',
+        properties: {
+          main: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#anyURI',
+            description:
+              '************ https://www.w3.org/ns/activitystreams#ref; Domain: Link; Range: xsd:anyURI; Functional',
+          },
+        },
+      },
+      mediaType: {
+        type: 'object',
+        properties: {
+          main: {
+            type: 'string',
+            description:
+              'https://www.w3.org/ns/activitystreams#mediaType; Domain: Object | Link; Range: MIME Media Type; Functional',
+          },
+        },
+      },
+      preview: {
+        type: 'object',
+        properties: {
+          main: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#object',
+            description:
+              'https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link',
           },
         },
       },
@@ -13375,12 +14090,16 @@ export const ids = {
   ChatBskyModerationGetActorMetadata: 'chat.bsky.moderation.getActorMetadata',
   ChatBskyModerationGetMessageContext: 'chat.bsky.moderation.getMessageContext',
   ChatBskyModerationUpdateActorAccess: 'chat.bsky.moderation.updateActorAccess',
+  OrgW3ActivitypubActivity: 'org.w3.activitypub.activity',
   OrgW3ActivitypubActor: 'org.w3.activitypub.actor',
   OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
   OrgW3ActivitypubGetActor: 'org.w3.activitypub.getActor',
   OrgW3ActivitypubGetOutbox: 'org.w3.activitypub.getOutbox',
+  OrgW3ActivitypubObject: 'org.w3.activitypub.object',
   OrgW3ActivitypubPost: 'org.w3.activitypub.post',
   OrgW3ActivitypubPutInbox: 'org.w3.activitypub.putInbox',
   OrgW3ActivitystreamsDefs: 'org.w3.activitystreams.defs',
   OrgW3ActivitystreamsFollower: 'org.w3.activitystreams.follower',
+  OrgW3ActivitystreamsLink: 'org.w3.activitystreams.link',
+  OrgW3ActivitystreamsProperties: 'org.w3.activitystreams.properties',
 } as const

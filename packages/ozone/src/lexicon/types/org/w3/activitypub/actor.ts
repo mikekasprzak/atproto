@@ -9,6 +9,7 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
+import type * as OrgW3ActivitystreamsProperties from '../activitystreams/properties.js'
 
 const is$typed = _is$typed,
   validate = _validate
@@ -39,7 +40,7 @@ export interface Main {
   featured?: string
   featuredTags?: string
   preferredUsername: string
-  name?: string
+  name?: OrgW3ActivitystreamsProperties.Name
   /** HTML encoded profile page */
   summary?: string
   url?: string
@@ -50,7 +51,7 @@ export interface Main {
   memorial?: boolean
   publicKey?: PublicKey
   tag?: Tag[]
-  attachments?: Attachment[]
+  attachments?: string[]
   endpoints?: Endpoints
   icon?: MediaUrl
   image?: MediaUrl

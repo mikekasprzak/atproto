@@ -1,0 +1,41 @@
+{
+  "lexicon": 1,
+  "id": "org.w3.activitystreams.core.object",
+  "defs": {
+    "main": {
+      "type": "object",
+      "properties": {
+        "@context": { "type": "unknown", "description": "JSON-LD terms" },
+        "id": { "type": "string", "description": "Range: anyURI" , "format": "uri" },
+        "type": { "type": "string", "description": "Range: anyURI" },
+
+        "attachment": { "type": "ref", "ref": "org.w3.activitystreams.properties#attachment" },
+        "attributedTo": { "type": "string" },
+        "audience": { "type": "string" },
+        "content": { "type": "string" },
+        "context": { "type": "string" },
+        "name": { "type": "string" },
+        "endTime": { "type": "string" },
+        "generator": { "type": "string" },
+        "icon": { "type": "string" },
+        "image": { "type": "string" },
+        "inReplyTo": { "type": "string" },
+        "location": { "type": "string" },
+        "preview": { "type": "string" },
+        "published": { "type": "string" },
+        "replies": { "type": "string" },
+        "startTime": { "type": "string" },
+        "summary": { "type": "string" },
+        "tag": { "type": "string" },
+        "updated": { "type": "string" },
+        "url": { "type": "string" },
+        "to": { "type": "string" },
+        "bto": { "type": "string" },
+        "cc": { "type": "string" },
+        "bcc": { "type": "string" },
+        "mediaType": { "type": "string" },
+        "duration": { "type": "string" }
+      }
+    }
+  }
+}
