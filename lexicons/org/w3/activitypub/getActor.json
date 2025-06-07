@@ -20,7 +20,7 @@
         "encoding": "application/activity+json",
         "schema": {
           "type": "ref",
-          "ref": "arg.w3.activitypub.actor"
+          "ref": "org.w3.activitypub.actor"
         }
       }
     }

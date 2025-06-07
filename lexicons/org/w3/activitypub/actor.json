@@ -4,12 +4,13 @@
   "defs": {
     "main": {
       "type": "object",
+      "required": ["@context", "id", "name"],
       "properties": {
-        "@context": { "type": "union", "refs": ["string", "array", "object"] },
+        "@context": { "type": "array", "items": { "type": "string"} },
         "_dummy": { "type": "array", "items": { "type": "string" } },
         "id": { "type": "string", "format": "uri" },
         "atId": { "type": "string", "format": "at-uri", "description": "AtProto identifier (not actually necessary)" },
-        "type": { "type": "ref", "ref": "org.w3.activitypub.defs#actorType" },
+        "type": { "type": "string" },
         "name": { "type": "string", "format": "handle" },
         "preferredUsername": { "type": "string" },
         "summary": { "type": "string", "description": "HTML encoded profile page" },

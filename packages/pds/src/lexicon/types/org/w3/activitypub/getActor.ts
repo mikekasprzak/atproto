@@ -11,7 +11,7 @@ import {
   type OmitKey,
 } from '../../../../util'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
-import type * as ArgW3ActivitypubActor from '../../../arg/w3/activitypub/actor.js'
+import type * as OrgW3ActivitypubActor from './actor.js'
 
 const is$typed = _is$typed,
   validate = _validate
@@ -23,7 +23,7 @@ export interface QueryParams {
 }
 
 export type InputSchema = undefined
-export type OutputSchema = ArgW3ActivitypubActor.Main
+export type OutputSchema = OrgW3ActivitypubActor.Main
 export type HandlerInput = undefined
 
 export interface HandlerSuccess {
