@@ -2,5 +2,77 @@
   "lexicon": 1,
   "id": "org.w3.activitystreams.defs",
   "defs": {
+    "main": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "union",
+          "refs": ["#anyURI", "#arrayOfAnyURIObject", "#object"]
+        }
+      }
+    },
+    "string": {
+      "type": "string",
+      "description": "xsd:string | rdf:langString"
+    },
+    "anyURI": {
+      "type": "string",
+      "description": "xsd:anyURI",
+      "format": "uri"
+    },
+    "boolean": {
+      "type": "boolean",
+      "description": "xsd:boolean"
+    },
+    "integer": {
+      "type": "integer",
+      "description": "xsd:integer"
+    },
+    "nonNegativeInteger": {
+      "type": "integer",
+      "description": "xsd:nonNegativeInteger",
+      "minimum": 0
+    },
+    "float": {
+      "type": "string",
+      "description": "xsd:integer; Note: Lexicon doesn't support floats"
+    },
+    "nonNegativeFloat": {
+      "type": "string",
+      "description": "xsd:float [>= 0.0f]; Note: Lexicon doesn't support floats"
+    },
+    "dateTime": {
+      "type": "string",
+      "description": "xsd:dateTime",
+      "format": "datetime"
+    },
+    "duration": {
+      "type": "string",
+      "description": "xsd:duration"
+    },
+    "object": {
+      "type": "unknown"
+    },
+    "arrayOfString": {
+      "type": "array",
+      "items": {
+        "type": "ref",
+        "ref": "#string"
+      }
+    },
+    "arrayOfStringObject": {
+      "type": "array",
+      "items": {
+        "type": "union",
+        "refs": ["#string", "#object"]
+      }
+    },
+    "arrayOfAnyURIObject": {
+      "type": "array",
+      "items": {
+        "type": "union",
+        "refs": ["#anyURI", "#object"]
+      }
+    }
   }
 }
