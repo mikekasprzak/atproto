@@ -6,10 +6,13 @@
       "type": "object",
       "required": ["@context", "id", "type", "name"],
       "properties": {
-        "@context": { "type": "array", "items": { "type": "string"} },
+        "@context": { "type": "array", "items": { "type": "string", "knownValues": [
+          "https://www.w3.org/ns/activitystreams",
+          "https://w3id.org/security/v1"
+          ]} },
         "id": { "type": "string", "format": "uri" },
         "atId": { "type": "string", "format": "at-uri", "description": "AtProto identifier (not actually necessary)" },
-        "type": { "type": "string", "knownValues": ["Person"] },
+        "type": { "type": "string", "knownValues": ["Application", "Group", "Organization", "Person", "Service"] },
         "name": { "type": "string", "format": "handle" },
         "preferredUsername": { "type": "string" },
         "summary": { "type": "string", "description": "HTML encoded profile page" },
@@ -21,17 +24,33 @@
         "publicKey": { "type": "ref", "ref": "#publicKey" },
         "tag": { "type": "array", "items": { "type": "string" } },
         "attachments": { "type": "array", "items": { "type": "string" } },
-        "endpoints": { "type": "array", "items": { "type": "string", "format": "uri" } },
-        "icon": { "type": "string" },
-        "image": { "type": "string" }
+        "endpoints": { "type": "ref", "ref": "#endpoints" },
+        "icon": { "type": "ref", "ref": "#mediaUrl" },
+        "image": { "type": "ref", "ref": "#mediaUrl" }
       }
     },
     "publicKey": {
       "type": "object",
+      "required": ["id", "owner", "publicKeyPem"],
       "properties": {
         "id": { "type": "string", "format": "uri" },
         "owner": { "type": "string", "format": "uri" },
         "publicKeyPem": { "type": "string" }
+      }
+    },
+    "endpoints": {
+      "type": "object",
+      "properties": {
+        "sharedInbox": { "type": "string", "format": "uri"}
+      }
+    },
+    "mediaUrl": {
+      "type": "object",
+      "required": ["type", "mediaType", "url"],
+      "properties": {
+        "type": { "type": "string", "knownValues": ["Image"] },
+        "mediaType": { "type": "string", "knownValues": ["image/gif", "image/jpeg", "image/png", "image/svg+xml", "image/webp"] },
+        "url": { "type": "string", "format": "uri" }
       }
     }
   }

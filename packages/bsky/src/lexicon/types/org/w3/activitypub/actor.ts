@@ -33,9 +33,9 @@ export interface Main {
   publicKey?: PublicKey
   tag?: string[]
   attachments?: string[]
-  endpoints?: string[]
-  icon?: string
-  image?: string
+  endpoints?: Endpoints
+  icon?: MediaUrl
+  image?: MediaUrl
 }
 
 const hashMain = 'main'
@@ -50,9 +50,9 @@ export function validateMain<V>(v: V) {
 
 export interface PublicKey {
   $type?: 'org.w3.activitypub.actor#publicKey'
-  id?: string
-  owner?: string
-  publicKeyPem?: string
+  id: string
+  owner: string
+  publicKeyPem: string
 }
 
 const hashPublicKey = 'publicKey'
@@ -63,4 +63,42 @@ export function isPublicKey<V>(v: V) {
 
 export function validatePublicKey<V>(v: V) {
   return validate<PublicKey & V>(v, id, hashPublicKey)
+}
+
+export interface Endpoints {
+  $type?: 'org.w3.activitypub.actor#endpoints'
+  sharedInbox?: string
+}
+
+const hashEndpoints = 'endpoints'
+
+export function isEndpoints<V>(v: V) {
+  return is$typed(v, id, hashEndpoints)
+}
+
+export function validateEndpoints<V>(v: V) {
+  return validate<Endpoints & V>(v, id, hashEndpoints)
+}
+
+export interface MediaUrl {
+  $type?: 'org.w3.activitypub.actor#mediaUrl'
+  type: 'Image' | (string & {})
+  mediaType:
+    | 'image/gif'
+    | 'image/jpeg'
+    | 'image/png'
+    | 'image/svg+xml'
+    | 'image/webp'
+    | (string & {})
+  url: string
+}
+
+const hashMediaUrl = 'mediaUrl'
+
+export function isMediaUrl<V>(v: V) {
+  return is$typed(v, id, hashMediaUrl)
+}
+
+export function validateMediaUrl<V>(v: V) {
+  return validate<MediaUrl & V>(v, id, hashMediaUrl)
 }

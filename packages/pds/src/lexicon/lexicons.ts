@@ -16422,22 +16422,22 @@ export const schemaDict = {
             },
           },
           endpoints: {
-            type: 'array',
-            items: {
-              type: 'string',
-              format: 'uri',
-            },
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.actor#endpoints',
           },
           icon: {
-            type: 'string',
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.actor#mediaUrl',
           },
           image: {
-            type: 'string',
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.actor#mediaUrl',
           },
         },
       },
       publicKey: {
         type: 'object',
+        required: ['id', 'owner', 'publicKeyPem'],
         properties: {
           id: {
             type: 'string',
@@ -16449,6 +16449,39 @@ export const schemaDict = {
           },
           publicKeyPem: {
             type: 'string',
+          },
+        },
+      },
+      endpoints: {
+        type: 'object',
+        properties: {
+          sharedInbox: {
+            type: 'string',
+            format: 'uri',
+          },
+        },
+      },
+      mediaUrl: {
+        type: 'object',
+        required: ['type', 'mediaType', 'url'],
+        properties: {
+          type: {
+            type: 'string',
+            knownValues: ['Image'],
+          },
+          mediaType: {
+            type: 'string',
+            knownValues: [
+              'image/gif',
+              'image/jpeg',
+              'image/png',
+              'image/svg+xml',
+              'image/webp',
+            ],
+          },
+          url: {
+            type: 'string',
+            format: 'uri',
           },
         },
       },

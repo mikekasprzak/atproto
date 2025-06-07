@@ -14,7 +14,6 @@ export default function (server: Server, ctx: AppContext) {
     handler: async ({ params, /*auth,*/ req }) => {
       const { repo } = params
 
-      //const did = await ctx.accountManager.getDidForActor(repo)
       const atUser = await ctx.accountManager.getAccount(repo)
       if (!atUser) {
         throw new InvalidRequestError(`Could not find repo: ${repo}`)
@@ -29,12 +28,15 @@ export default function (server: Server, ctx: AppContext) {
         profile = (await actor.record.getProfileRecord()) as ProfileRecord
       })
       if (!profile) {
-        throw new InvalidRequestError(`Unable to fetch profile for: ${repo}`)
+        throw new InvalidRequestError(`Unable to fetch profile from repo: ${repo}`)
       }
 
       const uriPrefix = `${genDomainPrefix(ctx, req)}/xrpc`
       const pubHandle = inferPubHandle(ctx, req.hostname, atUser.handle)
-      //`http://${ctx.cfg.service.hostname}/xrpc`
+
+      // NOTES: The @context defines JSON-LD terms. It can be specified by URL (string), or inlined directly in the document (object).
+      //   It's common to see Mastodon responses as a string, in an array of strings and objects
+      //   ref: https://www.w3.org/TR/json-ld/#the-context
 
       return {
         encoding: 'application/activity+json',
