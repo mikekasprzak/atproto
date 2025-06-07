@@ -39,20 +39,20 @@ export default function (server: Server, ctx: AppContext) {
       //   ref: https://www.w3.org/TR/json-ld/#the-context
 
       return {
-        encoding: 'application/activity+json',
+        encoding: 'application/activity+json', // 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
         body: {
           '@context': ['https://www.w3.org/ns/activitystreams'],
           id: `${uriPrefix}/org.w3.activitypub.getActor?repo=${did}`,
-          atId: `at://${did}/org.w3.activitypub.actor`,
+          atUri: `at://${did}/org.w3.activitypub.actor`,
           type: 'Person',
-          name: pubHandle.split('@')[0],
-          preferredUsername: profile.displayName,
-          summary: profile.description,
           inbox: `${uriPrefix}/org.w3.activitypub.putInbox?repo=${did}`,
           outbox: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}`,
           followers: `${uriPrefix}/org.w3.activitypub.getFollowers?repo=${did}`,
           following: `${uriPrefix}/org.w3.activitypub.getFollowing?repo=${did}`,
           //featured: `${uriPrefix}/org.joinmastodon.getFeatured?repo=${did}`,
+          preferredUsername: pubHandle.split('@')[0],
+          name: profile.displayName,
+          summary: profile.description,
         },
       }
     },

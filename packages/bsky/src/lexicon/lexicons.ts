@@ -12735,37 +12735,39 @@ export const schemaDict = {
     defs: {
       main: {
         type: 'object',
-        required: ['@context', 'id', 'type', 'name'],
+        required: ['id', 'type', 'preferredUsername'],
         properties: {
           '@context': {
             type: 'array',
+            description:
+              "ActivtyStreams terms dictionary. This isn't to spec. This type needs to be 'string | array | object'",
             items: {
               type: 'string',
+              description: 'ActivtyStreams valid term namespaces by URL.',
+              knownValues: [
+                'https://www.w3.org/ns/activitystreams',
+                'https://w3id.org/security/v1',
+              ],
             },
           },
           id: {
             type: 'string',
             format: 'uri',
           },
-          atId: {
+          atUri: {
             type: 'string',
             format: 'at-uri',
-            description: 'AtProto identifier (not actually necessary)',
+            description: 'AtProto identifier URI (not actually necessary)',
           },
           type: {
             type: 'string',
-            knownValues: ['Person'],
-          },
-          name: {
-            type: 'string',
-            format: 'handle',
-          },
-          preferredUsername: {
-            type: 'string',
-          },
-          summary: {
-            type: 'string',
-            description: 'HTML encoded profile page',
+            knownValues: [
+              'Application',
+              'Group',
+              'Organization',
+              'Person',
+              'Service',
+            ],
           },
           inbox: {
             type: 'string',
@@ -12787,6 +12789,41 @@ export const schemaDict = {
             type: 'string',
             format: 'uri',
           },
+          featuredTags: {
+            type: 'string',
+            format: 'uri',
+          },
+          preferredUsername: {
+            type: 'string',
+            format: 'handle',
+          },
+          name: {
+            type: 'string',
+          },
+          summary: {
+            type: 'string',
+            description: 'HTML encoded profile page',
+          },
+          url: {
+            type: 'string',
+            format: 'uri',
+          },
+          published: {
+            type: 'string',
+            format: 'datetime',
+          },
+          manuallyApprovesFollowers: {
+            type: 'boolean',
+          },
+          discoverable: {
+            type: 'boolean',
+          },
+          indexable: {
+            type: 'boolean',
+          },
+          memorial: {
+            type: 'boolean',
+          },
           publicKey: {
             type: 'ref',
             ref: 'lex:org.w3.activitypub.actor#publicKey',
@@ -12794,13 +12831,15 @@ export const schemaDict = {
           tag: {
             type: 'array',
             items: {
-              type: 'string',
+              type: 'ref',
+              ref: 'lex:org.w3.activitypub.actor#tag',
             },
           },
           attachments: {
             type: 'array',
             items: {
-              type: 'string',
+              type: 'ref',
+              ref: 'lex:org.w3.activitypub.actor#attachment',
             },
           },
           endpoints: {
@@ -12834,6 +12873,12 @@ export const schemaDict = {
           },
         },
       },
+      tag: {
+        type: 'string',
+      },
+      attachment: {
+        type: 'string',
+      },
       endpoints: {
         type: 'object',
         properties: {
@@ -12845,6 +12890,8 @@ export const schemaDict = {
       },
       mediaUrl: {
         type: 'object',
+        description:
+          "I'm not sure this is to spec. I believe the type needs to be 'string | object', where 'string' is the url",
         required: ['type', 'mediaType', 'url'],
         properties: {
           type: {

@@ -16,23 +16,41 @@ const id = 'org.w3.activitypub.actor'
 
 export interface Main {
   $type?: 'org.w3.activitypub.actor'
-  '@context': string[]
+  /** ActivtyStreams terms dictionary. This isn't to spec. This type needs to be 'string | array | object' */
+  '@context'?: (
+    | 'https://www.w3.org/ns/activitystreams'
+    | 'https://w3id.org/security/v1'
+    | (string & {})
+  )[]
   id: string
-  /** AtProto identifier (not actually necessary) */
-  atId?: string
-  type: 'Person' | (string & {})
-  name: string
-  preferredUsername?: string
-  /** HTML encoded profile page */
-  summary?: string
+  /** AtProto identifier URI (not actually necessary) */
+  atUri?: string
+  type:
+    | 'Application'
+    | 'Group'
+    | 'Organization'
+    | 'Person'
+    | 'Service'
+    | (string & {})
   inbox?: string
   outbox?: string
   followers?: string
   following?: string
   featured?: string
+  featuredTags?: string
+  preferredUsername: string
+  name?: string
+  /** HTML encoded profile page */
+  summary?: string
+  url?: string
+  published?: string
+  manuallyApprovesFollowers?: boolean
+  discoverable?: boolean
+  indexable?: boolean
+  memorial?: boolean
   publicKey?: PublicKey
-  tag?: string[]
-  attachments?: string[]
+  tag?: Tag[]
+  attachments?: Attachment[]
   endpoints?: Endpoints
   icon?: MediaUrl
   image?: MediaUrl
@@ -65,6 +83,9 @@ export function validatePublicKey<V>(v: V) {
   return validate<PublicKey & V>(v, id, hashPublicKey)
 }
 
+export type Tag = string
+export type Attachment = string
+
 export interface Endpoints {
   $type?: 'org.w3.activitypub.actor#endpoints'
   sharedInbox?: string
@@ -80,6 +101,7 @@ export function validateEndpoints<V>(v: V) {
   return validate<Endpoints & V>(v, id, hashEndpoints)
 }
 
+/** I'm not sure this is to spec. I believe the type needs to be 'string | object', where 'string' is the url */
 export interface MediaUrl {
   $type?: 'org.w3.activitypub.actor#mediaUrl'
   type: 'Image' | (string & {})
