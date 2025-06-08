@@ -4,10 +4,11 @@
   "defs": {
     "main": {
       "type": "object",
+      "description": "IMPLEMENTS link",
       "properties": {
         "@context": { "type": "unknown", "description": "JSON-LD terms" },
-        "id": { "type": "string", "format": "uri" },
 
+        "id": { "type": "ref", "ref": "org.w3.activitystreams.properties#id" },
         "href": { "type": "ref", "ref": "org.w3.activitystreams.properties#href" },
         "ref": { "type": "ref", "ref": "org.w3.activitystreams.properties#ref" },
         "mediaType": { "type": "ref", "ref": "org.w3.activitystreams.properties#mediaType" },

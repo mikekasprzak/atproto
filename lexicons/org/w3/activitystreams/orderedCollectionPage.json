@@ -1,10 +1,10 @@
 {
   "lexicon": 1,
-  "id": "org.w3.activitystreams.object",
+  "id": "org.w3.activitystreams.orderedCollectionPage",
   "defs": {
     "main": {
       "type": "object",
-      "description": "IMPLEMENTS object",
+      "description": "EXTENDS object, collection, collectionPage, IMPLEMENTS orderedCollectionPage",
       "properties": {
         "@context": { "type": "unknown", "description": "JSON-LD terms" },
 
@@ -35,7 +35,19 @@
         "cc": { "type": "ref", "ref": "org.w3.activitystreams.properties#cc" },
         "bcc": { "type": "ref", "ref": "org.w3.activitystreams.properties#bcc" },
         "mediaType": { "type": "ref", "ref": "org.w3.activitystreams.properties#mediaType" },
-        "duration": { "type": "ref", "ref": "org.w3.activitystreams.properties#duration" }
+        "duration": { "type": "ref", "ref": "org.w3.activitystreams.properties#duration" },
+
+        "totalItems": { "type": "ref", "ref": "org.w3.activitystreams.properties#totalItems" },
+        "current": { "type": "ref", "ref": "org.w3.activitystreams.properties#current" },
+        "first": { "type": "ref", "ref": "org.w3.activitystreams.properties#first" },
+        "last": { "type": "ref", "ref": "org.w3.activitystreams.properties#last" },
+        "items": { "type": "ref", "ref": "org.w3.activitystreams.properties#items" },
+
+        "partOf": { "type": "ref", "ref": "org.w3.activitystreams.properties#partOf" },
+        "next": { "type": "ref", "ref": "org.w3.activitystreams.properties#next" },
+        "prev": { "type": "ref", "ref": "org.w3.activitystreams.properties#prev" },
+
+        "startIndex": { "type": "ref", "ref": "org.w3.activitystreams.properties#startIndex" }
       }
     }
   }

@@ -13,11 +13,11 @@ import type * as OrgW3ActivitystreamsProperties from './properties.js'
 
 const is$typed = _is$typed,
   validate = _validate
-const id = 'org.w3.activitystreams.object'
+const id = 'org.w3.activitystreams.collectionPage'
 
-/** IMPLEMENTS object */
+/** EXTENDS object, collection, IMPLEMENTS collectionPage */
 export interface Main {
-  $type?: 'org.w3.activitystreams.object'
+  $type?: 'org.w3.activitystreams.collectionPage'
   /** JSON-LD terms */
   '@context'?: { [_ in string]: unknown }
   id?: OrgW3ActivitystreamsProperties.Id
@@ -48,6 +48,14 @@ export interface Main {
   bcc?: OrgW3ActivitystreamsProperties.Bcc
   mediaType?: OrgW3ActivitystreamsProperties.MediaType
   duration?: OrgW3ActivitystreamsProperties.Duration
+  totalItems?: OrgW3ActivitystreamsProperties.TotalItems
+  current?: OrgW3ActivitystreamsProperties.Current
+  first?: OrgW3ActivitystreamsProperties.First
+  last?: OrgW3ActivitystreamsProperties.Last
+  items?: OrgW3ActivitystreamsProperties.Items
+  partOf?: OrgW3ActivitystreamsProperties.PartOf
+  next?: OrgW3ActivitystreamsProperties.Next
+  prev?: OrgW3ActivitystreamsProperties.Prev
 }
 
 const hashMain = 'main'

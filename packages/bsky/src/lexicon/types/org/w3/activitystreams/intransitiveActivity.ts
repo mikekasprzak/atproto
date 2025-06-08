@@ -13,22 +13,19 @@ import type * as OrgW3ActivitystreamsProperties from './properties.js'
 
 const is$typed = _is$typed,
   validate = _validate
-const id = 'org.w3.activitystreams.link'
+const id = 'org.w3.activitystreams.intransitiveActivity'
 
-/** IMPLEMENTS link */
+/** IMPLEMENTS activity (DOES NOT EXTEND object) */
 export interface Main {
-  $type?: 'org.w3.activitystreams.link'
+  $type?: 'org.w3.activitystreams.intransitiveActivity'
   /** JSON-LD terms */
   '@context'?: { [_ in string]: unknown }
-  id?: OrgW3ActivitystreamsProperties.Id
-  href?: OrgW3ActivitystreamsProperties.Href
-  ref?: OrgW3ActivitystreamsProperties.Ref
-  mediaType?: OrgW3ActivitystreamsProperties.MediaType
-  name?: OrgW3ActivitystreamsProperties.Name
-  hreflang?: OrgW3ActivitystreamsProperties.Hreflang
-  height?: OrgW3ActivitystreamsProperties.Height
-  width?: OrgW3ActivitystreamsProperties.Width
-  preview?: OrgW3ActivitystreamsProperties.Preview
+  actor?: OrgW3ActivitystreamsProperties.Actor
+  object?: OrgW3ActivitystreamsProperties.Object
+  target?: OrgW3ActivitystreamsProperties.Target
+  result?: OrgW3ActivitystreamsProperties.Result
+  origin?: OrgW3ActivitystreamsProperties.Origin
+  instrument?: OrgW3ActivitystreamsProperties.Instrument
 }
 
 const hashMain = 'main'

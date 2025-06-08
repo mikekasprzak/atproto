@@ -15,11 +15,12 @@ const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitystreams.link'
 
+/** IMPLEMENTS link */
 export interface Main {
   $type?: 'org.w3.activitystreams.link'
   /** JSON-LD terms */
   '@context'?: { [_ in string]: unknown }
-  id?: string
+  id?: OrgW3ActivitystreamsProperties.Id
   href?: OrgW3ActivitystreamsProperties.Href
   ref?: OrgW3ActivitystreamsProperties.Ref
   mediaType?: OrgW3ActivitystreamsProperties.MediaType

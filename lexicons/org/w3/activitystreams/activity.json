@@ -1,10 +1,10 @@
 {
   "lexicon": 1,
-  "id": "org.w3.activitystreams.object",
+  "id": "org.w3.activitystreams.activity",
   "defs": {
     "main": {
       "type": "object",
-      "description": "IMPLEMENTS object",
+      "description": "EXTENDS object, IMPLEMENTS activity",
       "properties": {
         "@context": { "type": "unknown", "description": "JSON-LD terms" },
 
@@ -35,7 +35,14 @@
         "cc": { "type": "ref", "ref": "org.w3.activitystreams.properties#cc" },
         "bcc": { "type": "ref", "ref": "org.w3.activitystreams.properties#bcc" },
         "mediaType": { "type": "ref", "ref": "org.w3.activitystreams.properties#mediaType" },
-        "duration": { "type": "ref", "ref": "org.w3.activitystreams.properties#duration" }
+        "duration": { "type": "ref", "ref": "org.w3.activitystreams.properties#duration" },
+
+        "actor": { "type": "ref", "ref": "org.w3.activitystreams.properties#actor" },
+        "object": { "type": "ref", "ref": "org.w3.activitystreams.properties#object" },
+        "target": { "type": "ref", "ref": "org.w3.activitystreams.properties#target" },
+        "result": { "type": "ref", "ref": "org.w3.activitystreams.properties#result" },
+        "origin": { "type": "ref", "ref": "org.w3.activitystreams.properties#origin" },
+        "instrument": { "type": "ref", "ref": "org.w3.activitystreams.properties#instrument" }
       }
     }
   }

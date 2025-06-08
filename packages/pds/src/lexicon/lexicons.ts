@@ -17013,165 +17013,25 @@ export const schemaDict = {
       },
     },
   },
-  OrgW3ActivitystreamsDefs: {
+  OrgW3ActivitystreamsActivity: {
     lexicon: 1,
-    id: 'org.w3.activitystreams.defs',
+    id: 'org.w3.activitystreams.activity',
     defs: {
       main: {
         type: 'object',
-        properties: {
-          type: {
-            type: 'union',
-            refs: [
-              'lex:org.w3.activitystreams.defs#anyURI',
-              'lex:org.w3.activitystreams.defs#arrayOfAnyURIObject',
-              'lex:org.w3.activitystreams.defs#object',
-            ],
-          },
-        },
-      },
-      string: {
-        type: 'string',
-        description: 'xsd:string | rdf:langString',
-      },
-      anyURI: {
-        type: 'string',
-        description: 'xsd:anyURI',
-        format: 'uri',
-      },
-      boolean: {
-        type: 'boolean',
-        description: 'xsd:boolean',
-      },
-      integer: {
-        type: 'integer',
-        description: 'xsd:integer',
-      },
-      nonNegativeInteger: {
-        type: 'integer',
-        description: 'xsd:nonNegativeInteger',
-        minimum: 0,
-      },
-      float: {
-        type: 'string',
-        description: "xsd:integer; Note: Lexicon doesn't support floats",
-      },
-      nonNegativeFloat: {
-        type: 'string',
-        description:
-          "xsd:float [>= 0.0f]; Note: Lexicon doesn't support floats",
-      },
-      dateTime: {
-        type: 'string',
-        description: 'xsd:dateTime',
-        format: 'datetime',
-      },
-      duration: {
-        type: 'string',
-        description: 'xsd:duration',
-      },
-      object: {
-        type: 'unknown',
-      },
-      arrayOfString: {
-        type: 'array',
-        items: {
-          type: 'ref',
-          ref: 'lex:org.w3.activitystreams.defs#string',
-        },
-      },
-      arrayOfStringObject: {
-        type: 'array',
-        items: {
-          type: 'union',
-          refs: [
-            'lex:org.w3.activitystreams.defs#string',
-            'lex:org.w3.activitystreams.defs#object',
-          ],
-        },
-      },
-      arrayOfAnyURIObject: {
-        type: 'array',
-        items: {
-          type: 'union',
-          refs: [
-            'lex:org.w3.activitystreams.defs#anyURI',
-            'lex:org.w3.activitystreams.defs#object',
-          ],
-        },
-      },
-    },
-  },
-  OrgW3ActivitystreamsLink: {
-    lexicon: 1,
-    id: 'org.w3.activitystreams.link',
-    defs: {
-      main: {
-        type: 'object',
+        description: 'EXTENDS object, IMPLEMENTS activity',
         properties: {
           '@context': {
             type: 'unknown',
             description: 'JSON-LD terms',
           },
           id: {
-            type: 'string',
-            format: 'uri',
-          },
-          href: {
             type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#href',
-          },
-          ref: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#ref',
-          },
-          mediaType: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#mediaType',
-          },
-          name: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#name',
-          },
-          hreflang: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#hreflang',
-          },
-          height: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#height',
-          },
-          width: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#width',
-          },
-          preview: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#preview',
-          },
-        },
-      },
-    },
-  },
-  OrgW3ActivitystreamsObject: {
-    lexicon: 1,
-    id: 'org.w3.activitystreams.object',
-    defs: {
-      main: {
-        type: 'object',
-        properties: {
-          '@context': {
-            type: 'unknown',
-            description: 'JSON-LD terms',
-          },
-          id: {
-            type: 'string',
-            description: 'Range: anyURI',
-            format: 'uri',
+            ref: 'lex:org.w3.activitystreams.properties#id',
           },
           type: {
-            type: 'string',
-            description: 'Range: anyURI',
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#type',
           },
           attachment: {
             type: 'ref',
@@ -17276,6 +17136,960 @@ export const schemaDict = {
           duration: {
             type: 'ref',
             ref: 'lex:org.w3.activitystreams.properties#duration',
+          },
+          actor: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#actor',
+          },
+          object: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#object',
+          },
+          target: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#target',
+          },
+          result: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#result',
+          },
+          origin: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#origin',
+          },
+          instrument: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#instrument',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsCollection: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.collection',
+    defs: {
+      main: {
+        type: 'object',
+        description: 'EXTENDS object, IMPLEMENTS collection',
+        properties: {
+          '@context': {
+            type: 'unknown',
+            description: 'JSON-LD terms',
+          },
+          id: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#id',
+          },
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#type',
+          },
+          attachment: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attachment',
+          },
+          attributedTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
+          },
+          audience: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#audience',
+          },
+          content: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#content',
+          },
+          context: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#context',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          endTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#endTime',
+          },
+          generator: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#generator',
+          },
+          icon: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#icon',
+          },
+          image: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#image',
+          },
+          inReplyTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
+          },
+          location: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#location',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+          published: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#published',
+          },
+          replies: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#replies',
+          },
+          startTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#startTime',
+          },
+          summary: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#summary',
+          },
+          tag: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#tag',
+          },
+          updated: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#updated',
+          },
+          url: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#url',
+          },
+          to: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#to',
+          },
+          bto: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bto',
+          },
+          cc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#cc',
+          },
+          bcc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bcc',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          duration: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#duration',
+          },
+          totalItems: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#totalItems',
+          },
+          current: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#current',
+          },
+          first: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#first',
+          },
+          last: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#last',
+          },
+          items: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#items',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsCollectionPage: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.collectionPage',
+    defs: {
+      main: {
+        type: 'object',
+        description: 'EXTENDS object, collection, IMPLEMENTS collectionPage',
+        properties: {
+          '@context': {
+            type: 'unknown',
+            description: 'JSON-LD terms',
+          },
+          id: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#id',
+          },
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#type',
+          },
+          attachment: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attachment',
+          },
+          attributedTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
+          },
+          audience: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#audience',
+          },
+          content: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#content',
+          },
+          context: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#context',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          endTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#endTime',
+          },
+          generator: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#generator',
+          },
+          icon: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#icon',
+          },
+          image: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#image',
+          },
+          inReplyTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
+          },
+          location: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#location',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+          published: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#published',
+          },
+          replies: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#replies',
+          },
+          startTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#startTime',
+          },
+          summary: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#summary',
+          },
+          tag: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#tag',
+          },
+          updated: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#updated',
+          },
+          url: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#url',
+          },
+          to: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#to',
+          },
+          bto: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bto',
+          },
+          cc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#cc',
+          },
+          bcc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bcc',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          duration: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#duration',
+          },
+          totalItems: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#totalItems',
+          },
+          current: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#current',
+          },
+          first: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#first',
+          },
+          last: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#last',
+          },
+          items: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#items',
+          },
+          partOf: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#partOf',
+          },
+          next: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#next',
+          },
+          prev: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#prev',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsDefs: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.defs',
+    defs: {
+      main: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'union',
+            refs: [
+              'lex:org.w3.activitystreams.defs#anyURI',
+              'lex:org.w3.activitystreams.defs#arrayOfAnyURIObject',
+              'lex:org.w3.activitystreams.defs#object',
+            ],
+          },
+        },
+      },
+      string: {
+        type: 'string',
+        description: 'xsd:string | rdf:langString',
+      },
+      anyURI: {
+        type: 'string',
+        description: 'xsd:anyURI',
+        format: 'uri',
+      },
+      boolean: {
+        type: 'boolean',
+        description: 'xsd:boolean',
+      },
+      integer: {
+        type: 'integer',
+        description: 'xsd:integer',
+      },
+      nonNegativeInteger: {
+        type: 'integer',
+        description: 'xsd:nonNegativeInteger',
+        minimum: 0,
+      },
+      float: {
+        type: 'string',
+        description: "xsd:integer; Note: Lexicon doesn't support floats",
+      },
+      nonNegativeFloat: {
+        type: 'string',
+        description:
+          "xsd:float [>= 0.0f]; Note: Lexicon doesn't support floats",
+      },
+      dateTime: {
+        type: 'string',
+        description: 'xsd:dateTime',
+        format: 'datetime',
+      },
+      duration: {
+        type: 'string',
+        description: 'xsd:duration',
+      },
+      object: {
+        type: 'unknown',
+      },
+      arrayOfString: {
+        type: 'array',
+        items: {
+          type: 'ref',
+          ref: 'lex:org.w3.activitystreams.defs#string',
+        },
+      },
+      arrayOfStringObject: {
+        type: 'array',
+        items: {
+          type: 'union',
+          refs: [
+            'lex:org.w3.activitystreams.defs#string',
+            'lex:org.w3.activitystreams.defs#object',
+          ],
+        },
+      },
+      arrayOfAnyURIObject: {
+        type: 'array',
+        items: {
+          type: 'union',
+          refs: [
+            'lex:org.w3.activitystreams.defs#anyURI',
+            'lex:org.w3.activitystreams.defs#object',
+          ],
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsIntransitiveActivity: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.intransitiveActivity',
+    defs: {
+      main: {
+        type: 'object',
+        description: 'IMPLEMENTS activity (DOES NOT EXTEND object)',
+        properties: {
+          '@context': {
+            type: 'unknown',
+            description: 'JSON-LD terms',
+          },
+          actor: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#actor',
+          },
+          object: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#object',
+          },
+          target: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#target',
+          },
+          result: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#result',
+          },
+          origin: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#origin',
+          },
+          instrument: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#instrument',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsLink: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.link',
+    defs: {
+      main: {
+        type: 'object',
+        description: 'IMPLEMENTS link',
+        properties: {
+          '@context': {
+            type: 'unknown',
+            description: 'JSON-LD terms',
+          },
+          id: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#id',
+          },
+          href: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#href',
+          },
+          ref: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#ref',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          hreflang: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#hreflang',
+          },
+          height: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#height',
+          },
+          width: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#width',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsObject: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.object',
+    defs: {
+      main: {
+        type: 'object',
+        description: 'IMPLEMENTS object',
+        properties: {
+          '@context': {
+            type: 'unknown',
+            description: 'JSON-LD terms',
+          },
+          id: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#id',
+          },
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#type',
+          },
+          attachment: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attachment',
+          },
+          attributedTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
+          },
+          audience: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#audience',
+          },
+          content: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#content',
+          },
+          context: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#context',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          endTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#endTime',
+          },
+          generator: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#generator',
+          },
+          icon: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#icon',
+          },
+          image: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#image',
+          },
+          inReplyTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
+          },
+          location: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#location',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+          published: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#published',
+          },
+          replies: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#replies',
+          },
+          startTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#startTime',
+          },
+          summary: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#summary',
+          },
+          tag: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#tag',
+          },
+          updated: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#updated',
+          },
+          url: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#url',
+          },
+          to: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#to',
+          },
+          bto: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bto',
+          },
+          cc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#cc',
+          },
+          bcc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bcc',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          duration: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#duration',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsOrderedCollection: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.orderedCollection',
+    defs: {
+      main: {
+        type: 'object',
+        description: 'EXTENDS object, collection',
+        properties: {
+          '@context': {
+            type: 'unknown',
+            description: 'JSON-LD terms',
+          },
+          id: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#id',
+          },
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#type',
+          },
+          attachment: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attachment',
+          },
+          attributedTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
+          },
+          audience: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#audience',
+          },
+          content: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#content',
+          },
+          context: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#context',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          endTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#endTime',
+          },
+          generator: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#generator',
+          },
+          icon: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#icon',
+          },
+          image: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#image',
+          },
+          inReplyTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
+          },
+          location: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#location',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+          published: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#published',
+          },
+          replies: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#replies',
+          },
+          startTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#startTime',
+          },
+          summary: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#summary',
+          },
+          tag: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#tag',
+          },
+          updated: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#updated',
+          },
+          url: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#url',
+          },
+          to: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#to',
+          },
+          bto: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bto',
+          },
+          cc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#cc',
+          },
+          bcc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bcc',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          duration: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#duration',
+          },
+          totalItems: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#totalItems',
+          },
+          current: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#current',
+          },
+          first: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#first',
+          },
+          last: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#last',
+          },
+          items: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#items',
+          },
+        },
+      },
+    },
+  },
+  OrgW3ActivitystreamsOrderedCollectionPage: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.orderedCollectionPage',
+    defs: {
+      main: {
+        type: 'object',
+        description:
+          'EXTENDS object, collection, collectionPage, IMPLEMENTS orderedCollectionPage',
+        properties: {
+          '@context': {
+            type: 'unknown',
+            description: 'JSON-LD terms',
+          },
+          id: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#id',
+          },
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#type',
+          },
+          attachment: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attachment',
+          },
+          attributedTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
+          },
+          audience: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#audience',
+          },
+          content: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#content',
+          },
+          context: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#context',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          endTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#endTime',
+          },
+          generator: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#generator',
+          },
+          icon: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#icon',
+          },
+          image: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#image',
+          },
+          inReplyTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
+          },
+          location: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#location',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+          published: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#published',
+          },
+          replies: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#replies',
+          },
+          startTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#startTime',
+          },
+          summary: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#summary',
+          },
+          tag: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#tag',
+          },
+          updated: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#updated',
+          },
+          url: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#url',
+          },
+          to: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#to',
+          },
+          bto: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bto',
+          },
+          cc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#cc',
+          },
+          bcc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bcc',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          duration: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#duration',
+          },
+          totalItems: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#totalItems',
+          },
+          current: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#current',
+          },
+          first: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#first',
+          },
+          last: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#last',
+          },
+          items: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#items',
+          },
+          partOf: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#partOf',
+          },
+          next: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#next',
+          },
+          prev: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#prev',
+          },
+          startIndex: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#startIndex',
           },
         },
       },
@@ -18041,8 +18855,17 @@ export const ids = {
   OrgW3ActivitypubObject: 'org.w3.activitypub.object',
   OrgW3ActivitypubPost: 'org.w3.activitypub.post',
   OrgW3ActivitypubPutInbox: 'org.w3.activitypub.putInbox',
+  OrgW3ActivitystreamsActivity: 'org.w3.activitystreams.activity',
+  OrgW3ActivitystreamsCollection: 'org.w3.activitystreams.collection',
+  OrgW3ActivitystreamsCollectionPage: 'org.w3.activitystreams.collectionPage',
   OrgW3ActivitystreamsDefs: 'org.w3.activitystreams.defs',
+  OrgW3ActivitystreamsIntransitiveActivity:
+    'org.w3.activitystreams.intransitiveActivity',
   OrgW3ActivitystreamsLink: 'org.w3.activitystreams.link',
   OrgW3ActivitystreamsObject: 'org.w3.activitystreams.object',
+  OrgW3ActivitystreamsOrderedCollection:
+    'org.w3.activitystreams.orderedCollection',
+  OrgW3ActivitystreamsOrderedCollectionPage:
+    'org.w3.activitystreams.orderedCollectionPage',
   OrgW3ActivitystreamsProperties: 'org.w3.activitystreams.properties',
 } as const
