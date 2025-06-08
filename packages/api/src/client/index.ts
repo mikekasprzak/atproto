@@ -128,8 +128,8 @@ import * as AppBskyFeedGetFeedGenerators from './types/app/bsky/feed/getFeedGene
 import * as AppBskyFeedGetFeedSkeleton from './types/app/bsky/feed/getFeedSkeleton.js'
 import * as AppBskyFeedGetLikes from './types/app/bsky/feed/getLikes.js'
 import * as AppBskyFeedGetListFeed from './types/app/bsky/feed/getListFeed.js'
-import * as AppBskyFeedGetPosts from './types/app/bsky/feed/getPosts.js'
 import * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread.js'
+import * as AppBskyFeedGetPosts from './types/app/bsky/feed/getPosts.js'
 import * as AppBskyFeedGetQuotes from './types/app/bsky/feed/getQuotes.js'
 import * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy.js'
 import * as AppBskyFeedGetSuggestedFeeds from './types/app/bsky/feed/getSuggestedFeeds.js'
@@ -282,8 +282,8 @@ import * as OrgW3ActivitypubObject from './types/org/w3/activitypub/object.js'
 import * as OrgW3ActivitypubPost from './types/org/w3/activitypub/post.js'
 import * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
 import * as OrgW3ActivitystreamsDefs from './types/org/w3/activitystreams/defs.js'
-import * as OrgW3ActivitystreamsFollower from './types/org/w3/activitystreams/follower.js'
 import * as OrgW3ActivitystreamsLink from './types/org/w3/activitystreams/link.js'
+import * as OrgW3ActivitystreamsObject from './types/org/w3/activitystreams/object.js'
 import * as OrgW3ActivitystreamsProperties from './types/org/w3/activitystreams/properties.js'
 
 export * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs.js'
@@ -405,8 +405,8 @@ export * as AppBskyFeedGetFeedGenerators from './types/app/bsky/feed/getFeedGene
 export * as AppBskyFeedGetFeedSkeleton from './types/app/bsky/feed/getFeedSkeleton.js'
 export * as AppBskyFeedGetLikes from './types/app/bsky/feed/getLikes.js'
 export * as AppBskyFeedGetListFeed from './types/app/bsky/feed/getListFeed.js'
-export * as AppBskyFeedGetPosts from './types/app/bsky/feed/getPosts.js'
 export * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread.js'
+export * as AppBskyFeedGetPosts from './types/app/bsky/feed/getPosts.js'
 export * as AppBskyFeedGetQuotes from './types/app/bsky/feed/getQuotes.js'
 export * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy.js'
 export * as AppBskyFeedGetSuggestedFeeds from './types/app/bsky/feed/getSuggestedFeeds.js'
@@ -559,8 +559,8 @@ export * as OrgW3ActivitypubObject from './types/org/w3/activitypub/object.js'
 export * as OrgW3ActivitypubPost from './types/org/w3/activitypub/post.js'
 export * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
 export * as OrgW3ActivitystreamsDefs from './types/org/w3/activitystreams/defs.js'
-export * as OrgW3ActivitystreamsFollower from './types/org/w3/activitystreams/follower.js'
 export * as OrgW3ActivitystreamsLink from './types/org/w3/activitystreams/link.js'
+export * as OrgW3ActivitystreamsObject from './types/org/w3/activitystreams/object.js'
 export * as OrgW3ActivitystreamsProperties from './types/org/w3/activitystreams/properties.js'
 
 export const COM_ATPROTO_MODERATION = {
@@ -2137,13 +2137,6 @@ export class AppBskyFeedNS {
       })
   }
 
-  getPosts(
-    params?: AppBskyFeedGetPosts.QueryParams,
-    opts?: AppBskyFeedGetPosts.CallOptions,
-  ): Promise<AppBskyFeedGetPosts.Response> {
-    return this._client.call('app.bsky.feed.getPosts', params, undefined, opts)
-  }
-
   getPostThread(
     params?: AppBskyFeedGetPostThread.QueryParams,
     opts?: AppBskyFeedGetPostThread.CallOptions,
@@ -2153,6 +2146,13 @@ export class AppBskyFeedNS {
       .catch((e) => {
         throw AppBskyFeedGetPostThread.toKnownErr(e)
       })
+  }
+
+  getPosts(
+    params?: AppBskyFeedGetPosts.QueryParams,
+    opts?: AppBskyFeedGetPosts.CallOptions,
+  ): Promise<AppBskyFeedGetPosts.Response> {
+    return this._client.call('app.bsky.feed.getPosts', params, undefined, opts)
   }
 
   getQuotes(
@@ -4680,75 +4680,8 @@ export class OrgW3ActivitypubNS {
 
 export class OrgW3ActivitystreamsNS {
   _client: XrpcClient
-  follower: OrgW3ActivitystreamsFollowerRecord
 
   constructor(client: XrpcClient) {
     this._client = client
-    this.follower = new OrgW3ActivitystreamsFollowerRecord(client)
-  }
-}
-
-export class OrgW3ActivitystreamsFollowerRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: OrgW3ActivitystreamsFollower.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'org.w3.activitystreams.follower',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: OrgW3ActivitystreamsFollower.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'org.w3.activitystreams.follower',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<OrgW3ActivitystreamsFollower.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'org.w3.activitystreams.follower'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'org.w3.activitystreams.follower', ...params },
-      { headers },
-    )
   }
 }

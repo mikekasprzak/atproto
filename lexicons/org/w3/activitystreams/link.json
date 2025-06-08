@@ -17,14 +17,6 @@
         "width": { "type": "ref", "ref": "org.w3.activitystreams.properties#width" },
         "preview": { "type": "ref", "ref": "org.w3.activitystreams.properties#preview" }
       }
-    },
-    "preview2": { "type": "object",
-      "properties": {
-        "main": { "type": "ref",
-          "ref": "org.w3.activitystreams.defs#object",
-          "description": "https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link"
-        }
-      }
     }
   }
 }

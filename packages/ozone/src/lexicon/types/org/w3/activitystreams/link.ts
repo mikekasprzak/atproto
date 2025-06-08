@@ -10,7 +10,6 @@ import {
   type OmitKey,
 } from '../../../../util'
 import type * as OrgW3ActivitystreamsProperties from './properties.js'
-import type * as OrgW3ActivitystreamsDefs from './defs.js'
 
 const is$typed = _is$typed,
   validate = _validate
@@ -39,19 +38,4 @@ export function isMain<V>(v: V) {
 
 export function validateMain<V>(v: V) {
   return validate<Main & V>(v, id, hashMain)
-}
-
-export interface Preview2 {
-  $type?: 'org.w3.activitystreams.link#preview2'
-  main?: OrgW3ActivitystreamsDefs.Object
-}
-
-const hashPreview2 = 'preview2'
-
-export function isPreview2<V>(v: V) {
-  return is$typed(v, id, hashPreview2)
-}
-
-export function validatePreview2<V>(v: V) {
-  return validate<Preview2 & V>(v, id, hashPreview2)
 }

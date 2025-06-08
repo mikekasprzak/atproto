@@ -7239,48 +7239,6 @@ export const schemaDict = {
       },
     },
   },
-  AppBskyFeedGetPosts: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getPosts',
-    defs: {
-      main: {
-        type: 'query',
-        description:
-          "Gets post views for a specified list of posts (by AT-URI). This is sometimes referred to as 'hydrating' a 'feed skeleton'.",
-        parameters: {
-          type: 'params',
-          required: ['uris'],
-          properties: {
-            uris: {
-              type: 'array',
-              description: 'List of post AT-URIs to return hydrated views for.',
-              items: {
-                type: 'string',
-                format: 'at-uri',
-              },
-              maxLength: 25,
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['posts'],
-            properties: {
-              posts: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.defs#postView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
   AppBskyFeedGetPostThread: {
     lexicon: 1,
     id: 'app.bsky.feed.getPostThread',
@@ -7342,6 +7300,48 @@ export const schemaDict = {
             name: 'NotFound',
           },
         ],
+      },
+    },
+  },
+  AppBskyFeedGetPosts: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getPosts',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          "Gets post views for a specified list of posts (by AT-URI). This is sometimes referred to as 'hydrating' a 'feed skeleton'.",
+        parameters: {
+          type: 'params',
+          required: ['uris'],
+          properties: {
+            uris: {
+              type: 'array',
+              description: 'List of post AT-URIs to return hydrated views for.',
+              items: {
+                type: 'string',
+                format: 'at-uri',
+              },
+              maxLength: 25,
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['posts'],
+            properties: {
+              posts: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#postView',
+                },
+              },
+            },
+          },
+        },
       },
     },
   },
@@ -13484,31 +13484,6 @@ export const schemaDict = {
       },
     },
   },
-  OrgW3ActivitystreamsFollower: {
-    lexicon: 1,
-    id: 'org.w3.activitystreams.follower',
-    defs: {
-      main: {
-        type: 'record',
-        description: 'Record for an ActivityPub follower',
-        key: 'tid',
-        record: {
-          type: 'object',
-          required: ['subject', 'createdAt'],
-          properties: {
-            subject: {
-              type: 'string',
-              format: 'uri',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-      },
-    },
-  },
   OrgW3ActivitystreamsLink: {
     lexicon: 1,
     id: 'org.w3.activitystreams.link',
@@ -13558,14 +13533,131 @@ export const schemaDict = {
           },
         },
       },
-      preview2: {
+    },
+  },
+  OrgW3ActivitystreamsObject: {
+    lexicon: 1,
+    id: 'org.w3.activitystreams.object',
+    defs: {
+      main: {
         type: 'object',
         properties: {
-          main: {
+          '@context': {
+            type: 'unknown',
+            description: 'JSON-LD terms',
+          },
+          id: {
+            type: 'string',
+            description: 'Range: anyURI',
+            format: 'uri',
+          },
+          type: {
+            type: 'string',
+            description: 'Range: anyURI',
+          },
+          attachment: {
             type: 'ref',
-            ref: 'lex:org.w3.activitystreams.defs#object',
-            description:
-              'https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link',
+            ref: 'lex:org.w3.activitystreams.properties#attachment',
+          },
+          attributedTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
+          },
+          audience: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#audience',
+          },
+          content: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#content',
+          },
+          context: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#context',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          endTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#endTime',
+          },
+          generator: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#generator',
+          },
+          icon: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#icon',
+          },
+          image: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#image',
+          },
+          inReplyTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
+          },
+          location: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#location',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+          published: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#published',
+          },
+          replies: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#replies',
+          },
+          startTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#startTime',
+          },
+          summary: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#summary',
+          },
+          tag: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#tag',
+          },
+          updated: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#updated',
+          },
+          url: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#url',
+          },
+          to: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#to',
+          },
+          bto: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bto',
+          },
+          cc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#cc',
+          },
+          bcc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bcc',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          duration: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#duration',
           },
         },
       },
@@ -14157,8 +14249,8 @@ export const ids = {
   AppBskyFeedGetFeedSkeleton: 'app.bsky.feed.getFeedSkeleton',
   AppBskyFeedGetLikes: 'app.bsky.feed.getLikes',
   AppBskyFeedGetListFeed: 'app.bsky.feed.getListFeed',
-  AppBskyFeedGetPosts: 'app.bsky.feed.getPosts',
   AppBskyFeedGetPostThread: 'app.bsky.feed.getPostThread',
+  AppBskyFeedGetPosts: 'app.bsky.feed.getPosts',
   AppBskyFeedGetQuotes: 'app.bsky.feed.getQuotes',
   AppBskyFeedGetRepostedBy: 'app.bsky.feed.getRepostedBy',
   AppBskyFeedGetSuggestedFeeds: 'app.bsky.feed.getSuggestedFeeds',
@@ -14280,7 +14372,7 @@ export const ids = {
   OrgW3ActivitypubPost: 'org.w3.activitypub.post',
   OrgW3ActivitypubPutInbox: 'org.w3.activitypub.putInbox',
   OrgW3ActivitystreamsDefs: 'org.w3.activitystreams.defs',
-  OrgW3ActivitystreamsFollower: 'org.w3.activitystreams.follower',
   OrgW3ActivitystreamsLink: 'org.w3.activitystreams.link',
+  OrgW3ActivitystreamsObject: 'org.w3.activitystreams.object',
   OrgW3ActivitystreamsProperties: 'org.w3.activitystreams.properties',
 } as const
