@@ -10,6 +10,7 @@ import {
   type LexPrimitive,
   type LexToken,
   type LexUserType,
+  type LexRef,
   Lexicons,
 } from '@atproto/lexicon'
 import { toCamelCase, toScreamingSnakeCase, toTitleCase } from './util'
@@ -126,6 +127,11 @@ export function genUserType(
     case 'token':
       genToken(file, lexUri, def)
       break
+    case 'ref': {
+      const ifaceName: string = toTitleCase(getHash(lexUri))
+      genRef(file, imports, lexUri, def, ifaceName)
+      break;
+    }
     case 'object': {
       const ifaceName: string = toTitleCase(getHash(lexUri))
       genObject(file, imports, lexUri, def, ifaceName, {
@@ -153,6 +159,26 @@ export function genUserType(
       )
   }
 }
+
+function genRef(
+  file: SourceFile,
+  imports: Set<string>,
+  lexUri: string,
+  def: LexRef,
+  ifaceName: string
+)
+{
+  const type = refToType(def.ref, stripScheme(stripHash(lexUri)), imports)
+  const iface = file.addTypeAlias({
+    name: ifaceName,
+    type: makeType(type, {nullable: false}),
+    isExported: true,
+  })
+  genComment(iface, def)
+
+  //file.addStatements(`// DEBUG REF: ${def.ref} => ${type}`)
+}
+
 
 function genObject(
   file: SourceFile,
@@ -346,7 +372,7 @@ export function genArray(
 export function genPrimitiveOrBlob(
   file: SourceFile,
   lexUri: string,
-  def: LexPrimitive | LexBlob | LexIpldType,
+  def: LexPrimitive | LexBlob | LexIpldType | LexRef,
 ) {
   genComment(
     file.addTypeAlias({
@@ -611,9 +637,11 @@ function refToType(
 }
 
 export function primitiveOrBlobToType(
-  def: LexBlob | LexPrimitive | LexIpldType,
+  def: LexBlob | LexPrimitive | LexIpldType | LexRef,
 ): string {
   switch (def.type) {
+    case 'ref':
+      return def.ref
     case 'blob':
       return 'BlobRef'
     case 'bytes':
