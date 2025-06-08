@@ -326,6 +326,7 @@ export const lexUserType = z.custom<
   | LexXrpcProcedure
   | LexXrpcSubscription
   | LexBlob
+  | LexRef
   | LexArray
   | LexToken
   | LexObject
@@ -358,6 +359,9 @@ export const lexUserType = z.custom<
 
       case 'blob':
         return lexBlob.parse(val)
+
+      case 'ref':
+        return lexRef.parse(val)
 
       case 'array':
         return lexArray.parse(val)

@@ -51,8 +51,8 @@ export default function (server: Server, ctx: AppContext) {
           following: `${uriPrefix}/org.w3.activitypub.getFollowing?repo=${did}`,
           //featured: `${uriPrefix}/org.joinmastodon.getFeatured?repo=${did}`,
           preferredUsername: pubHandle.split('@')[0],
-          //name: profile.displayName,
-          name: {main: profile.displayName},
+          name: profile.displayName,
+          //name: {main: profile.displayName},
           summary: profile.description
         },
       }
