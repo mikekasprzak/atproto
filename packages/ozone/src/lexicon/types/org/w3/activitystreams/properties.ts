@@ -52,6 +52,8 @@ export type Next = string
 export type Object = { [_ in string]: unknown }
 /** https://www.w3.org/ns/activitystreams#prev; Domain: CollectionPage; Range: CollectionPage | Link; Functional */
 export type Prev = string
+/** https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link */
+export type Preview = OrgW3ActivitystreamsDefs.Object
 /** https://www.w3.org/ns/activitystreams#result; Domain: Activity; Range: Object | Link */
 export type Result = { [_ in string]: unknown }
 /** https://www.w3.org/ns/activitystreams#replies; Domain: Object; Range: Collection; Functional */
@@ -68,14 +70,24 @@ export type Accuracy = string
 export type Altitude = string
 /** https://www.w3.org/ns/activitystreams#content; Domain: Object; Range: xsd:string | rdf:langString */
 export type Content = string
+/** https://www.w3.org/ns/activitystreams#name; Domain: Object | Link; Range: xsd:string | rdf:langString */
+export type Name = OrgW3ActivitystreamsDefs.String
 /** https://www.w3.org/ns/activitystreams#duration; Domain: Object; Range: xsd:duration; Functional */
 export type Duration = string
+/** https://www.w3.org/ns/activitystreams#height; Domain: Link; Range: xsd:nonNegativeInteger; Functional */
+export type Height = OrgW3ActivitystreamsDefs.NonNegativeInteger
+/** https://www.w3.org/ns/activitystreams#href; Domain: Link; Range: xsd:anyURI; Functional */
+export type Href = OrgW3ActivitystreamsDefs.AnyURI
+/** https://www.w3.org/ns/activitystreams#hreflang; Domain: Link; Range: [BCP47] Language-Tag; Functional; Note: According to [RFC5646], the maximum legal size of a 'Language-Tag' is the 'langtag' of size (3+1+3+2*(1+3))+1+(4)+1+(3)+(variantCount*(1+8))+(1+extensionCount*(3+1+8))+1+(1+privateUseCount*(1+8)), which is a lot */
+export type Hreflang = string
 /** https://www.w3.org/ns/activitystreams#partOf; Domain: CollectionPage; Range: Link | Collection; Functional */
 export type PartOf = string
 /** https://www.w3.org/ns/activitystreams#latitude; Domain: Object; Range: xsd:float; Functional; Note: Float not supported in Lexicon */
 export type Latitude = string
 /** https://www.w3.org/ns/activitystreams#longitude; Domain: Object; Range: xsd:float; Functional; Note: Float not supported in Lexicon */
 export type Longitude = string
+/** https://www.w3.org/ns/activitystreams#mediaType; Domain: Object | Link; Range: MIME Media Type; Functional */
+export type MediaType = string
 /** https://www.w3.org/ns/activitystreams#endTime; Domain: Object; Range: xsd:datetime; Functional */
 export type EndTime = string
 /** https://www.w3.org/ns/activitystreams#published; Domain: Object; Range: xsd:datetime; Functional */
@@ -96,6 +108,8 @@ export type TotalItems = number
 export type Units = string
 /** https://www.w3.org/ns/activitystreams#updated; Domain: Object; Range: xsd:datetime; Functional */
 export type Updated = string
+/** https://www.w3.org/ns/activitystreams#width; Domain: Link; Range: xsd:nonNegativeInteger; Functional */
+export type Width = OrgW3ActivitystreamsDefs.NonNegativeInteger
 /** https://www.w3.org/ns/activitystreams#subject; Domain: Relationship; Range: Object | Link; Functional */
 export type Subject = OrgW3ActivitystreamsDefs.Object
 /** https://www.w3.org/ns/activitystreams#relationship; Domain: Relationship; Range: Object */
@@ -106,19 +120,3 @@ export type Describes = OrgW3ActivitystreamsDefs.Object
 export type FormerType = OrgW3ActivitystreamsDefs.Object
 /** https://www.w3.org/ns/activitystreams#deleted; Domain: Tombstone; Range: xsd:datetime; Functional */
 export type Deleted = string
-/** https://www.w3.org/ns/activitystreams#name; Domain: Object | Link; Range: xsd:string | rdf:langString */
-export type Name = OrgW3ActivitystreamsDefs.String
-/** https://www.w3.org/ns/activitystreams#height; Domain: Link; Range: xsd:nonNegativeInteger; Functional */
-export type Height = OrgW3ActivitystreamsDefs.NonNegativeInteger
-/** https://www.w3.org/ns/activitystreams#width; Domain: Link; Range: xsd:nonNegativeInteger; Functional */
-export type Width = OrgW3ActivitystreamsDefs.NonNegativeInteger
-/** https://www.w3.org/ns/activitystreams#href; Domain: Link; Range: xsd:anyURI; Functional */
-export type Href = OrgW3ActivitystreamsDefs.AnyURI
-/** https://www.w3.org/ns/activitystreams#hreflang; Domain: Link; Range: [BCP47] Language-Tag; Functional; Note: According to [RFC5646], the maximum legal size of a 'Language-Tag' is the 'langtag' of size (3+1+3+2*(1+3))+1+(4)+1+(3)+(variantCount*(1+8))+(1+extensionCount*(3+1+8))+1+(1+privateUseCount*(1+8)), which is a lot */
-export type Hreflang = string
-/** ************ https://www.w3.org/ns/activitystreams#ref; Domain: Link; Range: xsd:anyURI; Functional */
-export type Ref = OrgW3ActivitystreamsDefs.AnyURI
-/** https://www.w3.org/ns/activitystreams#mediaType; Domain: Object | Link; Range: MIME Media Type; Functional */
-export type MediaType = string
-/** https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link */
-export type Preview = OrgW3ActivitystreamsDefs.Object

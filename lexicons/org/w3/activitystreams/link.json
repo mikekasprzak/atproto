@@ -10,7 +10,7 @@
 
         "id": { "type": "ref", "ref": "org.w3.activitystreams.properties#id" },
         "href": { "type": "ref", "ref": "org.w3.activitystreams.properties#href" },
-        "ref": { "type": "ref", "ref": "org.w3.activitystreams.properties#ref" },
+        "rel": { "type": "ref", "ref": "org.w3.activitystreams.properties#rel" },
         "mediaType": { "type": "ref", "ref": "org.w3.activitystreams.properties#mediaType" },
         "name": { "type": "ref", "ref": "org.w3.activitystreams.properties#name" },
         "hreflang": { "type": "ref", "ref": "org.w3.activitystreams.properties#hreflang" },

@@ -17622,9 +17622,9 @@ export const schemaDict = {
             type: 'ref',
             ref: 'lex:org.w3.activitystreams.properties#href',
           },
-          ref: {
+          rel: {
             type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#ref',
+            ref: 'lex:org.w3.activitystreams.properties#rel',
           },
           mediaType: {
             type: 'ref',
@@ -18308,6 +18308,12 @@ export const schemaDict = {
           'https://www.w3.org/ns/activitystreams#prev; Domain: CollectionPage; Range: CollectionPage | Link; Functional',
         format: 'uri',
       },
+      preview: {
+        type: 'ref',
+        ref: 'lex:org.w3.activitystreams.defs#object',
+        description:
+          'https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link',
+      },
       result: {
         type: 'unknown',
         description:
@@ -18363,10 +18369,33 @@ export const schemaDict = {
         description:
           'https://www.w3.org/ns/activitystreams#content; Domain: Object; Range: xsd:string | rdf:langString',
       },
+      name: {
+        type: 'ref',
+        ref: 'lex:org.w3.activitystreams.defs#string',
+        description:
+          'https://www.w3.org/ns/activitystreams#name; Domain: Object | Link; Range: xsd:string | rdf:langString',
+      },
       duration: {
         type: 'string',
         description:
           'https://www.w3.org/ns/activitystreams#duration; Domain: Object; Range: xsd:duration; Functional',
+      },
+      height: {
+        type: 'ref',
+        ref: 'lex:org.w3.activitystreams.defs#nonNegativeInteger',
+        description:
+          'https://www.w3.org/ns/activitystreams#height; Domain: Link; Range: xsd:nonNegativeInteger; Functional',
+      },
+      href: {
+        type: 'ref',
+        ref: 'lex:org.w3.activitystreams.defs#anyURI',
+        description:
+          'https://www.w3.org/ns/activitystreams#href; Domain: Link; Range: xsd:anyURI; Functional',
+      },
+      hreflang: {
+        type: 'string',
+        description:
+          "https://www.w3.org/ns/activitystreams#hreflang; Domain: Link; Range: [BCP47] Language-Tag; Functional; Note: According to [RFC5646], the maximum legal size of a 'Language-Tag' is the 'langtag' of size (3+1+3+2*(1+3))+1+(4)+1+(3)+(variantCount*(1+8))+(1+extensionCount*(3+1+8))+1+(1+privateUseCount*(1+8)), which is a lot",
       },
       partOf: {
         type: 'string',
@@ -18382,6 +18411,11 @@ export const schemaDict = {
         type: 'string',
         description:
           'https://www.w3.org/ns/activitystreams#longitude; Domain: Object; Range: xsd:float; Functional; Note: Float not supported in Lexicon',
+      },
+      mediaType: {
+        type: 'string',
+        description:
+          'https://www.w3.org/ns/activitystreams#mediaType; Domain: Object | Link; Range: MIME Media Type; Functional',
       },
       endTime: {
         type: 'string',
@@ -18440,6 +18474,12 @@ export const schemaDict = {
           'https://www.w3.org/ns/activitystreams#updated; Domain: Object; Range: xsd:datetime; Functional',
         format: 'datetime',
       },
+      width: {
+        type: 'ref',
+        ref: 'lex:org.w3.activitystreams.defs#nonNegativeInteger',
+        description:
+          'https://www.w3.org/ns/activitystreams#width; Domain: Link; Range: xsd:nonNegativeInteger; Functional',
+      },
       subject: {
         type: 'ref',
         ref: 'lex:org.w3.activitystreams.defs#object',
@@ -18469,52 +18509,6 @@ export const schemaDict = {
         description:
           'https://www.w3.org/ns/activitystreams#deleted; Domain: Tombstone; Range: xsd:datetime; Functional',
         format: 'datetime',
-      },
-      name: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#string',
-        description:
-          'https://www.w3.org/ns/activitystreams#name; Domain: Object | Link; Range: xsd:string | rdf:langString',
-      },
-      height: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#nonNegativeInteger',
-        description:
-          'https://www.w3.org/ns/activitystreams#height; Domain: Link; Range: xsd:nonNegativeInteger; Functional',
-      },
-      width: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#nonNegativeInteger',
-        description:
-          'https://www.w3.org/ns/activitystreams#width; Domain: Link; Range: xsd:nonNegativeInteger; Functional',
-      },
-      href: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#anyURI',
-        description:
-          'https://www.w3.org/ns/activitystreams#href; Domain: Link; Range: xsd:anyURI; Functional',
-      },
-      hreflang: {
-        type: 'string',
-        description:
-          "https://www.w3.org/ns/activitystreams#hreflang; Domain: Link; Range: [BCP47] Language-Tag; Functional; Note: According to [RFC5646], the maximum legal size of a 'Language-Tag' is the 'langtag' of size (3+1+3+2*(1+3))+1+(4)+1+(3)+(variantCount*(1+8))+(1+extensionCount*(3+1+8))+1+(1+privateUseCount*(1+8)), which is a lot",
-      },
-      ref: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#anyURI',
-        description:
-          '************ https://www.w3.org/ns/activitystreams#ref; Domain: Link; Range: xsd:anyURI; Functional',
-      },
-      mediaType: {
-        type: 'string',
-        description:
-          'https://www.w3.org/ns/activitystreams#mediaType; Domain: Object | Link; Range: MIME Media Type; Functional',
-      },
-      preview: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#object',
-        description:
-          'https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link',
       },
     },
   },

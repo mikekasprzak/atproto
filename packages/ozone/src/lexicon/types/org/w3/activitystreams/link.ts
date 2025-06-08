@@ -22,7 +22,7 @@ export interface Main {
   '@context'?: { [_ in string]: unknown }
   id?: OrgW3ActivitystreamsProperties.Id
   href?: OrgW3ActivitystreamsProperties.Href
-  ref?: OrgW3ActivitystreamsProperties.Ref
+  rel?: OrgW3ActivitystreamsProperties.Rel
   mediaType?: OrgW3ActivitystreamsProperties.MediaType
   name?: OrgW3ActivitystreamsProperties.Name
   hreflang?: OrgW3ActivitystreamsProperties.Hreflang
