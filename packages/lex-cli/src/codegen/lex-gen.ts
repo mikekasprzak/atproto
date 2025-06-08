@@ -397,7 +397,7 @@ export function genArray(
 export function genPrimitiveOrBlob(
   file: SourceFile,
   lexUri: string,
-  def: LexPrimitive | LexBlob | LexIpldType | LexRef,
+  def: LexPrimitive | LexBlob | LexIpldType,
 ) {
   genComment(
     file.addTypeAlias({
@@ -662,11 +662,9 @@ function refToType(
 }
 
 export function primitiveOrBlobToType(
-  def: LexBlob | LexPrimitive | LexIpldType | LexRef,
+  def: LexBlob | LexPrimitive | LexIpldType,
 ): string {
   switch (def.type) {
-    case 'ref':
-      return def.ref
     case 'blob':
       return 'BlobRef'
     case 'bytes':
