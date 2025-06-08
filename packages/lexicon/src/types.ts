@@ -330,6 +330,8 @@ export const lexUserType = z.custom<
   | LexArray
   | LexToken
   | LexObject
+  | LexRef
+  | LexRefUnion
   | LexBoolean
   | LexInteger
   | LexString
@@ -369,6 +371,10 @@ export const lexUserType = z.custom<
         return lexToken.parse(val)
       case 'object':
         return lexObject.parse(val)
+      case 'ref':
+        return lexRef.parse(val)
+      case 'union':
+        return lexRefUnion.parse(val)
 
       case 'boolean':
         return lexBoolean.parse(val)

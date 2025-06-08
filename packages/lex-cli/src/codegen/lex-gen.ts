@@ -7,10 +7,11 @@ import {
   type LexCidLink,
   type LexIpldType,
   type LexObject,
+  type LexRef,
+  type LexRefUnion,
   type LexPrimitive,
   type LexToken,
   type LexUserType,
-  type LexRef,
   Lexicons,
 } from '@atproto/lexicon'
 import { toCamelCase, toScreamingSnakeCase, toTitleCase } from './util'
@@ -142,6 +143,16 @@ export function genUserType(
       })
       break
     }
+    case 'ref': {
+      const ifaceName: string = toTitleCase(getHash(lexUri))
+      genRef(file, imports, lexUri, def, ifaceName)
+      break
+    }
+    case 'union': {
+      const ifaceName: string = toTitleCase(getHash(lexUri))
+      genRefUnion(file, imports, lexUri, def, ifaceName)
+      break
+    }
 
     case 'blob':
     case 'bytes':
@@ -175,10 +186,24 @@ function genRef(
     isExported: true,
   })
   genComment(iface, def)
-
-  //file.addStatements(`// DEBUG REF: ${def.ref} => ${type}`)
 }
 
+function genRefUnion(
+  file: SourceFile,
+  imports: Set<string>,
+  lexUri: string,
+  def: LexRefUnion,
+  ifaceName: string
+)
+{
+  const types = def.refs.map((ref) => refToUnionType(ref, lexUri, imports))
+  const iface = file.addTypeAlias({
+    name: ifaceName,
+    type: makeType(types, {nullable: false}),
+    isExported: true,
+  })
+  genComment(iface, def)
+}
 
 function genObject(
   file: SourceFile,
