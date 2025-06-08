@@ -2,15 +2,11 @@
   "lexicon": 1,
   "id": "org.w3.activitystreams.defs",
   "defs": {
-    "main": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "union",
-          "refs": ["#anyURI", "#arrayOfAnyURIObject", "#object"]
-        }
-      }
+    "anyURIArrayObject": {
+      "type": "union",
+      "refs": ["#anyURI", "#arrayOfAnyURIObject", "#object"]
     },
+
     "string": {
       "type": "string",
       "description": "xsd:string | rdf:langString"
@@ -19,6 +15,11 @@
       "type": "string",
       "description": "xsd:anyURI",
       "format": "uri"
+    },
+    "language": {
+      "type": "string",
+      "description": "[BCP47] Language Tag",
+      "format": "language"
     },
     "boolean": {
       "type": "boolean",
@@ -35,11 +36,11 @@
     },
     "float": {
       "type": "string",
-      "description": "xsd:integer; Note: Lexicon doesn't support floats"
+      "description": "xsd:float; Note: Lexicon doesn't support float"
     },
     "nonNegativeFloat": {
       "type": "string",
-      "description": "xsd:float [>= 0.0f]; Note: Lexicon doesn't support floats"
+      "description": "xsd:float [>= 0.0f]; Note: Lexicon doesn't support float"
     },
     "dateTime": {
       "type": "string",
@@ -48,11 +49,12 @@
     },
     "duration": {
       "type": "string",
-      "description": "xsd:duration"
+      "description": "xsd:duration; TODO: this"
     },
     "object": {
       "type": "unknown"
     },
+
     "arrayOfString": {
       "type": "array",
       "items": {

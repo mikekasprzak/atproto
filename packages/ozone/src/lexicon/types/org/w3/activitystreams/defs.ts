@@ -14,42 +14,29 @@ const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitystreams.defs'
 
-export interface Main {
-  $type?: 'org.w3.activitystreams.defs'
-  type?:
-    | $Typed<AnyURI>
-    | $Typed<ArrayOfAnyURIObject>
-    | $Typed<Object>
-    | { $type: string }
-}
-
-const hashMain = 'main'
-
-export function isMain<V>(v: V) {
-  return is$typed(v, id, hashMain)
-}
-
-export function validateMain<V>(v: V) {
-  return validate<Main & V>(v, id, hashMain)
-}
-
+export type AnyURIArrayObject =
+  | $Typed<AnyURI>
+  | $Typed<ArrayOfAnyURIObject>
+  | $Typed<Object>
 /** xsd:string | rdf:langString */
 export type String = string
 /** xsd:anyURI */
 export type AnyURI = string
+/** [BCP47] Language Tag */
+export type Language = string
 /** xsd:boolean */
 export type Boolean = boolean
 /** xsd:integer */
 export type Integer = number
 /** xsd:nonNegativeInteger */
 export type NonNegativeInteger = number
-/** xsd:integer; Note: Lexicon doesn't support floats */
+/** xsd:float; Note: Lexicon doesn't support float */
 export type Float = string
-/** xsd:float [>= 0.0f]; Note: Lexicon doesn't support floats */
+/** xsd:float [>= 0.0f]; Note: Lexicon doesn't support float */
 export type NonNegativeFloat = string
 /** xsd:dateTime */
 export type DateTime = string
-/** xsd:duration */
+/** xsd:duration; TODO: this */
 export type Duration = string
 export type Object = { [_ in string]: unknown }
 export type ArrayOfString = String[]

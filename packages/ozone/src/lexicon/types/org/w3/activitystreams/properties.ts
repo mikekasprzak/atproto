@@ -19,104 +19,126 @@ const id = 'org.w3.activitystreams.properties'
 export type Id = string
 /** @type; Domain: Object | Link; Range: anyURI */
 export type Type = string
-export type Actor = OrgW3ActivitystreamsDefs.Object[]
-export type Attachment = OrgW3ActivitystreamsDefs.Object[]
-export type AttributedTo = OrgW3ActivitystreamsDefs.Object[]
-export type Audience = OrgW3ActivitystreamsDefs.Object[]
-export type Bcc = OrgW3ActivitystreamsDefs.Object[]
-export type Bto = OrgW3ActivitystreamsDefs.Object[]
-export type Cc = OrgW3ActivitystreamsDefs.Object[]
-export type Context = OrgW3ActivitystreamsDefs.Object[]
+/** https://www.w3.org/ns/activitystreams#actor; Domain: Activity; Range: Object | Link; SubpropertyOf: attributedTo */
+export type Actor = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#attachment; Domain: Object; Range: Object | Link */
+export type Attachment = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#attributedTo; Domain: Object | Link; Range: Object | Link */
+export type AttributedTo = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#audience; Domain: Object; Range: Object | Link */
+export type Audience = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#bcc; Domain: Object; Range: Object | Link */
+export type Bcc = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#bto; Domain: Object; Range: Object | Link */
+export type Bto = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#cc; Domain: Object; Range: Object | Link */
+export type Cc = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#context; Domain: Object; Range: Object | Link */
+export type Context = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#current; Domain: Collection; Range: CollectionPage | Link; Functional */
-export type Current = string
+export type Current = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#first; Domain: Collection; Range: CollectionPage | Link; Functional */
-export type First = string
-export type Generator = OrgW3ActivitystreamsDefs.Object[]
-export type Icon = OrgW3ActivitystreamsDefs.Object[]
-export type Image = OrgW3ActivitystreamsDefs.Object[]
-export type InReplyTo = OrgW3ActivitystreamsDefs.Object[]
-export type Instrument = OrgW3ActivitystreamsDefs.Object[]
+export type First = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#generator; Domain: Object; Range: Object | Link */
+export type Generator = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#icon; Domain: Object; Range: Image | Link */
+export type Icon = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#image; Domain: Object; Range: Image | Link */
+export type Image = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#inReplyTo; Domain: Object; Range: Object | Link */
+export type InReplyTo = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#instrument; Domain: Activity; Range: Object | Link */
+export type Instrument = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#last; Domain: Collection; Range: CollectionPage | Link; Functional */
-export type Last = string
-export type Location = OrgW3ActivitystreamsDefs.Object[]
-export type Items = OrgW3ActivitystreamsDefs.Object[]
-export type OneOf = OrgW3ActivitystreamsDefs.Object[]
-export type AnyOf = OrgW3ActivitystreamsDefs.Object[]
+export type Last = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#location; Domain: Object; Range: Object | Link */
+export type Location = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#items; Domain: Collection; Range: Object | Link | Ordered List of [Object | Link] */
+export type Items = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#oneOf; Domain: Question; Range: Object | Link */
+export type OneOf = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#anyOf; Domain: Question; Range: Object | Link */
+export type AnyOf = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#closed; Domain: Question; Range: Object | Link | xsd:dateTime | xsd:boolean */
-export type Closed = { [_ in string]: unknown }
+export type Closed =
+  | $Typed<OrgW3ActivitystreamsDefs.Object>
+  | $Typed<OrgW3ActivitystreamsDefs.DateTime>
+  | $Typed<OrgW3ActivitystreamsDefs.Boolean>
 /** https://www.w3.org/ns/activitystreams#origin; Domain: Activity; Range: Object | Link */
-export type Origin = { [_ in string]: unknown }
+export type Origin = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#next; Domain: CollectionPage; Range: CollectionPage | Link; Functional */
-export type Next = string
+export type Next = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#object; Domain: Activity | Relationship; Range: Object | Link */
-export type Object = { [_ in string]: unknown }
+export type Object = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#prev; Domain: CollectionPage; Range: CollectionPage | Link; Functional */
-export type Prev = string
+export type Prev = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#preview; Domain: Object | Link; Range: Object | Link */
-export type Preview = OrgW3ActivitystreamsDefs.Object
+export type Preview = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#result; Domain: Activity; Range: Object | Link */
-export type Result = { [_ in string]: unknown }
+export type Result = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#replies; Domain: Object; Range: Collection; Functional */
-export type Replies = { [_ in string]: unknown }
-export type Tag = OrgW3ActivitystreamsDefs.Object[]
+export type Replies = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#tag; Domain: Object; Range: Object | Link */
+export type Tag = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#target; Domain: Activity; Range: Object | Link */
-export type Target = OrgW3ActivitystreamsDefs.Object
-export type To = OrgW3ActivitystreamsDefs.Object[]
+export type Target = OrgW3ActivitystreamsDefs.AnyURIArrayObject
+/** https://www.w3.org/ns/activitystreams#to; Domain: Object; Range: Object | Link */
+export type To = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#url; Domain: Object; Range: Link | xsd:anyURI */
-export type Url = string
+export type Url = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#accuracy; Domain: Place; Range: xsd:float [>= 0.0f, <= 100.0f]; Note: Float not supported in Lexicon */
-export type Accuracy = string
+export type Accuracy = OrgW3ActivitystreamsDefs.Float
 /** https://www.w3.org/ns/activitystreams#altitude; Domain: Object; Range: xsd:float; Functional; Note: Float not supported in Lexicon */
-export type Altitude = string
+export type Altitude = OrgW3ActivitystreamsDefs.Float
 /** https://www.w3.org/ns/activitystreams#content; Domain: Object; Range: xsd:string | rdf:langString */
-export type Content = string
+export type Content = OrgW3ActivitystreamsDefs.String
 /** https://www.w3.org/ns/activitystreams#name; Domain: Object | Link; Range: xsd:string | rdf:langString */
 export type Name = OrgW3ActivitystreamsDefs.String
 /** https://www.w3.org/ns/activitystreams#duration; Domain: Object; Range: xsd:duration; Functional */
-export type Duration = string
+export type Duration = OrgW3ActivitystreamsDefs.Duration
 /** https://www.w3.org/ns/activitystreams#height; Domain: Link; Range: xsd:nonNegativeInteger; Functional */
 export type Height = OrgW3ActivitystreamsDefs.NonNegativeInteger
 /** https://www.w3.org/ns/activitystreams#href; Domain: Link; Range: xsd:anyURI; Functional */
 export type Href = OrgW3ActivitystreamsDefs.AnyURI
-/** https://www.w3.org/ns/activitystreams#hreflang; Domain: Link; Range: [BCP47] Language-Tag; Functional; Note: According to [RFC5646], the maximum legal size of a 'Language-Tag' is the 'langtag' of size (3+1+3+2*(1+3))+1+(4)+1+(3)+(variantCount*(1+8))+(1+extensionCount*(3+1+8))+1+(1+privateUseCount*(1+8)), which is a lot */
-export type Hreflang = string
+/** https://www.w3.org/ns/activitystreams#hreflang; Domain: Link; Range: [BCP47] Language-Tag; Functional */
+export type Hreflang = OrgW3ActivitystreamsDefs.Language
 /** https://www.w3.org/ns/activitystreams#partOf; Domain: CollectionPage; Range: Link | Collection; Functional */
-export type PartOf = string
+export type PartOf = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#latitude; Domain: Object; Range: xsd:float; Functional; Note: Float not supported in Lexicon */
-export type Latitude = string
+export type Latitude = OrgW3ActivitystreamsDefs.Float
 /** https://www.w3.org/ns/activitystreams#longitude; Domain: Object; Range: xsd:float; Functional; Note: Float not supported in Lexicon */
-export type Longitude = string
+export type Longitude = OrgW3ActivitystreamsDefs.Float
 /** https://www.w3.org/ns/activitystreams#mediaType; Domain: Object | Link; Range: MIME Media Type; Functional */
-export type MediaType = string
+export type MediaType = OrgW3ActivitystreamsDefs.String
 /** https://www.w3.org/ns/activitystreams#endTime; Domain: Object; Range: xsd:datetime; Functional */
-export type EndTime = string
+export type EndTime = OrgW3ActivitystreamsDefs.DateTime
 /** https://www.w3.org/ns/activitystreams#published; Domain: Object; Range: xsd:datetime; Functional */
-export type Published = string
+export type Published = OrgW3ActivitystreamsDefs.DateTime
 /** https://www.w3.org/ns/activitystreams#startTime; Domain: Object; Range: xsd:datetime; Functional */
-export type StartTime = string
+export type StartTime = OrgW3ActivitystreamsDefs.DateTime
 /** https://www.w3.org/ns/activitystreams#radius; Domain: Place; Range: xsd:float [>= 0.0f]; Functional; Note: Float not supported in Lexicon */
-export type Radius = string
+export type Radius = OrgW3ActivitystreamsDefs.NonNegativeFloat
 /** https://www.w3.org/ns/activitystreams#rel; Domain: Link; Range: [RFC5988] or [HTML5] Link Relation */
 export type Rel = OrgW3ActivitystreamsDefs.AnyURI
 /** https://www.w3.org/ns/activitystreams#startIndex; Domain: OrderedCollectionPage; Range: xsd:nonNegativeInteger; Functional */
-export type StartIndex = number
+export type StartIndex = OrgW3ActivitystreamsDefs.NonNegativeInteger
 /** https://www.w3.org/ns/activitystreams#summary; Domain: Object; Range: xsd:string | rdf:langString */
-export type Summary = string
+export type Summary = OrgW3ActivitystreamsDefs.String
 /** https://www.w3.org/ns/activitystreams#totalitems; Domain: Collection; Range: xsd:nonNegativeInteger; Functional */
-export type TotalItems = number
+export type TotalItems = OrgW3ActivitystreamsDefs.NonNegativeInteger
 /** https://www.w3.org/ns/activitystreams#units; Domain: Place; Range: 'cm' | 'feet' | 'inches' | 'km' | 'm' | 'miles' | xsd:anyURI: Functional */
 export type Units = string
 /** https://www.w3.org/ns/activitystreams#updated; Domain: Object; Range: xsd:datetime; Functional */
-export type Updated = string
+export type Updated = OrgW3ActivitystreamsDefs.DateTime
 /** https://www.w3.org/ns/activitystreams#width; Domain: Link; Range: xsd:nonNegativeInteger; Functional */
 export type Width = OrgW3ActivitystreamsDefs.NonNegativeInteger
 /** https://www.w3.org/ns/activitystreams#subject; Domain: Relationship; Range: Object | Link; Functional */
-export type Subject = OrgW3ActivitystreamsDefs.Object
+export type Subject = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#relationship; Domain: Relationship; Range: Object */
-export type Relationship = OrgW3ActivitystreamsDefs.Object
+export type Relationship = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#describes; Domain: Profile; Range: Object; Functional */
-export type Describes = OrgW3ActivitystreamsDefs.Object
+export type Describes = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#formerType; Domain: Tombstone; Range: Object; Functional: false; Note: MK - I believe explicit 'Functional: false' means it a url, while syntactically correct, points to a dead resource */
-export type FormerType = OrgW3ActivitystreamsDefs.Object
+export type FormerType = OrgW3ActivitystreamsDefs.AnyURIArrayObject
 /** https://www.w3.org/ns/activitystreams#deleted; Domain: Tombstone; Range: xsd:datetime; Functional */
-export type Deleted = string
+export type Deleted = OrgW3ActivitystreamsDefs.DateTime
