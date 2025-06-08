@@ -16626,7 +16626,7 @@ export const schemaDict = {
     defs: {
       main: {
         type: 'object',
-        required: ['id', 'type', 'preferredUsername'],
+        required: ['id', 'type', 'preferredUsername', 'context'],
         properties: {
           '@context': {
             type: 'array',
@@ -16715,6 +16715,10 @@ export const schemaDict = {
           },
           memorial: {
             type: 'boolean',
+          },
+          context: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#context',
           },
           publicKey: {
             type: 'ref',

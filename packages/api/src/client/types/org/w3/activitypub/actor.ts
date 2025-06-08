@@ -49,6 +49,7 @@ export interface Main {
   discoverable?: boolean
   indexable?: boolean
   memorial?: boolean
+  context: OrgW3ActivitystreamsProperties.Context
   publicKey?: PublicKey
   tag?: Tag[]
   attachments?: string[]

@@ -7,6 +7,7 @@ import { Server } from '../../../../lexicon'
 import { Record as ProfileRecord } from '../../../../lexicon/types/app/bsky/actor/profile'
 //import { Record as PostRecord } from '../lexicon/types/app/bsky/feed/post'
 import { genDomainPrefix, inferPubHandle } from '../../../../activitypub/util'
+import { AnyURIArrayObject, AnyURI } from '../../../../lexicon/types/org/w3/activitystreams/defs'
 
 export default function (server: Server, ctx: AppContext) {
   server.org.w3.activitypub.getActor({
@@ -52,8 +53,10 @@ export default function (server: Server, ctx: AppContext) {
           //featured: `${uriPrefix}/org.joinmastodon.getFeatured?repo=${did}`,
           preferredUsername: pubHandle.split('@')[0],
           name: profile.displayName,
-          //name: {main: profile.displayName},
-          summary: profile.description
+          summary: profile.description,
+          //context: ["dogs" as AnyURI],
+          context: ["http://google.ca"] as AnyURIArrayObject,
+          hog: "pigoot"
         },
       }
     },

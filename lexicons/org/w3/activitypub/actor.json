@@ -4,7 +4,7 @@
   "defs": {
     "main": {
       "type": "object",
-      "required": ["id", "type", "preferredUsername"],
+      "required": ["id", "type", "preferredUsername", "context"],
       "properties": {
         "@context": { "type": "array",
           "description": "ActivtyStreams terms dictionary. This isn't to spec. This type needs to be 'string | array | object'",
@@ -35,6 +35,7 @@
         "discoverable": { "type": "boolean" },
         "indexable": { "type": "boolean" },
         "memorial": { "type": "boolean" },
+        "context": { "type": "ref", "ref": "org.w3.activitystreams.properties#context" },
         "publicKey": { "type": "ref", "ref": "#publicKey" },
         "tag": { "type": "array", "items": { "type": "ref", "ref": "#tag" } },
         "attachments": { "type": "array", "items": { "type": "string" } },
