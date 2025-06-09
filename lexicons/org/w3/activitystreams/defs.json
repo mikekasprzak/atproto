@@ -90,7 +90,7 @@
         },
         "type": {
           "type": "ref",
-          "ref": "#type"
+          "ref": "#string"
         }
       }
     },

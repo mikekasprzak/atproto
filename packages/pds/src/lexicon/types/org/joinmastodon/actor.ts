@@ -10,14 +10,15 @@ import type * as OrgW3ActivitystreamsProperties from '../w3/activitystreams/prop
 import type * as OrgW3ActivitystreamsActor from '../w3/activitystreams/actor.js'
 import type * as OrgW3ActivitypubProperties from '../w3/activitypub/properties.js'
 import type * as OrgW3ActivitypubActor from '../w3/activitypub/actor.js'
+import type * as OrgJoinmastodonProperties from './properties.js'
 
 const is$typed = _is$typed,
   validate = _validate
 const id = 'org.joinmastodon.actor'
 
 /** EXTENDS org.w3.activitypub.actor */
-export interface Actor {
-  $type?: 'org.joinmastodon.actor#actor'
+export interface Main {
+  $type?: 'org.joinmastodon.actor'
   '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id: OrgW3ActivitystreamsProperties.Id
   type: OrgW3ActivitystreamsActor.ActorTypes
@@ -53,17 +54,24 @@ export interface Actor {
   following?: OrgW3ActivitypubActor.Following
   followers?: OrgW3ActivitypubActor.Followers
   liked?: OrgW3ActivitypubActor.Liked
-  streams?: OrgW3ActivitystreamsDefs.ObjectType
+  streams?: OrgW3ActivitypubActor.Streams
   preferredUsername?: OrgW3ActivitypubActor.PreferredUsername
   endpoints?: OrgW3ActivitypubActor.Endpoints
+  publicKey?: OrgJoinmastodonProperties.PublicKey
+  featured?: OrgJoinmastodonProperties.Featured
+  featuredTags?: OrgJoinmastodonProperties.FeaturedTags
+  discoverable?: OrgJoinmastodonProperties.Discoverable
+  indexable?: OrgJoinmastodonProperties.Indexable
+  suspended?: OrgJoinmastodonProperties.Suspended
+  memorial?: OrgJoinmastodonProperties.Memorial
 }
 
-const hashActor = 'actor'
+const hashMain = 'main'
 
-export function isActor<V>(v: V) {
-  return is$typed(v, id, hashActor)
+export function isMain<V>(v: V) {
+  return is$typed(v, id, hashMain)
 }
 
-export function validateActor<V>(v: V) {
-  return validate<Actor & V>(v, id, hashActor)
+export function validateMain<V>(v: V) {
+  return validate<Main & V>(v, id, hashMain)
 }

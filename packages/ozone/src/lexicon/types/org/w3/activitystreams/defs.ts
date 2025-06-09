@@ -60,7 +60,7 @@ export function validateIdObject<V>(v: V) {
 export interface IdTypeObject {
   $type?: 'org.w3.activitystreams.defs#idTypeObject'
   id: Id
-  type: Type
+  type: String
 }
 
 const hashIdTypeObject = 'idTypeObject'

@@ -2,7 +2,7 @@
   "lexicon": 1,
   "id": "org.joinmastodon.actor",
   "defs": {
-    "actor": {
+    "main": {
       "type": "object",
       "required": ["id", "type", "inbox", "outbox"],
       "description": "EXTENDS org.w3.activitypub.actor",
@@ -39,16 +39,22 @@
         "duration": { "type": "ref", "ref": "org.w3.activitystreams.properties#duration" },
 
         "source": { "type": "ref", "ref": "org.w3.activitypub.properties#source" },
-
         "inbox": { "type": "ref", "ref": "org.w3.activitypub.actor#inbox" },
         "outbox": { "type": "ref", "ref": "org.w3.activitypub.actor#outbox" },
         "following": { "type": "ref", "ref": "org.w3.activitypub.actor#following" },
         "followers": { "type": "ref", "ref": "org.w3.activitypub.actor#followers" },
         "liked": { "type": "ref", "ref": "org.w3.activitypub.actor#liked" },
-        "streams": { "type": "ref", "ref": "org.w3.activitystreams.defs#objectType" },
+        "streams": { "type": "ref", "ref": "org.w3.activitypub.actor#streams" },
         "preferredUsername": { "type": "ref", "ref": "org.w3.activitypub.actor#preferredUsername" },
-        "endpoints": { "type": "ref", "ref": "org.w3.activitypub.actor#endpoints" }
+        "endpoints": { "type": "ref", "ref": "org.w3.activitypub.actor#endpoints" },
 
+        "publicKey": {"type": "ref", "ref": "org.joinmastodon.properties#publicKey"},
+        "featured": {"type": "ref", "ref": "org.joinmastodon.properties#featured"},
+        "featuredTags": {"type": "ref", "ref": "org.joinmastodon.properties#featuredTags"},
+        "discoverable": {"type": "ref", "ref": "org.joinmastodon.properties#discoverable"},
+        "indexable": {"type": "ref", "ref": "org.joinmastodon.properties#indexable"},
+        "suspended": {"type": "ref", "ref": "org.joinmastodon.properties#suspended"},
+        "memorial": {"type": "ref", "ref": "org.joinmastodon.properties#memorial"}
       }
     }
   }

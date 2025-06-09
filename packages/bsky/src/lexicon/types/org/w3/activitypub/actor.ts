@@ -11,41 +11,53 @@ import {
 } from '../../../../util'
 import type * as OrgW3ActivitystreamsDefs from '../activitystreams/defs.js'
 import type * as OrgW3ActivitystreamsProperties from '../activitystreams/properties.js'
+import type * as OrgW3ActivitypubProperties from './properties.js'
 
 const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitypub.actor'
 
+/** EXTENDS org.w3.activitystreams.actor */
 export interface Main {
   $type?: 'org.w3.activitypub.actor'
   '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id: OrgW3ActivitystreamsProperties.Id
   type: OrgW3ActivitystreamsProperties.Type
-  /** AtProto identifier URI (not actually necessary) */
-  atUri?: string
-  inbox?: string
-  outbox?: string
-  followers?: string
-  following?: string
-  featured?: string
-  featuredTags?: string
-  preferredUsername?: string
-  name?: OrgW3ActivitystreamsProperties.Name
-  /** HTML encoded profile page */
-  summary?: string
-  url?: string
-  published?: string
-  manuallyApprovesFollowers?: boolean
-  discoverable?: boolean
-  indexable?: boolean
-  memorial?: boolean
+  attachment?: OrgW3ActivitystreamsProperties.Attachment
+  attributedTo?: OrgW3ActivitystreamsProperties.AttributedTo
+  audience?: OrgW3ActivitystreamsProperties.Audience
+  content?: OrgW3ActivitystreamsProperties.Content
   context?: OrgW3ActivitystreamsProperties.Context
-  publicKey?: PublicKey
-  tag?: Tag[]
-  attachments?: string[]
+  name?: OrgW3ActivitystreamsProperties.Name
+  endTime?: OrgW3ActivitystreamsProperties.EndTime
+  generator?: OrgW3ActivitystreamsProperties.Generator
+  icon?: OrgW3ActivitystreamsProperties.Icon
+  image?: OrgW3ActivitystreamsProperties.Image
+  inReplyTo?: OrgW3ActivitystreamsProperties.InReplyTo
+  location?: OrgW3ActivitystreamsProperties.Location
+  preview?: OrgW3ActivitystreamsProperties.Preview
+  published?: OrgW3ActivitystreamsProperties.Published
+  replies?: OrgW3ActivitystreamsProperties.Replies
+  startTime?: OrgW3ActivitystreamsProperties.StartTime
+  summary?: OrgW3ActivitystreamsProperties.Summary
+  tag?: OrgW3ActivitystreamsProperties.Tag
+  updated?: OrgW3ActivitystreamsProperties.Updated
+  url?: OrgW3ActivitystreamsProperties.Url
+  to?: OrgW3ActivitystreamsProperties.To
+  bto?: OrgW3ActivitystreamsProperties.Bto
+  cc?: OrgW3ActivitystreamsProperties.Cc
+  bcc?: OrgW3ActivitystreamsProperties.Bcc
+  mediaType?: OrgW3ActivitystreamsProperties.MediaType
+  duration?: OrgW3ActivitystreamsProperties.Duration
+  source?: OrgW3ActivitypubProperties.Source
+  inbox: Inbox
+  outbox: Outbox
+  following?: Following
+  followers?: Followers
+  liked?: Liked
+  streams?: Streams
+  preferredUsername?: PreferredUsername
   endpoints?: Endpoints
-  icon?: MediaUrl
-  image?: MediaUrl
 }
 
 const hashMain = 'main'
@@ -58,31 +70,13 @@ export function validateMain<V>(v: V) {
   return validate<Main & V>(v, id, hashMain)
 }
 
-export interface PublicKey {
-  $type?: 'org.w3.activitypub.actor#publicKey'
-  id: string
-  owner: string
-  publicKeyPem: string
-}
-
-const hashPublicKey = 'publicKey'
-
-export function isPublicKey<V>(v: V) {
-  return is$typed(v, id, hashPublicKey)
-}
-
-export function validatePublicKey<V>(v: V) {
-  return validate<PublicKey & V>(v, id, hashPublicKey)
-}
-
-export type Tag = string
-export type Attachment = string
 export type EndpointType = OrgW3ActivitystreamsDefs.AnyURI
 export type Inbox = EndpointType
 export type Outbox = EndpointType
 export type Followers = EndpointType
 export type Following = EndpointType
 export type Liked = EndpointType
+export type Streams = OrgW3ActivitystreamsDefs.ObjectType
 export type PreferredUsername = OrgW3ActivitystreamsDefs.String
 
 export interface Endpoints {
@@ -103,28 +97,4 @@ export function isEndpoints<V>(v: V) {
 
 export function validateEndpoints<V>(v: V) {
   return validate<Endpoints & V>(v, id, hashEndpoints)
-}
-
-/** I'm not sure this is to spec. I believe the type needs to be 'string | object', where 'string' is the url */
-export interface MediaUrl {
-  $type?: 'org.w3.activitypub.actor#mediaUrl'
-  type: 'Image' | (string & {})
-  mediaType:
-    | 'image/gif'
-    | 'image/jpeg'
-    | 'image/png'
-    | 'image/svg+xml'
-    | 'image/webp'
-    | (string & {})
-  url: string
-}
-
-const hashMediaUrl = 'mediaUrl'
-
-export function isMediaUrl<V>(v: V) {
-  return is$typed(v, id, hashMediaUrl)
-}
-
-export function validateMediaUrl<V>(v: V) {
-  return validate<MediaUrl & V>(v, id, hashMediaUrl)
 }

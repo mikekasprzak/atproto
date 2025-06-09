@@ -63,7 +63,7 @@ export function validateMain<V>(v: V) {
 /** IMPLEMENTS object */
 export interface Article {
   $type?: 'org.w3.activitystreams.object#article'
-  '@context'?: OrgW3ActivitystreamsDefs.Context
+  '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id?: OrgW3ActivitystreamsProperties.Id
   type?: 'Article'
   attachment?: OrgW3ActivitystreamsProperties.Attachment

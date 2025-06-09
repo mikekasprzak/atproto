@@ -42,7 +42,7 @@
       "type": "object",
       "description": "IMPLEMENTS object",
       "properties": {
-        "@context": { "type": "ref", "ref": "org.w3.activitystreams.defs#context" },
+        "@context": { "type": "ref", "ref": "org.w3.activitystreams.defs#contextType" },
 
         "id": { "type": "ref", "ref": "org.w3.activitystreams.properties#id" },
         "type": { "type": "string", "const": "Article" },
