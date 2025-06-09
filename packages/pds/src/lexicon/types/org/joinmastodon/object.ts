@@ -114,7 +114,7 @@ export type ObjectTypes =
   | 'Emoji'
   | (string & {})
 
-/** EXTENDS object */
+/** EXTENDS object, IMPLEMENTS org.schema.propertyValue */
 export interface PropertyValue {
   $type?: 'org.joinmastodon.object#propertyValue'
   '@context'?: OrgW3ActivitystreamsDefs.ContextType

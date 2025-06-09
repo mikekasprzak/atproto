@@ -13426,55 +13426,6 @@ export const schemaDict = {
       },
     },
   },
-  OrgW3ActivitypubPost: {
-    lexicon: 1,
-    id: 'org.w3.activitypub.post',
-    defs: {
-      main: {
-        type: 'object',
-        description: 'deprecated',
-        properties: {
-          '@context': {
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-          id: {
-            type: 'string',
-            format: 'uri',
-          },
-          atId: {
-            type: 'string',
-            format: 'at-uri',
-            description: 'AtProto identifier (not actually necessary)',
-          },
-          type: {
-            type: 'string',
-          },
-          summary: {
-            type: 'string',
-            description: 'HTML encoded profile page',
-          },
-          source: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.post#sourceType',
-          },
-        },
-      },
-      sourceType: {
-        type: 'object',
-        properties: {
-          content: {
-            type: 'string',
-          },
-          mediaType: {
-            type: 'string',
-          },
-        },
-      },
-    },
-  },
   OrgW3ActivitypubProperties: {
     lexicon: 1,
     id: 'org.w3.activitypub.properties',
@@ -15700,7 +15651,7 @@ export const schemaDict = {
       },
       actorTypes: {
         type: 'ref',
-        ref: 'lex:org.w3.activitpub.actor#actorTypes',
+        ref: 'lex:org.w3.activitypub.actor#actorTypes',
       },
     },
   },
@@ -15953,7 +15904,7 @@ export const schemaDict = {
       },
       propertyValue: {
         type: 'object',
-        description: 'EXTENDS object',
+        description: 'EXTENDS object, IMPLEMENTS org.schema.propertyValue',
         required: ['type'],
         properties: {
           '@context': {
@@ -16458,7 +16409,6 @@ export const ids = {
   OrgW3ActivitypubGetOutbox: 'org.w3.activitypub.getOutbox',
   OrgW3ActivitypubLink: 'org.w3.activitypub.link',
   OrgW3ActivitypubObject: 'org.w3.activitypub.object',
-  OrgW3ActivitypubPost: 'org.w3.activitypub.post',
   OrgW3ActivitypubProperties: 'org.w3.activitypub.properties',
   OrgW3ActivitypubPutInbox: 'org.w3.activitypub.putInbox',
   OrgW3ActivitystreamsActivity: 'org.w3.activitystreams.activity',

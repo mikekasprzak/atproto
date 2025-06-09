@@ -10,7 +10,6 @@ import type * as OrgW3ActivitystreamsProperties from '../w3/activitystreams/prop
 import type * as OrgW3ActivitypubProperties from '../w3/activitypub/properties.js'
 import type * as OrgW3ActivitypubActor from '../w3/activitypub/actor.js'
 import type * as OrgJoinmastodonProperties from './properties.js'
-import type * as OrgW3ActivitpubActor from '../w3/activitpub/actor.js'
 
 const is$typed = _is$typed,
   validate = _validate
@@ -76,4 +75,4 @@ export function validateMain<V>(v: V) {
   return validate<Main & V>(v, id, hashMain)
 }
 
-export type ActorTypes = OrgW3ActivitpubActor.ActorTypes
+export type ActorTypes = OrgW3ActivitypubActor.ActorTypes
