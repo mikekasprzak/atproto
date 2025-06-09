@@ -16,12 +16,12 @@ const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitystreams.orderedCollectionPage'
 
-/** EXTENDS collectionPage */
+/** EXTENDS collectionPage, IMPLEMENTS orderedCollectionPage */
 export interface Main {
   $type?: 'org.w3.activitystreams.orderedCollectionPage'
   '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id?: OrgW3ActivitystreamsProperties.Id
-  type?: 'orderedCollectionPage'
+  type: 'orderedCollectionPage'
   attachment?: OrgW3ActivitystreamsProperties.Attachment
   attributedTo?: OrgW3ActivitystreamsProperties.AttributedTo
   audience?: OrgW3ActivitystreamsProperties.Audience

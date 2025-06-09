@@ -9,45 +9,11 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
+import type * as OrgW3ActivitystreamsActivity from '../activitystreams/activity.js'
 
 const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitypub.activity'
 
-export interface Main {
-  $type?: 'org.w3.activitypub.activity'
-  '@context'?: string[]
-  id?: string
-  /** AtProto identifier (not actually necessary) */
-  atId?: string
-  type?: string
-  /** HTML encoded profile page */
-  summary?: string
-  source?: SourceType
-}
-
-const hashMain = 'main'
-
-export function isMain<V>(v: V) {
-  return is$typed(v, id, hashMain)
-}
-
-export function validateMain<V>(v: V) {
-  return validate<Main & V>(v, id, hashMain)
-}
-
-export interface SourceType {
-  $type?: 'org.w3.activitypub.activity#sourceType'
-  content?: string
-  mediaType?: string
-}
-
-const hashSourceType = 'sourceType'
-
-export function isSourceType<V>(v: V) {
-  return is$typed(v, id, hashSourceType)
-}
-
-export function validateSourceType<V>(v: V) {
-  return validate<SourceType & V>(v, id, hashSourceType)
-}
+/** EXTENDS org.w3.activitystreams.activity, IMPLEMENTS activity */
+export type Main = OrgW3ActivitystreamsActivity.Main

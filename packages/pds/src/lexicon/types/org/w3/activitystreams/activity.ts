@@ -21,7 +21,7 @@ export interface Main {
   $type?: 'org.w3.activitystreams.activity'
   '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id?: OrgW3ActivitystreamsProperties.Id
-  type?: OrgW3ActivitystreamsProperties.Type
+  type?: ActivityTypes
   attachment?: OrgW3ActivitystreamsProperties.Attachment
   attributedTo?: OrgW3ActivitystreamsProperties.AttributedTo
   audience?: OrgW3ActivitystreamsProperties.Audience
@@ -65,3 +65,34 @@ export function isMain<V>(v: V) {
 export function validateMain<V>(v: V) {
   return validate<Main & V>(v, id, hashMain)
 }
+
+export type ActivityTypes =
+  | 'Accept'
+  | 'Add'
+  | 'Announce'
+  | 'Arrive'
+  | 'Block'
+  | 'Create'
+  | 'Delete'
+  | 'Dislike'
+  | 'Flag'
+  | 'Follow'
+  | 'Ignore'
+  | 'Invite'
+  | 'Join'
+  | 'Leave'
+  | 'Like'
+  | 'Listen'
+  | 'Move'
+  | 'Offer'
+  | 'Question'
+  | 'Reject'
+  | 'Read'
+  | 'Remove'
+  | 'TentativeReject'
+  | 'TentativeAccept'
+  | 'Travel'
+  | 'Undo'
+  | 'Update'
+  | 'View'
+  | (string & {})

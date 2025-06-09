@@ -7,21 +7,21 @@ import { validate as _validate } from '../../../lexicons'
 import { type $Typed, is$typed as _is$typed, type OmitKey } from '../../../util'
 import type * as OrgW3ActivitystreamsDefs from '../w3/activitystreams/defs.js'
 import type * as OrgW3ActivitystreamsProperties from '../w3/activitystreams/properties.js'
-import type * as OrgW3ActivitystreamsActor from '../w3/activitystreams/actor.js'
 import type * as OrgW3ActivitypubProperties from '../w3/activitypub/properties.js'
 import type * as OrgW3ActivitypubActor from '../w3/activitypub/actor.js'
 import type * as OrgJoinmastodonProperties from './properties.js'
+import type * as OrgW3ActivitpubActor from '../w3/activitpub/actor.js'
 
 const is$typed = _is$typed,
   validate = _validate
 const id = 'org.joinmastodon.actor'
 
-/** EXTENDS org.w3.activitypub.actor */
+/** EXTENDS org.w3.activitypub.actor, IMPLEMENTS actor */
 export interface Main {
   $type?: 'org.joinmastodon.actor'
   '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id: OrgW3ActivitystreamsProperties.Id
-  type: OrgW3ActivitystreamsActor.ActorTypes
+  type: ActorTypes
   attachment?: OrgW3ActivitystreamsProperties.Attachment
   attributedTo?: OrgW3ActivitystreamsProperties.AttributedTo
   audience?: OrgW3ActivitystreamsProperties.Audience
@@ -75,3 +75,5 @@ export function isMain<V>(v: V) {
 export function validateMain<V>(v: V) {
   return validate<Main & V>(v, id, hashMain)
 }
+
+export type ActorTypes = OrgW3ActivitpubActor.ActorTypes

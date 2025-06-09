@@ -14,6 +14,7 @@ const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitypub.post'
 
+/** deprecated */
 export interface Main {
   $type?: 'org.w3.activitypub.post'
   '@context'?: string[]

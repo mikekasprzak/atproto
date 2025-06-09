@@ -12,12 +12,12 @@ const is$typed = _is$typed,
   validate = _validate
 const id = 'org.joinmastodon.link'
 
-/** EXTENDS link, IMPLEMENTS hashtag */
-export interface Hashtag {
-  $type?: 'org.joinmastodon.link#hashtag'
+/** EXTENDS org.w3.activitypub.link, IMPLEMENTS link */
+export interface Main {
+  $type?: 'org.joinmastodon.link'
   '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id?: OrgW3ActivitystreamsProperties.Id
-  type?: 'Hashtag'
+  type?: LinkTypes
   href?: OrgW3ActivitystreamsProperties.Href
   rel?: OrgW3ActivitystreamsProperties.Rel
   mediaType?: OrgW3ActivitystreamsProperties.MediaType
@@ -28,12 +28,14 @@ export interface Hashtag {
   preview?: OrgW3ActivitystreamsProperties.Preview
 }
 
-const hashHashtag = 'hashtag'
+const hashMain = 'main'
 
-export function isHashtag<V>(v: V) {
-  return is$typed(v, id, hashHashtag)
+export function isMain<V>(v: V) {
+  return is$typed(v, id, hashMain)
 }
 
-export function validateHashtag<V>(v: V) {
-  return validate<Hashtag & V>(v, id, hashHashtag)
+export function validateMain<V>(v: V) {
+  return validate<Main & V>(v, id, hashMain)
 }
+
+export type LinkTypes = 'Link' | 'Mention' | 'Hashtag' | (string & {})

@@ -9,11 +9,11 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
-import type * as OrgW3ActivitystreamsActivity from '../activitystreams/activity.js'
+import type * as OrgW3ActivitystreamsLink from '../activitystreams/link.js'
 
 const is$typed = _is$typed,
   validate = _validate
-const id = 'org.w3.activitypub.activity'
+const id = 'org.w3.activitypub.link'
 
-/** EXTENDS org.w3.activitystreams.activity, IMPLEMENTS activity */
-export type Main = OrgW3ActivitystreamsActivity.Main
+/** EXTENDS org.w3.activitystreams.link, IMPLEMENTS link */
+export type Main = OrgW3ActivitystreamsLink.Main

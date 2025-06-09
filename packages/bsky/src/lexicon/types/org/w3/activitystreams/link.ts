@@ -21,7 +21,7 @@ export interface Main {
   $type?: 'org.w3.activitystreams.link'
   '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id?: OrgW3ActivitystreamsProperties.Id
-  type?: OrgW3ActivitystreamsProperties.TypeLink
+  type?: LinkTypes
   href?: OrgW3ActivitystreamsProperties.Href
   rel?: OrgW3ActivitystreamsProperties.Rel
   mediaType?: OrgW3ActivitystreamsProperties.MediaType
@@ -42,28 +42,4 @@ export function validateMain<V>(v: V) {
   return validate<Main & V>(v, id, hashMain)
 }
 
-/** IMPLEMENTS link */
-export interface Mention {
-  $type?: 'org.w3.activitystreams.link#mention'
-  '@context'?: OrgW3ActivitystreamsDefs.ContextType
-  id?: OrgW3ActivitystreamsProperties.Id
-  type: 'Mention'
-  href?: OrgW3ActivitystreamsProperties.Href
-  rel?: OrgW3ActivitystreamsProperties.Rel
-  mediaType?: OrgW3ActivitystreamsProperties.MediaType
-  name?: OrgW3ActivitystreamsProperties.Name
-  hreflang?: OrgW3ActivitystreamsProperties.Hreflang
-  height?: OrgW3ActivitystreamsProperties.Height
-  width?: OrgW3ActivitystreamsProperties.Width
-  preview?: OrgW3ActivitystreamsProperties.Preview
-}
-
-const hashMention = 'mention'
-
-export function isMention<V>(v: V) {
-  return is$typed(v, id, hashMention)
-}
-
-export function validateMention<V>(v: V) {
-  return validate<Mention & V>(v, id, hashMention)
-}
+export type LinkTypes = 'Link' | 'Mention' | (string & {})

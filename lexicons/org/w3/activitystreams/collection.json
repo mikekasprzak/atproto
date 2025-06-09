@@ -4,7 +4,8 @@
   "defs": {
     "main": {
       "type": "object",
-      "description": "EXTENDS object",
+      "description": "EXTENDS object, IMPLEMENTS collection",
+      "required": ["type"],
       "properties": {
         "@context": { "type": "ref", "ref": "org.w3.activitystreams.defs#contextType" },
 

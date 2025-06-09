@@ -12,17 +12,18 @@ import {
 import type * as OrgW3ActivitystreamsDefs from '../activitystreams/defs.js'
 import type * as OrgW3ActivitystreamsProperties from '../activitystreams/properties.js'
 import type * as OrgW3ActivitypubProperties from './properties.js'
+import type * as OrgW3ActivitystreamsActor from '../activitystreams/actor.js'
 
 const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitypub.actor'
 
-/** EXTENDS org.w3.activitystreams.actor */
+/** EXTENDS org.w3.activitystreams.actor, IMPLEMENTS actor */
 export interface Main {
   $type?: 'org.w3.activitypub.actor'
   '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id: OrgW3ActivitystreamsProperties.Id
-  type: OrgW3ActivitystreamsProperties.Type
+  type: ActorTypes
   attachment?: OrgW3ActivitystreamsProperties.Attachment
   attributedTo?: OrgW3ActivitystreamsProperties.AttributedTo
   audience?: OrgW3ActivitystreamsProperties.Audience
@@ -70,6 +71,7 @@ export function validateMain<V>(v: V) {
   return validate<Main & V>(v, id, hashMain)
 }
 
+export type ActorTypes = OrgW3ActivitystreamsActor.ActorTypes
 export type EndpointType = OrgW3ActivitystreamsDefs.AnyURI
 export type Inbox = EndpointType
 export type Outbox = EndpointType
