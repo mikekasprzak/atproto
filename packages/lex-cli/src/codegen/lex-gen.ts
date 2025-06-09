@@ -258,7 +258,7 @@ function genObject(
           types.push('{ $type: string }')
         }
         iface.addProperty({
-          name: `${propKey}${req ? '' : '?'}`,
+          name: `'${propKey}'${req ? '' : '?'}`,
           type: makeType(types, { nullable: propNullable }),
         })
         continue
@@ -268,7 +268,7 @@ function genObject(
           let propAst
           if (propDef.items.type === 'ref') {
             propAst = iface.addProperty({
-              name: `${propKey}${req ? '' : '?'}`,
+              name: `'${propKey}'${req ? '' : '?'}`,
               type: makeType(
                 refToType(
                   propDef.items.ref,
@@ -289,7 +289,7 @@ function genObject(
               types.push('{ $type: string }')
             }
             propAst = iface.addProperty({
-              name: `${propKey}${req ? '' : '?'}`,
+              name: `'${propKey}'${req ? '' : '?'}`,
               type: makeType(types, {
                 nullable: propNullable,
                 array: true,
@@ -297,7 +297,7 @@ function genObject(
             })
           } else {
             propAst = iface.addProperty({
-              name: `${propKey}${req ? '' : '?'}`,
+              name: `'${propKey}'${req ? '' : '?'}`,
               type: makeType(primitiveOrBlobToType(propDef.items), {
                 nullable: propNullable,
                 array: true,
@@ -309,7 +309,7 @@ function genObject(
           //= propName: type
           genComment(
             iface.addProperty({
-              name: `${propKey}${req ? '' : '?'}`,
+              name: `'${propKey}'${req ? '' : '?'}`,
               type: makeType(primitiveOrBlobToType(propDef), {
                 nullable: propNullable,
               }),
@@ -431,7 +431,7 @@ export function genXrpcParams(
           paramDef.default !== undefined)
       genComment(
         iface.addProperty({
-          name: `${paramKey}${req ? '' : '?'}`,
+          name: `'${paramKey}'${req ? '' : '?'}`,
           type:
             paramDef.type === 'array'
               ? primitiveToType(paramDef.items) + '[]'
