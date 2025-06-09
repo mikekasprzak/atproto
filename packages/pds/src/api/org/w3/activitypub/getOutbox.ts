@@ -62,6 +62,7 @@ export default function (server: Server, ctx: AppContext) {
         })
       })
 
+      /*
       if (page) {
         // TODO: sanitize page
 
@@ -107,7 +108,8 @@ export default function (server: Server, ctx: AppContext) {
           //prev: '',
         }
       }
-      else {
+      else*/
+      {
         apResponse = {
           type: 'OrderedCollection',
           id: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}`,
