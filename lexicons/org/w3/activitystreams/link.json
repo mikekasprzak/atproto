@@ -6,9 +6,30 @@
       "type": "object",
       "description": "IMPLEMENTS link",
       "properties": {
-        "@context": { "type": "unknown", "description": "JSON-LD terms" },
+        "@context": { "type": "ref", "ref": "org.w3.activitystreams.defs#contextType" },
 
         "id": { "type": "ref", "ref": "org.w3.activitystreams.properties#id" },
+        "type": { "type": "ref", "ref": "org.w3.activitystreams.properties#typeLink" },
+        "href": { "type": "ref", "ref": "org.w3.activitystreams.properties#href" },
+        "rel": { "type": "ref", "ref": "org.w3.activitystreams.properties#rel" },
+        "mediaType": { "type": "ref", "ref": "org.w3.activitystreams.properties#mediaType" },
+        "name": { "type": "ref", "ref": "org.w3.activitystreams.properties#name" },
+        "hreflang": { "type": "ref", "ref": "org.w3.activitystreams.properties#hreflang" },
+        "height": { "type": "ref", "ref": "org.w3.activitystreams.properties#height" },
+        "width": { "type": "ref", "ref": "org.w3.activitystreams.properties#width" },
+        "preview": { "type": "ref", "ref": "org.w3.activitystreams.properties#preview" }
+      }
+    },
+
+    "mention": {
+      "type": "object",
+      "required": ["type"],
+      "description": "IMPLEMENTS link",
+      "properties": {
+        "@context": { "type": "ref", "ref": "org.w3.activitystreams.defs#contextType" },
+
+        "id": { "type": "ref", "ref": "org.w3.activitystreams.properties#id" },
+        "type": { "type": "string", "const": "Mention" },
         "href": { "type": "ref", "ref": "org.w3.activitystreams.properties#href" },
         "rel": { "type": "ref", "ref": "org.w3.activitystreams.properties#rel" },
         "mediaType": { "type": "ref", "ref": "org.w3.activitystreams.properties#mediaType" },

@@ -4,22 +4,13 @@
   "defs": {
     "main": {
       "type": "object",
-      "required": ["id", "type", "preferredUsername", "context"],
+      "required": ["id", "type"],
       "properties": {
-        "@context": { "type": "array",
-          "description": "ActivtyStreams terms dictionary. This isn't to spec. This type needs to be 'string | array | object'",
-          "items": {
-            "type": "string",
-            "description": "ActivtyStreams valid term namespaces by URL.",
-            "knownValues": [
-              "https://www.w3.org/ns/activitystreams",
-              "https://w3id.org/security/v1"
-            ]
-          }
-        },
-        "id": { "type": "string", "format": "uri" },
+        "@context": { "type": "ref", "ref": "org.w3.activitystreams.defs#contextType" },
+
+        "id": { "type": "ref", "ref": "org.w3.activitystreams.properties#id" },
+        "type": { "type": "ref", "ref": "org.w3.activitystreams.properties#type" },
         "atUri": { "type": "string", "format": "at-uri", "description": "AtProto identifier URI (not actually necessary)" },
-        "type": { "type": "string", "knownValues": ["Application", "Group", "Organization", "Person", "Service"] },
         "inbox": { "type": "string", "format": "uri" },
         "outbox": { "type": "string", "format": "uri" },
         "followers": { "type": "string", "format": "uri" },
@@ -59,12 +50,29 @@
     "attachment": {
       "type": "string"
     },
+
+
+    "endpointType": { "type": "ref", "ref": "org.w3.activitystreams.defs#anyURI" },
+
+    "inbox": { "type": "ref", "ref": "#endpointType" },
+    "outbox": { "type": "ref", "ref": "#endpointType" },
+    "followers": { "type": "ref", "ref": "#endpointType" },
+    "following": { "type": "ref", "ref": "#endpointType" },
+    "liked": { "type": "ref", "ref": "#endpointType" },
+    "preferredUsername": { "type": "ref", "ref": "org.w3.activitystreams.defs#string" },
+
     "endpoints": {
       "type": "object",
       "properties": {
-        "sharedInbox": { "type": "string", "format": "uri" }
+        "proxyUrl": { "type": "ref", "ref": "#endpointType" },
+        "oauthAuthorizationEndpoint": { "type": "ref", "ref": "#endpointType" },
+        "oauthTokenEndpoint": { "type": "ref", "ref": "#endpointType" },
+        "provideClientKey": { "type": "ref", "ref": "#endpointType" },
+        "signClientKey": { "type": "ref", "ref": "#endpointType" },
+        "sharedInbox": { "type": "ref", "ref": "#endpointType" }
       }
     },
+
     "mediaUrl": {
       "type": "object",
       "description":"I'm not sure this is to spec. I believe the type needs to be 'string | object', where 'string' is the url",

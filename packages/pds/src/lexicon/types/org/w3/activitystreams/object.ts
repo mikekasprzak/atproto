@@ -9,6 +9,7 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
+import type * as OrgW3ActivitystreamsDefs from './defs.js'
 import type * as OrgW3ActivitystreamsProperties from './properties.js'
 
 const is$typed = _is$typed,
@@ -18,10 +19,9 @@ const id = 'org.w3.activitystreams.object'
 /** IMPLEMENTS object */
 export interface Main {
   $type?: 'org.w3.activitystreams.object'
-  /** JSON-LD terms */
-  '@context'?: { [_ in string]: unknown }
+  '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id?: OrgW3ActivitystreamsProperties.Id
-  type?: OrgW3ActivitystreamsProperties.Type
+  type?: OrgW3ActivitystreamsProperties.TypeObject
   attachment?: OrgW3ActivitystreamsProperties.Attachment
   attributedTo?: OrgW3ActivitystreamsProperties.AttributedTo
   audience?: OrgW3ActivitystreamsProperties.Audience
@@ -58,4 +58,48 @@ export function isMain<V>(v: V) {
 
 export function validateMain<V>(v: V) {
   return validate<Main & V>(v, id, hashMain)
+}
+
+/** IMPLEMENTS object */
+export interface Article {
+  $type?: 'org.w3.activitystreams.object#article'
+  '@context'?: OrgW3ActivitystreamsDefs.Context
+  id?: OrgW3ActivitystreamsProperties.Id
+  type?: 'Article'
+  attachment?: OrgW3ActivitystreamsProperties.Attachment
+  attributedTo?: OrgW3ActivitystreamsProperties.AttributedTo
+  audience?: OrgW3ActivitystreamsProperties.Audience
+  content?: OrgW3ActivitystreamsProperties.Content
+  context?: OrgW3ActivitystreamsProperties.Context
+  name?: OrgW3ActivitystreamsProperties.Name
+  endTime?: OrgW3ActivitystreamsProperties.EndTime
+  generator?: OrgW3ActivitystreamsProperties.Generator
+  icon?: OrgW3ActivitystreamsProperties.Icon
+  image?: OrgW3ActivitystreamsProperties.Image
+  inReplyTo?: OrgW3ActivitystreamsProperties.InReplyTo
+  location?: OrgW3ActivitystreamsProperties.Location
+  preview?: OrgW3ActivitystreamsProperties.Preview
+  published?: OrgW3ActivitystreamsProperties.Published
+  replies?: OrgW3ActivitystreamsProperties.Replies
+  startTime?: OrgW3ActivitystreamsProperties.StartTime
+  summary?: OrgW3ActivitystreamsProperties.Summary
+  tag?: OrgW3ActivitystreamsProperties.Tag
+  updated?: OrgW3ActivitystreamsProperties.Updated
+  url?: OrgW3ActivitystreamsProperties.Url
+  to?: OrgW3ActivitystreamsProperties.To
+  bto?: OrgW3ActivitystreamsProperties.Bto
+  cc?: OrgW3ActivitystreamsProperties.Cc
+  bcc?: OrgW3ActivitystreamsProperties.Bcc
+  mediaType?: OrgW3ActivitystreamsProperties.MediaType
+  duration?: OrgW3ActivitystreamsProperties.Duration
+}
+
+const hashArticle = 'article'
+
+export function isArticle<V>(v: V) {
+  return is$typed(v, id, hashArticle)
+}
+
+export function validateArticle<V>(v: V) {
+  return validate<Article & V>(v, id, hashArticle)
 }

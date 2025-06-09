@@ -8,6 +8,15 @@ import { Record as ProfileRecord } from '../../../../lexicon/types/app/bsky/acto
 //import { Record as PostRecord } from '../lexicon/types/app/bsky/feed/post'
 import { genDomainPrefix, inferPubHandle } from '../../../../activitypub/util'
 import { AnyURIArrayObject, AnyURI } from '../../../../lexicon/types/org/w3/activitystreams/defs'
+import { Main as ActivityStreamLink } from '../../../../lexicon/types/org/w3/activitystreams/link'
+
+function makeContext(options: {}) {
+  return 'https://www.w3.org/ns/activitystreams' as AnyURIArrayObject
+}
+
+function makeAPType(value) {
+  return value as AnyURIArrayObject
+}
 
 export default function (server: Server, ctx: AppContext) {
   server.org.w3.activitypub.getActor({
@@ -32,6 +41,9 @@ export default function (server: Server, ctx: AppContext) {
         throw new InvalidRequestError(`Unable to fetch profile from repo: ${repo}`)
       }
 
+      const dog: unknown = "dawg"
+      console.log(typeof dog)
+
       const uriPrefix = `${genDomainPrefix(ctx, req)}/xrpc`
       const pubHandle = inferPubHandle(ctx, req.hostname, atUser.handle)
 
@@ -39,25 +51,33 @@ export default function (server: Server, ctx: AppContext) {
       //   It's common to see Mastodon responses as a string, in an array of strings and objects
       //   ref: https://www.w3.org/TR/json-ld/#the-context
 
+
+      const apResponse = {
+        '@context': makeAPType('https://www.w3.org/ns/activitystreams'),
+        type: 'Person',
+        id: `${uriPrefix}/org.w3.activitypub.getActor?repo=${did}`,
+        atUri: `at://${did}/org.w3.activitypub.actor`,
+        inbox: `${uriPrefix}/org.w3.activitypub.putInbox?repo=${did}`,
+        outbox: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}`,
+        followers: `${uriPrefix}/org.w3.activitypub.getFollowers?repo=${did}`,
+        following: `${uriPrefix}/org.w3.activitypub.getFollowing?repo=${did}`,
+        //featured: `${uriPrefix}/org.joinmastodon.getFeatured?repo=${did}`,
+        preferredUsername: pubHandle.split('@')[0],
+        name: profile.displayName,
+        summary: profile.description,
+        //context: ["dogs" as AnyURI],
+        //context: ["http://google.ca"] as AnyURIArrayObject,
+        context: makeAPType([
+          'hey',
+          {
+          id: "hoops"
+        }]),
+        hog: "pigoot"
+      }
+
       return {
         encoding: 'application/activity+json', // 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
-        body: {
-          '@context': ['https://www.w3.org/ns/activitystreams'],
-          id: `${uriPrefix}/org.w3.activitypub.getActor?repo=${did}`,
-          atUri: `at://${did}/org.w3.activitypub.actor`,
-          type: 'Person',
-          inbox: `${uriPrefix}/org.w3.activitypub.putInbox?repo=${did}`,
-          outbox: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}`,
-          followers: `${uriPrefix}/org.w3.activitypub.getFollowers?repo=${did}`,
-          following: `${uriPrefix}/org.w3.activitypub.getFollowing?repo=${did}`,
-          //featured: `${uriPrefix}/org.joinmastodon.getFeatured?repo=${did}`,
-          preferredUsername: pubHandle.split('@')[0],
-          name: profile.displayName,
-          summary: profile.description,
-          //context: ["dogs" as AnyURI],
-          context: ["http://google.ca"] as AnyURIArrayObject,
-          hog: "pigoot"
-        },
+        body: apResponse,
       }
     },
   })

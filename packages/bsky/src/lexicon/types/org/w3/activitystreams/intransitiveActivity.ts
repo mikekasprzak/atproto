@@ -9,6 +9,7 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
+import type * as OrgW3ActivitystreamsDefs from './defs.js'
 import type * as OrgW3ActivitystreamsProperties from './properties.js'
 
 const is$typed = _is$typed,
@@ -18,8 +19,7 @@ const id = 'org.w3.activitystreams.intransitiveActivity'
 /** IMPLEMENTS activity (DOES NOT EXTEND object) */
 export interface Main {
   $type?: 'org.w3.activitystreams.intransitiveActivity'
-  /** JSON-LD terms */
-  '@context'?: { [_ in string]: unknown }
+  '@context'?: OrgW3ActivitystreamsDefs.ContextType
   actor?: OrgW3ActivitystreamsProperties.Actor
   object?: OrgW3ActivitystreamsProperties.Object
   target?: OrgW3ActivitystreamsProperties.Target

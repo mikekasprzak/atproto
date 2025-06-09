@@ -6,7 +6,7 @@
       "type": "object",
       "description": "IMPLEMENTS activity (DOES NOT EXTEND object)",
       "properties": {
-        "@context": { "type": "unknown", "description": "JSON-LD terms" },
+        "@context": { "type": "ref", "ref": "org.w3.activitystreams.defs#contextType" },
 
         "actor": { "type": "ref", "ref": "org.w3.activitystreams.properties#actor" },
         "object": { "type": "ref", "ref": "org.w3.activitystreams.properties#object" },

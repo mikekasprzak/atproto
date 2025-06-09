@@ -9,6 +9,7 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
+import type * as OrgW3ActivitystreamsDefs from '../activitystreams/defs.js'
 import type * as OrgW3ActivitystreamsProperties from '../activitystreams/properties.js'
 
 const is$typed = _is$typed,
@@ -17,29 +18,18 @@ const id = 'org.w3.activitypub.actor'
 
 export interface Main {
   $type?: 'org.w3.activitypub.actor'
-  /** ActivtyStreams terms dictionary. This isn't to spec. This type needs to be 'string | array | object' */
-  '@context'?: (
-    | 'https://www.w3.org/ns/activitystreams'
-    | 'https://w3id.org/security/v1'
-    | (string & {})
-  )[]
-  id: string
+  '@context'?: OrgW3ActivitystreamsDefs.ContextType
+  id: OrgW3ActivitystreamsProperties.Id
+  type: OrgW3ActivitystreamsProperties.Type
   /** AtProto identifier URI (not actually necessary) */
   atUri?: string
-  type:
-    | 'Application'
-    | 'Group'
-    | 'Organization'
-    | 'Person'
-    | 'Service'
-    | (string & {})
   inbox?: string
   outbox?: string
   followers?: string
   following?: string
   featured?: string
   featuredTags?: string
-  preferredUsername: string
+  preferredUsername?: string
   name?: OrgW3ActivitystreamsProperties.Name
   /** HTML encoded profile page */
   summary?: string
@@ -49,7 +39,7 @@ export interface Main {
   discoverable?: boolean
   indexable?: boolean
   memorial?: boolean
-  context: OrgW3ActivitystreamsProperties.Context
+  context?: OrgW3ActivitystreamsProperties.Context
   publicKey?: PublicKey
   tag?: Tag[]
   attachments?: string[]
@@ -87,10 +77,22 @@ export function validatePublicKey<V>(v: V) {
 
 export type Tag = string
 export type Attachment = string
+export type EndpointType = OrgW3ActivitystreamsDefs.AnyURI
+export type Inbox = EndpointType
+export type Outbox = EndpointType
+export type Followers = EndpointType
+export type Following = EndpointType
+export type Liked = EndpointType
+export type PreferredUsername = OrgW3ActivitystreamsDefs.String
 
 export interface Endpoints {
   $type?: 'org.w3.activitypub.actor#endpoints'
-  sharedInbox?: string
+  proxyUrl?: EndpointType
+  oauthAuthorizationEndpoint?: EndpointType
+  oauthTokenEndpoint?: EndpointType
+  provideClientKey?: EndpointType
+  signClientKey?: EndpointType
+  sharedInbox?: EndpointType
 }
 
 const hashEndpoints = 'endpoints'

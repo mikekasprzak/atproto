@@ -2488,10 +2488,12 @@ export class ChatBskyModerationNS {
 export class OrgNS {
   _server: Server
   w3: OrgW3NS
+  joinmastodon: OrgJoinmastodonNS
 
   constructor(server: Server) {
     this._server = server
     this.w3 = new OrgW3NS(server)
+    this.joinmastodon = new OrgJoinmastodonNS(server)
   }
 }
 
@@ -2549,6 +2551,14 @@ export class OrgW3ActivitypubNS {
 }
 
 export class OrgW3ActivitystreamsNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+}
+
+export class OrgJoinmastodonNS {
   _server: Server
 
   constructor(server: Server) {

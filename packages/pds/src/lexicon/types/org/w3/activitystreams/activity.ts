@@ -9,6 +9,7 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
+import type * as OrgW3ActivitystreamsDefs from './defs.js'
 import type * as OrgW3ActivitystreamsProperties from './properties.js'
 
 const is$typed = _is$typed,
@@ -18,8 +19,7 @@ const id = 'org.w3.activitystreams.activity'
 /** EXTENDS object, IMPLEMENTS activity */
 export interface Main {
   $type?: 'org.w3.activitystreams.activity'
-  /** JSON-LD terms */
-  '@context'?: { [_ in string]: unknown }
+  '@context'?: OrgW3ActivitystreamsDefs.ContextType
   id?: OrgW3ActivitystreamsProperties.Id
   type?: OrgW3ActivitystreamsProperties.Type
   attachment?: OrgW3ActivitystreamsProperties.Attachment
