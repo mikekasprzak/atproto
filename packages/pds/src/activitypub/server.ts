@@ -24,10 +24,10 @@ export const createRouter = (ctx: AppContext): Router => {
       : handle !== ctx.cfg.service.hostname &&
           handle.endsWith(ctx.cfg.service.hostname)
         ? `${handle.substring(0, handle.length - ctx.cfg.service.hostname.length - 1)}@${ctx.cfg.service.hostname}`
-        : ctx.cfg.service.hostnameRoot &&
-            handle !== ctx.cfg.service.hostnameRoot &&
-            handle.endsWith(ctx.cfg.service.hostnameRoot)
-          ? `${handle.substring(0, handle.length - ctx.cfg.service.hostnameRoot.length - 1)}@${ctx.cfg.service.hostnameRoot}`
+        : ctx.cfg.service.hostnameAlt &&
+            handle !== ctx.cfg.service.hostnameAlt &&
+            handle.endsWith(ctx.cfg.service.hostnameAlt)
+          ? `${handle.substring(0, handle.length - ctx.cfg.service.hostnameAlt.length - 1)}@${ctx.cfg.service.hostnameAlt}`
           : handle !== hostname && handle.endsWith(hostname)
             ? `${handle.substring(0, handle.length - hostname.length - 1)}@${hostname}`
             : `${handle}@${hostname}`
@@ -95,9 +95,9 @@ export const createRouter = (ctx: AppContext): Router => {
     if (!ret.did) {
       // Test with the alternate hostname, or without if its the same as the given hostname
       const atHandle =
-        host === ctx.cfg.service.hostnameRoot
+        host === ctx.cfg.service.hostnameAlt
           ? actor
-          : `${actor}.${ctx.cfg.service.hostnameRoot}`
+          : `${actor}.${ctx.cfg.service.hostnameAlt}`
       const atUser = await ctx.accountManager.getAccount(atHandle)
       ret.did = atUser?.did
       if (ret.did) {

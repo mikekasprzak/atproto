@@ -5,7 +5,6 @@ export const readEnv = (): ServerEnvironment => {
     // service
     port: envInt('PDS_PORT'),
     hostname: envStr('PDS_HOSTNAME'),
-    hostnameRoot: envStr('PDS_HOSTNAME_ROOT'),
     serviceDid: envStr('PDS_SERVICE_DID'),
     serviceName: envStr('PDS_SERVICE_NAME'),
     version: envStr('PDS_VERSION'),
@@ -17,6 +16,7 @@ export const readEnv = (): ServerEnvironment => {
     contactEmailAddress: envStr('PDS_CONTACT_EMAIL_ADDRESS'),
     acceptingImports: envBool('PDS_ACCEPTING_REPO_IMPORTS'),
     blobUploadLimit: envInt('PDS_BLOB_UPLOAD_LIMIT'),
+    hostnameAlt: envStr('PDS_HOSTNAME_ALT'),
     devMode: envBool('PDS_DEV_MODE'),
 
     // OAuth
@@ -155,7 +155,6 @@ export type ServerEnvironment = {
   // service
   port?: number
   hostname?: string
-  hostnameRoot?: string
   serviceDid?: string
   serviceName?: string
   version?: string
@@ -167,6 +166,7 @@ export type ServerEnvironment = {
   contactEmailAddress?: string
   acceptingImports?: boolean
   blobUploadLimit?: number
+  hostnameAlt?: string // Used by ActivityPub
   devMode?: boolean
 
   // OAuth

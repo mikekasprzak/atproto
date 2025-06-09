@@ -1,7 +1,7 @@
 import { RequestHandler, Router, json } from 'express'
 //import { AuthScope } from '../auth-verifier'
 import { AppContext } from '../context'
-import { inferPubHandle, genDomainPrefix } from './util'
+import { genDomainPrefix, inferPubHandle } from './util'
 
 export const pubRoutePrefix = '/activitypub'
 export const atRoutePrefix = '/atpub'
@@ -13,7 +13,7 @@ export const createRouter = (ctx: AppContext): Router => {
   type DIDByActorHost = {
     did?: string
     handle?: string
-    didFoundBy?: 'given' | 'hostname' | 'althostname'
+    didFoundBy?: 'given' | 'did' | 'hostname' | 'hostnameAlt'
   }
 
   const findDIDByActorHost = async function (
@@ -31,7 +31,7 @@ export const createRouter = (ctx: AppContext): Router => {
       const atUser = await ctx.accountManager.getAccount(atHandle)
       ret.did = atUser?.did
       if (ret.did) {
-        ret.didFoundBy = 'given'
+        ret.didFoundBy = actor.startsWith('did:') ? 'did' : 'given'
         ret.handle =
           actor.startsWith('did:') && atUser?.handle
             ? `${atUser.handle}`
@@ -57,16 +57,16 @@ export const createRouter = (ctx: AppContext): Router => {
       }
     }
 
-    if (!ret.did) {
+    if (ctx.cfg.service.hostnameAlt && !ret.did) {
       // Test with the alternate hostname, or without if its the same as the given hostname
       const atHandle =
-        host === ctx.cfg.service.hostnameRoot
+        host === ctx.cfg.service.hostnameAlt
           ? actor
-          : `${actor}.${ctx.cfg.service.hostnameRoot}`
+          : `${actor}.${ctx.cfg.service.hostnameAlt}`
       const atUser = await ctx.accountManager.getAccount(atHandle)
       ret.did = atUser?.did
       if (ret.did) {
-        ret.didFoundBy = 'althostname'
+        ret.didFoundBy = 'hostnameAlt'
         ret.handle = atHandle // prefer the handle we made
       }
     }
@@ -91,6 +91,7 @@ export const createRouter = (ctx: AppContext): Router => {
     let at: DIDByActorHost
     try {
       at = await findDIDByActorHost(req, res, pubActor, pubHost)
+      console.log('at', at)
     } catch (err) {
       return res.status(500).send('Internal Server Error')
     }
@@ -98,8 +99,12 @@ export const createRouter = (ctx: AppContext): Router => {
       return res.status(404).send('Not Found') // Mastodon sends a blank 404
     }
 
-    const newSubject = inferPubHandle(req.hostname, at.handle, pubActor)
+    console.log('befre')
+
+    const newSubject = inferPubHandle(ctx, req.hostname, at.handle, pubActor)
+    console.log('mi')
     const domPrefix = genDomainPrefix(ctx, req)
+    console.log('aff')
     return res.type('application/jrd+json; charset=utf-8').json({
       subject: `acct:${newSubject}`,
       links: [

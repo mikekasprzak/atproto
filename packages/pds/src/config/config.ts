@@ -21,12 +21,12 @@ export const envToCfg = (env: ServerEnvironment): ServerConfig => {
     publicUrl,
     did,
     version: env.version, // default?
-    hostnameRoot: env.hostnameRoot,
     privacyPolicyUrl: env.privacyPolicyUrl,
     termsOfServiceUrl: env.termsOfServiceUrl,
     contactEmailAddress: env.contactEmailAddress,
     acceptingImports: env.acceptingImports ?? true,
     blobUploadLimit: env.blobUploadLimit ?? 5 * 1024 * 1024, // 5mb
+    hostnameAlt: env.hostnameAlt, // Used by ActivityPub
     devMode: env.devMode ?? false,
   }
 
@@ -371,7 +371,7 @@ export type ServiceConfig = {
   publicUrl: string
   did: string
   version?: string
-  hostnameRoot?: string
+  hostnameAlt?: string
   privacyPolicyUrl?: string
   termsOfServiceUrl?: string
   acceptingImports: boolean
