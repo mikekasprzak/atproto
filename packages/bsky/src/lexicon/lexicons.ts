@@ -13283,24 +13283,31 @@ export const schemaDict = {
     defs: {
       main: {
         type: 'query',
-        description: 'ActivityPub outbox',
+        description: 'Fetches a user (actor) as an ActivityPub ',
         parameters: {
           type: 'params',
-          required: [],
+          required: ['repo'],
           properties: {
-            cursor: {
+            repo: {
               type: 'string',
+              format: 'at-identifier',
+              description: 'The handle or DID of the repo.',
+            },
+            page: {
+              type: 'integer',
             },
           },
         },
         output: {
-          encoding: 'application/json',
+          encoding: 'application/activity+json',
           schema: {
-            type: 'object',
-            properties: {},
+            type: 'union',
+            refs: [
+              'lex:org.w3.activitystreams.orderedCollection',
+              'lex:org.w3.activitystreams.orderedCollectionPage',
+            ],
           },
         },
-        errors: [],
       },
     },
   },
@@ -14359,7 +14366,7 @@ export const schemaDict = {
     defs: {
       main: {
         type: 'object',
-        description: 'EXTENDS object, IMPLEMENTS collection',
+        description: 'EXTENDS object',
         properties: {
           '@context': {
             type: 'ref',
@@ -14370,8 +14377,8 @@ export const schemaDict = {
             ref: 'lex:org.w3.activitystreams.properties#id',
           },
           type: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#type',
+            type: 'string',
+            const: 'Collection',
           },
           attachment: {
             type: 'ref',
@@ -14507,7 +14514,7 @@ export const schemaDict = {
     defs: {
       main: {
         type: 'object',
-        description: 'EXTENDS object, collection, IMPLEMENTS collectionPage',
+        description: 'EXTENDS collection',
         properties: {
           '@context': {
             type: 'ref',
@@ -14518,8 +14525,8 @@ export const schemaDict = {
             ref: 'lex:org.w3.activitystreams.properties#id',
           },
           type: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#type',
+            type: 'string',
+            const: 'CollectionPage',
           },
           attachment: {
             type: 'ref',
@@ -15323,7 +15330,7 @@ export const schemaDict = {
     defs: {
       main: {
         type: 'object',
-        description: 'EXTENDS object, collection',
+        description: 'EXTENDS collection',
         properties: {
           '@context': {
             type: 'ref',
@@ -15334,8 +15341,8 @@ export const schemaDict = {
             ref: 'lex:org.w3.activitystreams.properties#id',
           },
           type: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#type',
+            type: 'string',
+            const: 'OrderedCollection',
           },
           attachment: {
             type: 'ref',
@@ -15471,8 +15478,7 @@ export const schemaDict = {
     defs: {
       main: {
         type: 'object',
-        description:
-          'EXTENDS object, collection, collectionPage, IMPLEMENTS orderedCollectionPage',
+        description: 'EXTENDS collectionPage',
         properties: {
           '@context': {
             type: 'ref',
@@ -15483,8 +15489,8 @@ export const schemaDict = {
             ref: 'lex:org.w3.activitystreams.properties#id',
           },
           type: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#type',
+            type: 'string',
+            const: 'orderedCollectionPage',
           },
           attachment: {
             type: 'ref',

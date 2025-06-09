@@ -4,22 +4,31 @@
   "defs": {
     "main": {
       "type": "query",
-      "description": "ActivityPub outbox",
+      "description": "Fetches a user (actor) as an ActivityPub ",
       "parameters": {
         "type": "params",
-        "required": [],
+        "required": ["repo"],
         "properties": {
-          "cursor": { "type": "string" }
+          "repo": {
+            "type": "string",
+            "format": "at-identifier",
+            "description": "The handle or DID of the repo."
+          },
+          "page": {
+            "type": "integer"
+          }
         }
       },
       "output": {
-        "encoding": "application/json",
+        "encoding": "application/activity+json",
         "schema": {
-          "type": "object",
-          "properties": {}
+          "type": "union",
+          "refs": [
+            "org.w3.activitystreams.orderedCollection",
+            "org.w3.activitystreams.orderedCollectionPage"
+          ]
         }
-      },
-      "errors": []
+      }
     }
   }
 }

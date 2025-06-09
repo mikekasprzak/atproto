@@ -11,23 +11,28 @@ import {
   type OmitKey,
 } from '../../../../util'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
+import type * as OrgW3ActivitystreamsOrderedCollection from '../activitystreams/orderedCollection.js'
+import type * as OrgW3ActivitystreamsOrderedCollectionPage from '../activitystreams/orderedCollectionPage.js'
 
 const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitypub.getOutbox'
 
 export interface QueryParams {
-  cursor?: string
+  /** The handle or DID of the repo. */
+  repo: string
+  page?: number
 }
 
 export type InputSchema = undefined
-
-export interface OutputSchema {}
-
+export type OutputSchema =
+  | $Typed<OrgW3ActivitystreamsOrderedCollection.Main>
+  | $Typed<OrgW3ActivitystreamsOrderedCollectionPage.Main>
+  | { $type: string }
 export type HandlerInput = undefined
 
 export interface HandlerSuccess {
-  encoding: 'application/json'
+  encoding: 'application/activity+json'
   body: OutputSchema
   headers?: { [key: string]: string }
 }

@@ -4,12 +4,12 @@
   "defs": {
     "main": {
       "type": "object",
-      "description": "EXTENDS object, collection, IMPLEMENTS collectionPage",
+      "description": "EXTENDS collection",
       "properties": {
         "@context": { "type": "ref", "ref": "org.w3.activitystreams.defs#contextType" },
 
         "id": { "type": "ref", "ref": "org.w3.activitystreams.properties#id" },
-        "type": { "type": "ref", "ref": "org.w3.activitystreams.properties#type" },
+        "type": { "type": "string", "const": "CollectionPage" },
         "attachment": { "type": "ref", "ref": "org.w3.activitystreams.properties#attachment" },
         "attributedTo": { "type": "ref", "ref": "org.w3.activitystreams.properties#attributedTo" },
         "audience": { "type": "ref", "ref": "org.w3.activitystreams.properties#audience" },

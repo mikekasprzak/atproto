@@ -10,18 +10,24 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
+import type * as OrgW3ActivitystreamsOrderedCollection from '../activitystreams/orderedCollection.js'
+import type * as OrgW3ActivitystreamsOrderedCollectionPage from '../activitystreams/orderedCollectionPage.js'
 
 const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitypub.getOutbox'
 
 export interface QueryParams {
-  cursor?: string
+  /** The handle or DID of the repo. */
+  repo: string
+  page?: number
 }
 
 export type InputSchema = undefined
-
-export interface OutputSchema {}
+export type OutputSchema =
+  | $Typed<OrgW3ActivitystreamsOrderedCollection.Main>
+  | $Typed<OrgW3ActivitystreamsOrderedCollectionPage.Main>
+  | { $type: string }
 
 export interface CallOptions {
   signal?: AbortSignal

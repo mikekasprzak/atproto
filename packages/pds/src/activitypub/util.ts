@@ -146,3 +146,107 @@ export function makeLDContext(obj: any) {
 export function makeObject(value) {
   return value as ObjectType
 }
+
+
+export const atUriToParts = function (uri: string) {
+  if (!uri.startsWith('at://')) {
+    return undefined
+  }
+  const withoutAt = uri.substring('at://'.length)
+  const [did, type, revision] = withoutAt.split('/')
+  return { did, type, tid: revision }
+}
+
+export const atUriToTID = function (uri: string) {
+  return atUriToParts(uri)?.tid
+}
+
+
+
+
+export const makeActivity = function (
+  type: string,// Pick<ActivityPubActivity, 'type'>['type'],
+  options: {
+    uriHandle: string
+    postId: string
+    published: string
+    id?: string
+    cid?: string
+  },
+  object: object,
+) {
+  const statusUri = `${options.uriHandle}/status/${options.postId}`
+  const baseId = options.id ?? statusUri
+
+  return {
+    type: type,
+    id: `${baseId}/activity`,
+    url: `${statusUri}/activity`,
+    cid: options.cid,
+    actor: options.uriHandle,
+    published: options.published,
+    to: ['https://www.w3.org/ns/activitystreams#Public'],
+    cc: [`${options.uriHandle}/followers`], // public
+    object,
+  }
+}
+
+export const makeNote = function (
+  options: {
+    uriHandle: string
+    postId: string
+    published: string
+    id?: string
+    cid?: string
+  },
+  content: string,
+) {
+  const totalLikes = 0
+  const totalShares = 0
+
+  const statusUri = `${options.uriHandle}/status/${options.postId}`
+  const baseId = options.id ?? statusUri
+
+  return {
+    type: 'Note',
+    id: baseId,
+    url: statusUri,
+    cid: options.cid,
+    summary: null,
+    inReplyTo: null,
+    published: options.published,
+    attributedTo: options.uriHandle,
+    to: ['https://www.w3.org/ns/activitystreams#Public'],
+    cc: [`${options.uriHandle}/followers`], // public
+    sensitive: false,
+    content: content,
+    contentMap: {
+      en: content,
+    },
+    attachment: [],
+    tag: [],
+    replies: {
+      id: `${baseId}/replies`,
+      url: `${statusUri}/replies`,
+      type: 'Collection',
+      first: {
+        type: 'CollectionPage',
+        next: `${options.uriHandle}/status/${options.postId}/replies?page=true`,
+        partOf: `${options.uriHandle}/status/${options.postId}/replies`,
+        items: [],
+      },
+    },
+    likes: {
+      id: `${baseId}/likes`,
+      url: `${statusUri}/likes`,
+      type: 'Collection',
+      totalItems: totalLikes,
+    },
+    shares: {
+      id: `${baseId}/shares`,
+      url: `${statusUri}/shares`,
+      type: 'Collection',
+      totalItems: totalShares,
+    },
+  }
+}
