@@ -16,7 +16,7 @@ import {
   ResponseType,
   XRPCError,
 } from '@atproto/xrpc-server'
-import * as webfinger from './activitypub/webfinger'
+import * as activityPub from './activitypub'
 import API from './api'
 import * as authRoutes from './auth-routes'
 import * as basicRoutes from './basic-routes'
@@ -137,7 +137,10 @@ export class PDS {
     app.use(cors({ maxAge: DAY / SECOND }))
     app.use(basicRoutes.createRouter(ctx))
     app.use(wellKnown.createRouter(ctx))
-    app.use(webfinger.createRouter(ctx))
+    //if (ctx.cfg.service.activitypub) {
+      app.use(activityPub.oauthAuthorizationServer.createRouter(ctx))
+      app.use(activityPub.webfinger.createRouter(ctx))
+    //}
     app.use(server.xrpc.router)
     app.use(error.handler)
 

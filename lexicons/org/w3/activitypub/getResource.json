@@ -1,0 +1,36 @@
+{
+    "lexicon": 1,
+    "id": "org.w3.activitypub.getResource",
+    "defs": {
+      "main": {
+        "type": "query",
+        "description": "Fetches a user's resource, in ActivityPub format",
+        "parameters": {
+          "type": "params",
+          "required": ["repo", "id", "nsid"],
+          "properties": {
+            "repo": {
+              "type": "string",
+              "format": "at-identifier",
+              "description": "The handle or DID of the repo."
+            },
+            "id": {
+              "type": "string",
+              "description": "The resource to fetch."
+            },
+            "nsid": {
+              "type": "string",
+              "description": "The namespace-id of the resource to fetch."
+            }
+          }
+        },
+        "output": {
+          "encoding": "application/activity+json",
+          "schema": {
+            "type": "ref",
+            "ref": "org.w3.activitystreams.object"
+          }
+        }
+      }
+    }
+  }

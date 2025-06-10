@@ -13279,6 +13279,49 @@ export const schemaDict = {
       },
     },
   },
+  OrgW3ActivitypubGetResource: {
+    lexicon: 1,
+    id: 'org.w3.activitypub.getResource',
+    defs: {
+      main: {
+        type: 'query',
+        description: "Fetches a user's resource, in ActivityPub format",
+        parameters: {
+          type: 'params',
+          required: ['repo'],
+          properties: {
+            repo: {
+              type: 'string',
+              format: 'at-identifier',
+              description: 'The handle or DID of the repo.',
+            },
+            id: {
+              type: 'string',
+              description:
+                'The resource to fetch, or the parent of the NSID of resource(s) to fetch.',
+            },
+            nsid: {
+              type: 'string',
+              description: 'The namespace id of the resource(s) to fetch.',
+            },
+            page: {
+              type: 'integer',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/activity+json',
+          schema: {
+            type: 'union',
+            refs: [
+              'lex:org.w3.activitystreams.object',
+              'lex:org.w3.activitystreams.orderedCollectionPage',
+            ],
+          },
+        },
+      },
+    },
+  },
   OrgW3ActivitypubLink: {
     lexicon: 1,
     id: 'org.w3.activitypub.link',
@@ -16407,6 +16450,7 @@ export const ids = {
   OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
   OrgW3ActivitypubGetActor: 'org.w3.activitypub.getActor',
   OrgW3ActivitypubGetOutbox: 'org.w3.activitypub.getOutbox',
+  OrgW3ActivitypubGetResource: 'org.w3.activitypub.getResource',
   OrgW3ActivitypubLink: 'org.w3.activitypub.link',
   OrgW3ActivitypubObject: 'org.w3.activitypub.object',
   OrgW3ActivitypubProperties: 'org.w3.activitypub.properties',

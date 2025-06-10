@@ -91,7 +91,6 @@ export const createRouter = (ctx: AppContext): Router => {
     let at: DIDByActorHost
     try {
       at = await findDIDByActorHost(req, res, pubActor, pubHost)
-      console.log('at', at)
     } catch (err) {
       return res.status(500).send('Internal Server Error')
     }
@@ -99,12 +98,9 @@ export const createRouter = (ctx: AppContext): Router => {
       return res.status(404).send('Not Found') // Mastodon sends a blank 404
     }
 
-    console.log('befre')
 
     const newSubject = inferPubHandle(ctx, req.hostname, at.handle, pubActor)
-    console.log('mi')
     const domPrefix = genDomainPrefix(ctx, req)
-    console.log('aff')
     return res.type('application/jrd+json; charset=utf-8').json({
       subject: `acct:${newSubject}`,
       links: [

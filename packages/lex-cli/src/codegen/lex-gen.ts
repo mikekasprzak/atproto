@@ -229,6 +229,7 @@ function genObject(
 
   if (typeProperty) {
     const hash = getHash(lexUri)
+    //const hashes = hash.split('.')
     const baseNsid = stripScheme(stripHash(lexUri))
 
     //= $type?: <uri>

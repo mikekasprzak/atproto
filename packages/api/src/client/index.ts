@@ -278,6 +278,7 @@ import * as OrgW3ActivitypubActor from './types/org/w3/activitypub/actor.js'
 import * as OrgW3ActivitypubDefs from './types/org/w3/activitypub/defs.js'
 import * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
 import * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
+import * as OrgW3ActivitypubGetResource from './types/org/w3/activitypub/getResource.js'
 import * as OrgW3ActivitypubLink from './types/org/w3/activitypub/link.js'
 import * as OrgW3ActivitypubObject from './types/org/w3/activitypub/object.js'
 import * as OrgW3ActivitypubProperties from './types/org/w3/activitypub/properties.js'
@@ -567,6 +568,7 @@ export * as OrgW3ActivitypubActor from './types/org/w3/activitypub/actor.js'
 export * as OrgW3ActivitypubDefs from './types/org/w3/activitypub/defs.js'
 export * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
 export * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
+export * as OrgW3ActivitypubGetResource from './types/org/w3/activitypub/getResource.js'
 export * as OrgW3ActivitypubLink from './types/org/w3/activitypub/link.js'
 export * as OrgW3ActivitypubObject from './types/org/w3/activitypub/object.js'
 export * as OrgW3ActivitypubProperties from './types/org/w3/activitypub/properties.js'
@@ -4685,6 +4687,18 @@ export class OrgW3ActivitypubNS {
   ): Promise<OrgW3ActivitypubGetOutbox.Response> {
     return this._client.call(
       'org.w3.activitypub.getOutbox',
+      params,
+      undefined,
+      opts,
+    )
+  }
+
+  getResource(
+    params?: OrgW3ActivitypubGetResource.QueryParams,
+    opts?: OrgW3ActivitypubGetResource.CallOptions,
+  ): Promise<OrgW3ActivitypubGetResource.Response> {
+    return this._client.call(
+      'org.w3.activitypub.getResource',
       params,
       undefined,
       opts,

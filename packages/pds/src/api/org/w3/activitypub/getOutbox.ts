@@ -2,9 +2,9 @@ import { RepoRecord } from '@atproto/lexicon'
 import { InvalidRequestError } from '@atproto/oauth-provider'
 //import { AtUri } from '@atproto/syntax'
 import {
-  /*atUriToTID,*/
+  atUriToTID,
   genDomainPrefix,
-  /*inferPubHandle,*/
+  inferPubHandle,
   /*makeActivity,
   makeImageURL,*/
   makeLDContext,
@@ -16,12 +16,13 @@ import { Server } from '../../../../lexicon'
 import { ids } from '../../../../lexicon/lexicons'
 //import { pipethrough } from '../../../../pipethrough'
 import { Record as ProfileRecord } from '../../../../lexicon/types/app/bsky/actor/profile'
+import { Record as FeedPostRecord } from '../../../../lexicon/types/app/bsky/feed/post'
 
 export default function (server: Server, ctx: AppContext) {
   server.org.w3.activitypub.getOutbox({
     //auth: ctx.authVerifier.accessStandard(),
     handler: async ({ params, /*auth,*/ req }) => {
-      const { repo /*, page*/ } = params
+      const { repo, page } = params
 
       const atUser = await ctx.accountManager.getAccount(repo)
       if (!atUser) {
@@ -44,7 +45,7 @@ export default function (server: Server, ctx: AppContext) {
       }
 
       const uriPrefix = `${genDomainPrefix(ctx, req)}/xrpc`
-      //const pubHandle = inferPubHandle(ctx, req.hostname, atUser.handle)
+      const pubHandle = inferPubHandle(ctx, req.hostname, atUser.handle)
 
       let apResponse = {}
 
@@ -62,7 +63,7 @@ export default function (server: Server, ctx: AppContext) {
         })
       })
 
-      /*
+
       if (page) {
         // TODO: sanitize page
 
@@ -73,7 +74,39 @@ export default function (server: Server, ctx: AppContext) {
           //const cm = er ? (er.record as CreateOutputSchema) : undefined
 
           const tid = atUriToTID(key.uri)
+          //const statusUri = `${pubHandle}/xrpc/ ${tid}`
 
+          const source = key.value.text as string
+          const content = `<p>${source}</p>`
+
+          return {
+            type: 'Create',
+            id: `${uriPrefix}/${ids.OrgW3ActivitypubGetResource}?repo=${did}&id=${tid}&nsid="${ids.OrgW3ActivitypubActivity}#create"`,
+            //atUri: key.uri,
+            //atCid: key.cid,
+            published: pr.createdAs as string,
+            actor: `${uriPrefix}/${ids.OrgW3ActivitypubGetActor}?repo=${did}`,
+            to: ['https://www.w3.org/ns/activitystreams#Public'],
+            //cc: [`${options.uriHandle}/followers`], // public
+            object: {
+              type: 'Note',
+              id: `${uriPrefix}/${ids.OrgW3ActivitypubGetResource}?repo=${did}&id=${tid}&nsid="${ids.OrgW3ActivitypubObject}#note"`,
+              summary: null,
+              inReplyTo: null,
+              published: pr.createdAs as string,
+              attributedTo: `${uriPrefix}/${ids.OrgW3ActivitypubGetActor}?repo=${did}`,
+              to: ['https://www.w3.org/ns/activitystreams#Public'],
+              //cc: [`${options.uriHandle}/followers`], // public
+              sensitive: false,
+              content: content,
+              /*contentMap: {
+                en: content,
+              },*/
+
+            },
+          }
+
+          /*
           return makeActivity(
             'Create',
             {
@@ -96,27 +129,28 @@ export default function (server: Server, ctx: AppContext) {
               `<p>${key.value.text as string}</p>`,
             ),
           )
+          */
         })
 
         apResponse = {
           type: 'OrderedCollectionPage',
-          id: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}&page=true`,
-          //atUri: `at://${did}/org.w3.activitypub.getOutbox`,
-          partOf: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}`,
+          id: `${uriPrefix}/${ids.OrgW3ActivitypubGetOutbox}?repo=${did}&page=true`,
+          //atUri: `at://${did}/${ids.OrgW3ActivitypubGetOutbox}`,
+          partOf: `${uriPrefix}/${ids.OrgW3ActivitypubGetOutbox}?repo=${did}`,
           orderedItems: items,
           //next: '',
           //prev: '',
         }
       }
-      else*/
+      else
       {
         apResponse = {
           type: 'OrderedCollection',
-          id: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}`,
-          //atUri: `at://${did}/org.w3.activitypub.getOutbox`,
+          id: `${uriPrefix}/${ids.OrgW3ActivitypubGetOutbox}?repo=${did}`,
+          //atUri: `at://${did}/${ids.OrgW3ActivitypubGetOutbox}`,
           totalItems: postRecord.length,
-          first: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}&page=true`,
-          last: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}&page=true&min_id=0`,
+          first: `${uriPrefix}/${ids.OrgW3ActivitypubGetOutbox}?repo=${did}&page=true`,
+          last: `${uriPrefix}/${ids.OrgW3ActivitypubGetOutbox}?repo=${did}&page=true&min_id=0`,
         }
       }
 
