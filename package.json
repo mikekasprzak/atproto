@@ -54,7 +54,9 @@
     "prettier": "^3.5.3",
     "prettier-config-standard": "^7.0.0",
     "prettier-plugin-tailwindcss": "^0.6.12",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "jsonc-parser": "^3.3.1",
+    "jsonld-cli": "^2.0.0"
   },
   "workspaces": {
     "packages": [
