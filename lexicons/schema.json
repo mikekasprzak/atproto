@@ -1,0 +1,406 @@
+{
+  "@schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atproto.com/lexicon.schema.json",
+  "title": "AtProtocol Lexicon Schema",
+  "description": "A json schema for AtProtocol Lexicon schema format",
+  "type": "object",
+  "required": ["lexicon", "id", "defs"],
+  "properties": {
+    "lexicon": {
+      "type": "integer",
+      "enum": [1],
+      "default": 1,
+      "description": "Lexicon schema version"
+    },
+    "id": {
+      "type": "string",
+      "description": "Lexicon NSID identifier"
+    },
+    "defs": {
+      "type": "object",
+      "description": "Lexicon user type(s)",
+      "patternProperties": {
+        "^[A-Za-z0-9_@]+$": { "$ref": "#/$defs/roots" }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "$defs": {
+
+    "root": {
+      "type": "object",
+      "properties": {
+        "null": { "$ref": "#/$defs/nullType" }
+      }
+    },
+
+    "roots": {
+      "type": "object",
+      "properties": {
+        "null": { "$ref": "#/$defs/nullType" },
+        "boolean": { "$ref": "#/$defs/booleanType" },
+        "integer": { "$ref": "#/$defs/integerType" },
+        "string": { "$ref": "#/$defs/stringType" },
+        "bytes": { "$ref": "#/$defs/bytesType" },
+        "cid-link": { "$ref": "#/$defs/cid-linkType" },
+        "array": { "$ref": "#/$defs/arrayType" },
+        "object": { "$ref": "#/$defs/objectType" },
+        "blob": { "$ref": "#/$defs/blobType" },
+        "params": { "$ref": "#/$defs/paramsType" },
+        "token": { "$ref": "#/$defs/tokenType" },
+        "ref": { "$ref": "#/$defs/refType" },
+        "union": { "$ref": "#/$defs/unionType" },
+        "unknown": { "$ref": "#/$defs/unknownType" }
+      }
+    },
+
+    "nullType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "null" }
+      }
+    },
+    "booleanType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "boolean" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "default": { "type": "boolean" },
+            "const": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "integerType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "integer" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "minimum": { "type": "integer" },
+            "maximum": { "type": "integer" },
+            "enum": { "type": "array", "items": { "type": "integer" } },
+            "default": { "type": "integer" },
+            "const": { "type": "integer" }
+          }
+        }
+      ]
+    },
+    "stringType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "string" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "format": { "$ref": "#/$defs/stringFormatNames" },
+            "maxLength": { "type": "integer" },
+            "minLength": { "type": "integer" },
+            "maxGraphemes": { "type": "integer" },
+            "minGraphemes": { "type": "integer" },
+            "knownValues": { "type": "array", "items": { "type": "string" } },
+            "enum": { "type": "array", "items": { "type": "string" } },
+            "default": { "type": "string" },
+            "const": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "bytesType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "bytes" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "maxLength": { "type": "integer" },
+            "minLength": { "type": "integer" }
+          }
+        }
+      ]
+    },
+    "cid-linkType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "cid-link" }
+      }
+    },
+    "arrayType": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "array" }
+      },
+      "oneOf": [
+        {
+          "required": ["type", "items"],
+          "properties": {
+            "items": { "$ref": "#/$defs/root" },
+            "minLength": { "type": "integer" },
+            "maxLength": { "type": "integer" }
+          }
+        }
+      ]
+    },
+    "objectType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "object" }
+      },
+      "oneOf": [
+        {
+          "required": ["type", "properties"],
+          "properties": {
+            "required": { "type": "array", "items": { "type": "string" } },
+            "properties": { "$ref": "#/$defs/root" },
+            "nullable": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      ]
+    },
+    "blobType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "blob" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "accept": { "type": "array", "items": { "type": "string" } },
+            "maxSize": { "type": "integer" }
+          }
+        }
+      ]
+    },
+    "paramsType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "params" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "required": { "type": "array", "items": { "type": "string" } },
+            "properties": { "$ref": "#/$defs/root" }
+          }
+        }
+      ]
+    },
+    "tokenType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "token" }
+      }
+    },
+    "refType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "ref" }
+      }
+    },
+    "unionType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "union" }
+      },
+      "oneOf": [
+        {
+          "required": ["type", "refs"],
+          "properties": {
+            "refs": { "type": "array", "items": { "type": "string" } },
+            "closed": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "unknownType": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "unknown" }
+      }
+    },
+
+    "typeNames": {
+      "type": "string",
+      "enum": [
+        "null",
+        "boolean",
+        "integer",
+        "string",
+        "bytes",
+        "cid-link",
+        "blob",
+        "array",
+        "object",
+        "params",
+        "token",
+        "ref",
+        "union",
+        "unknown",
+        "record",
+        "query",
+        "procedure",
+        "subscription"
+      ]
+    },
+
+    "stringFormatNames": {
+      "type": "string",
+      "enum": [
+        "at-identifier",
+        "at-uri",
+        "cid",
+        "datetime",
+        "did",
+        "handle",
+        "nsid",
+        "tid",
+        "record-key",
+        "uri",
+        "language"
+      ]
+    },
+
+    "object": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "description": { "type": "string" },
+        "type": { "$ref": "#/$defs/typeNames" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "type": { "const": "null" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "boolean" },
+
+            "default": { "type": "boolean" },
+            "const": { "type": "boolean" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "integer" },
+
+            "minimum": { "type": "integer" },
+            "maximum": { "type": "integer" },
+            "enum": { "type": "array", "items": { "type": "integer" } },
+
+            "default": { "type": "integer" },
+            "const": { "type": "integer" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "string" },
+
+            "format": { "$ref": "#/$defs/stringFormatNames" },
+
+            "maxLength": { "type": "integer" },
+            "minLength": { "type": "integer" },
+            "maxGraphemes": { "type": "integer" },
+            "minGraphemes": { "type": "integer" },
+            "knownValues": { "type": "array", "items": { "type": "string" } },
+            "enum": { "type": "array", "items": { "type": "string" } },
+
+            "default": { "type": "string" },
+            "const": { "type": "string" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "bytes" },
+            "maxLength": { "type": "integer" },
+            "minLength": { "type": "integer" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "cid-link" }
+          }
+        },
+        {
+          "required": ["type", "items"],
+          "properties": {
+            "type": { "const": "array" },
+            "items": { "$ref": "#/$defs" },
+            "minLength": { "type": "integer" },
+            "maxLength": { "type": "integer" }
+          }
+        },
+        {
+          "required": ["type", "properties"],
+          "properties": {
+            "type": { "const": "object" },
+            "required": { "type": "array", "items": { "type": "string" } },
+            "properties": { "$ref": "#/$defs" },
+            "nullable": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "blob" },
+            "accept": { "type": "array", "items": { "type": "string" } },
+            "maxSize": { "type": "integer" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "params" },
+            "required": { "type": "array", "items": { "type": "string" } },
+            "properties": { "$ref": "#/$defs" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "token" }
+          }
+        },
+        {
+          "required": ["type", "ref"],
+          "properties": {
+            "type": { "const": "ref" },
+            "ref": { "type": "string" }
+          }
+        },
+        {
+          "required": ["type", "refs"],
+          "properties": {
+            "type": { "const": "union" },
+            "refs": { "type": "array", "items": { "type": "string" } },
+            "closed": { "type": "boolean" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "unknown" }
+          }
+        }
+      ]
+    }
+  }
+}
