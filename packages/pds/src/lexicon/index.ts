@@ -3126,6 +3126,16 @@ export class OrgW3ActivitystreamsNS {
 
 export class OrgJoinmastodonNS {
   _server: Server
+  feed: OrgJoinmastodonFeedNS
+
+  constructor(server: Server) {
+    this._server = server
+    this.feed = new OrgJoinmastodonFeedNS(server)
+  }
+}
+
+export class OrgJoinmastodonFeedNS {
+  _server: Server
 
   constructor(server: Server) {
     this._server = server

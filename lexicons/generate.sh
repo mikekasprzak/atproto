@@ -23,7 +23,6 @@ verbose=false
 quiet=false
 useFlock=true
 lockfile="/tmp/`basename $0`.lock"
-lockfile_fd=200
 
 # parse the arguments
 while getopts "cfhl:Vq" opt; do
@@ -77,15 +76,15 @@ output_dir=`realpath -m --relative-to=$pwd $1`
 
 # use flock to limit concurrent runs of this script
 if [ "$useFlock" != false ]; then
-    if [ "$verbose" == true ] && [ "$quiet" != true ]; then
-        echo "Locking $lockfile ($lockfile_fd)"
-    fi
-
-    exec $lockfile_fd>$lockfile
-    flock -w 10 $lockfile_fd || {
+    exec {lockfile_fd}<>$lockfile
+    flock -w 15 $lockfile_fd || {
         >&2 echo "Failed to lock $lockfile ($lockfile_fd)"
         exit 1
     }
+
+    if [ "$verbose" == true ] && [ "$quiet" != true ]; then
+        echo "Locking $lockfile ($lockfile_fd)"
+    fi
 
     onExit() {
         if [ "$useFlock" != false ]; then

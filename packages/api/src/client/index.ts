@@ -273,31 +273,6 @@ import * as ToolsOzoneVerificationDefs from './types/tools/ozone/verification/de
 import * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
 import * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
 import * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
-import * as OrgW3ActivitypubActivity from './types/org/w3/activitypub/activity.js'
-import * as OrgW3ActivitypubActor from './types/org/w3/activitypub/actor.js'
-import * as OrgW3ActivitypubDefs from './types/org/w3/activitypub/defs.js'
-import * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
-import * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
-import * as OrgW3ActivitypubGetResource from './types/org/w3/activitypub/getResource.js'
-import * as OrgW3ActivitypubLink from './types/org/w3/activitypub/link.js'
-import * as OrgW3ActivitypubObject from './types/org/w3/activitypub/object.js'
-import * as OrgW3ActivitypubProperties from './types/org/w3/activitypub/properties.js'
-import * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
-import * as OrgW3ActivitystreamsActivity from './types/org/w3/activitystreams/activity.js'
-import * as OrgW3ActivitystreamsActor from './types/org/w3/activitystreams/actor.js'
-import * as OrgW3ActivitystreamsCollection from './types/org/w3/activitystreams/collection.js'
-import * as OrgW3ActivitystreamsCollectionPage from './types/org/w3/activitystreams/collectionPage.js'
-import * as OrgW3ActivitystreamsDefs from './types/org/w3/activitystreams/defs.js'
-import * as OrgW3ActivitystreamsIntransitiveActivity from './types/org/w3/activitystreams/intransitiveActivity.js'
-import * as OrgW3ActivitystreamsLink from './types/org/w3/activitystreams/link.js'
-import * as OrgW3ActivitystreamsObject from './types/org/w3/activitystreams/object.js'
-import * as OrgW3ActivitystreamsOrderedCollection from './types/org/w3/activitystreams/orderedCollection.js'
-import * as OrgW3ActivitystreamsOrderedCollectionPage from './types/org/w3/activitystreams/orderedCollectionPage.js'
-import * as OrgW3ActivitystreamsProperties from './types/org/w3/activitystreams/properties.js'
-import * as OrgJoinmastodonActor from './types/org/joinmastodon/actor.js'
-import * as OrgJoinmastodonLink from './types/org/joinmastodon/link.js'
-import * as OrgJoinmastodonObject from './types/org/joinmastodon/object.js'
-import * as OrgJoinmastodonProperties from './types/org/joinmastodon/properties.js'
 
 export * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs.js'
 export * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount.js'
@@ -563,31 +538,6 @@ export * as ToolsOzoneVerificationDefs from './types/tools/ozone/verification/de
 export * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
 export * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
 export * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
-export * as OrgW3ActivitypubActivity from './types/org/w3/activitypub/activity.js'
-export * as OrgW3ActivitypubActor from './types/org/w3/activitypub/actor.js'
-export * as OrgW3ActivitypubDefs from './types/org/w3/activitypub/defs.js'
-export * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
-export * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
-export * as OrgW3ActivitypubGetResource from './types/org/w3/activitypub/getResource.js'
-export * as OrgW3ActivitypubLink from './types/org/w3/activitypub/link.js'
-export * as OrgW3ActivitypubObject from './types/org/w3/activitypub/object.js'
-export * as OrgW3ActivitypubProperties from './types/org/w3/activitypub/properties.js'
-export * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
-export * as OrgW3ActivitystreamsActivity from './types/org/w3/activitystreams/activity.js'
-export * as OrgW3ActivitystreamsActor from './types/org/w3/activitystreams/actor.js'
-export * as OrgW3ActivitystreamsCollection from './types/org/w3/activitystreams/collection.js'
-export * as OrgW3ActivitystreamsCollectionPage from './types/org/w3/activitystreams/collectionPage.js'
-export * as OrgW3ActivitystreamsDefs from './types/org/w3/activitystreams/defs.js'
-export * as OrgW3ActivitystreamsIntransitiveActivity from './types/org/w3/activitystreams/intransitiveActivity.js'
-export * as OrgW3ActivitystreamsLink from './types/org/w3/activitystreams/link.js'
-export * as OrgW3ActivitystreamsObject from './types/org/w3/activitystreams/object.js'
-export * as OrgW3ActivitystreamsOrderedCollection from './types/org/w3/activitystreams/orderedCollection.js'
-export * as OrgW3ActivitystreamsOrderedCollectionPage from './types/org/w3/activitystreams/orderedCollectionPage.js'
-export * as OrgW3ActivitystreamsProperties from './types/org/w3/activitystreams/properties.js'
-export * as OrgJoinmastodonActor from './types/org/joinmastodon/actor.js'
-export * as OrgJoinmastodonLink from './types/org/joinmastodon/link.js'
-export * as OrgJoinmastodonObject from './types/org/joinmastodon/object.js'
-export * as OrgJoinmastodonProperties from './types/org/joinmastodon/properties.js'
 
 export const COM_ATPROTO_MODERATION = {
   DefsReasonSpam: 'com.atproto.moderation.defs#reasonSpam',
@@ -640,7 +590,6 @@ export class AtpBaseClient extends XrpcClient {
   app: AppNS
   chat: ChatNS
   tools: ToolsNS
-  org: OrgNS
 
   constructor(options: FetchHandler | FetchHandlerOptions) {
     super(options, schemas)
@@ -648,7 +597,6 @@ export class AtpBaseClient extends XrpcClient {
     this.app = new AppNS(this)
     this.chat = new ChatNS(this)
     this.tools = new ToolsNS(this)
-    this.org = new OrgNS(this)
   }
 
   /** @deprecated use `this` instead */
@@ -4635,101 +4583,5 @@ export class ToolsOzoneVerificationNS {
       data,
       opts,
     )
-  }
-}
-
-export class OrgNS {
-  _client: XrpcClient
-  w3: OrgW3NS
-  joinmastodon: OrgJoinmastodonNS
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.w3 = new OrgW3NS(client)
-    this.joinmastodon = new OrgJoinmastodonNS(client)
-  }
-}
-
-export class OrgW3NS {
-  _client: XrpcClient
-  activitypub: OrgW3ActivitypubNS
-  activitystreams: OrgW3ActivitystreamsNS
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.activitypub = new OrgW3ActivitypubNS(client)
-    this.activitystreams = new OrgW3ActivitystreamsNS(client)
-  }
-}
-
-export class OrgW3ActivitypubNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  getActor(
-    params?: OrgW3ActivitypubGetActor.QueryParams,
-    opts?: OrgW3ActivitypubGetActor.CallOptions,
-  ): Promise<OrgW3ActivitypubGetActor.Response> {
-    return this._client.call(
-      'org.w3.activitypub.getActor',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getOutbox(
-    params?: OrgW3ActivitypubGetOutbox.QueryParams,
-    opts?: OrgW3ActivitypubGetOutbox.CallOptions,
-  ): Promise<OrgW3ActivitypubGetOutbox.Response> {
-    return this._client.call(
-      'org.w3.activitypub.getOutbox',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getResource(
-    params?: OrgW3ActivitypubGetResource.QueryParams,
-    opts?: OrgW3ActivitypubGetResource.CallOptions,
-  ): Promise<OrgW3ActivitypubGetResource.Response> {
-    return this._client.call(
-      'org.w3.activitypub.getResource',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  putInbox(
-    data?: OrgW3ActivitypubPutInbox.InputSchema,
-    opts?: OrgW3ActivitypubPutInbox.CallOptions,
-  ): Promise<OrgW3ActivitypubPutInbox.Response> {
-    return this._client.call(
-      'org.w3.activitypub.putInbox',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-}
-
-export class OrgW3ActivitystreamsNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-}
-
-export class OrgJoinmastodonNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
   }
 }

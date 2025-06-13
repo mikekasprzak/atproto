@@ -11,26 +11,27 @@ import {
   type OmitKey,
 } from '../../../../util'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
+import type * as OrgW3ActivitystreamsObject from '../activitystreams/object.js'
 
 const is$typed = _is$typed,
   validate = _validate
-const id = 'org.w3.activitypub.putInbox'
+const id = 'org.w3.activitypub.getResource'
 
-export interface QueryParams {}
-
-export interface InputSchema {
-  priority?: boolean
+export interface QueryParams {
+  /** The handle or DID of the repo. */
+  repo: string
+  /** The resource to fetch. */
+  id: string
+  /** The namespace-id of the resource to fetch. */
+  nsid: string
 }
 
-export interface OutputSchema {}
-
-export interface HandlerInput {
-  encoding: 'application/json'
-  body: InputSchema
-}
+export type InputSchema = undefined
+export type OutputSchema = OrgW3ActivitystreamsObject.Main
+export type HandlerInput = undefined
 
 export interface HandlerSuccess {
-  encoding: 'application/json'
+  encoding: 'application/activity+json'
   body: OutputSchema
   headers?: { [key: string]: string }
 }

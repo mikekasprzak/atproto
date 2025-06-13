@@ -16906,7 +16906,7 @@ export const schemaDict = {
         description: "Fetches a user's resource, in ActivityPub format",
         parameters: {
           type: 'params',
-          required: ['repo'],
+          required: ['repo', 'id', 'nsid'],
           properties: {
             repo: {
               type: 'string',
@@ -16915,26 +16915,19 @@ export const schemaDict = {
             },
             id: {
               type: 'string',
-              description:
-                'The resource to fetch, or the parent of the NSID of resource(s) to fetch.',
+              description: 'The resource to fetch.',
             },
             nsid: {
               type: 'string',
-              description: 'The namespace id of the resource(s) to fetch.',
-            },
-            page: {
-              type: 'integer',
+              description: 'The namespace-id of the resource to fetch.',
             },
           },
         },
         output: {
           encoding: 'application/activity+json',
           schema: {
-            type: 'union',
-            refs: [
-              'lex:org.w3.activitystreams.object',
-              'lex:org.w3.activitystreams.orderedCollectionPage',
-            ],
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.object',
           },
         },
       },
@@ -19119,670 +19112,51 @@ export const schemaDict = {
       },
     },
   },
-  OrgJoinmastodonActor: {
+  OrgJoinmastodonFeedPost: {
     lexicon: 1,
-    id: 'org.joinmastodon.actor',
+    id: 'org.joinmastodon.feed.post',
     defs: {
       main: {
-        type: 'object',
-        description: 'EXTENDS org.w3.activitypub.actor, IMPLEMENTS actor',
-        required: ['id', 'type', 'inbox', 'outbox'],
-        properties: {
-          '@context': {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.defs#contextType',
-          },
-          id: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#id',
-          },
-          type: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.actor#actorTypes',
-          },
-          attachment: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#attachment',
-          },
-          attributedTo: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
-          },
-          audience: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#audience',
-          },
-          content: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#content',
-          },
-          context: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#context',
-          },
-          name: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#name',
-          },
-          endTime: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#endTime',
-          },
-          generator: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#generator',
-          },
-          icon: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#icon',
-          },
-          image: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#image',
-          },
-          inReplyTo: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
-          },
-          location: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#location',
-          },
-          preview: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#preview',
-          },
-          published: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#published',
-          },
-          replies: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#replies',
-          },
-          startTime: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#startTime',
-          },
-          summary: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#summary',
-          },
-          tag: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#tag',
-          },
-          updated: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#updated',
-          },
-          url: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#url',
-          },
-          to: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#to',
-          },
-          bto: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#bto',
-          },
-          cc: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#cc',
-          },
-          bcc: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#bcc',
-          },
-          mediaType: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#mediaType',
-          },
-          duration: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#duration',
-          },
-          source: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.properties#source',
-          },
-          inbox: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.actor#inbox',
-          },
-          outbox: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.actor#outbox',
-          },
-          following: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.actor#following',
-          },
-          followers: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.actor#followers',
-          },
-          liked: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.actor#liked',
-          },
-          streams: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.actor#streams',
-          },
-          preferredUsername: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.actor#preferredUsername',
-          },
-          endpoints: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.actor#endpoints',
-          },
-          publicKey: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#publicKey',
-          },
-          featured: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#featured',
-          },
-          featuredTags: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#featuredTags',
-          },
-          discoverable: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#discoverable',
-          },
-          indexable: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#indexable',
-          },
-          suspended: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#suspended',
-          },
-          memorial: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#memorial',
+        type: 'record',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['text', 'createdAt'],
+          properties: {
+            text: {
+              type: 'ref',
+              ref: 'lex:app.bsky.feed.post#main.record.text',
+            },
+            facets: {
+              type: 'ref',
+              ref: 'lex:app.bsky.feed.post#main.record.facets',
+            },
+            reply: {
+              type: 'ref',
+              ref: 'lex:app.bsky.feed.post#main.record.replyRef',
+            },
+            embed: {
+              type: 'ref',
+              ref: 'lex:app.bsky.feed.post#main.record.embed',
+            },
+            langs: {
+              type: 'ref',
+              ref: 'lex:app.bsky.feed.post#main.record.langs',
+            },
+            labels: {
+              type: 'ref',
+              ref: 'lex:app.bsky.feed.post#main.record.labels',
+            },
+            tags: {
+              type: 'ref',
+              ref: 'lex:app.bsky.feed.post#main.record.tags',
+            },
+            createdAt: {
+              type: 'ref',
+              ref: 'lex:app.bsky.feed.post#main.record.createdAt',
+            },
           },
         },
-      },
-      actorTypes: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitypub.actor#actorTypes',
-      },
-    },
-  },
-  OrgJoinmastodonLink: {
-    lexicon: 1,
-    id: 'org.joinmastodon.link',
-    defs: {
-      main: {
-        type: 'object',
-        description: 'EXTENDS org.w3.activitypub.link, IMPLEMENTS link',
-        properties: {
-          '@context': {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.defs#contextType',
-          },
-          id: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#id',
-          },
-          type: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.link#linkTypes',
-          },
-          href: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#href',
-          },
-          rel: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#rel',
-          },
-          mediaType: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#mediaType',
-          },
-          name: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#name',
-          },
-          hreflang: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#hreflang',
-          },
-          height: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#height',
-          },
-          width: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#width',
-          },
-          preview: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#preview',
-          },
-        },
-      },
-      linkTypes: {
-        type: 'string',
-        knownValues: ['Link', 'Mention', 'Hashtag'],
-      },
-    },
-  },
-  OrgJoinmastodonObject: {
-    lexicon: 1,
-    id: 'org.joinmastodon.object',
-    defs: {
-      main: {
-        type: 'object',
-        description: 'EXTENDS org.w3.activitypub.object, IMPLEMENTS object',
-        properties: {
-          '@context': {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.defs#contextType',
-          },
-          id: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#id',
-          },
-          type: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.object#objectTypes',
-          },
-          attachment: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#attachment',
-          },
-          attributedTo: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
-          },
-          audience: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#audience',
-          },
-          content: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#content',
-          },
-          context: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#context',
-          },
-          name: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#name',
-          },
-          endTime: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#endTime',
-          },
-          generator: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#generator',
-          },
-          icon: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#icon',
-          },
-          image: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#image',
-          },
-          inReplyTo: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
-          },
-          location: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#location',
-          },
-          preview: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#preview',
-          },
-          published: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#published',
-          },
-          replies: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#replies',
-          },
-          startTime: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#startTime',
-          },
-          summary: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#summary',
-          },
-          tag: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#tag',
-          },
-          updated: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#updated',
-          },
-          url: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#url',
-          },
-          to: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#to',
-          },
-          bto: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#bto',
-          },
-          cc: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#cc',
-          },
-          bcc: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#bcc',
-          },
-          mediaType: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#mediaType',
-          },
-          duration: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#duration',
-          },
-          source: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.properties#source',
-          },
-        },
-      },
-      objectTypes: {
-        type: 'string',
-        knownValues: [
-          'Activity',
-          'Collection',
-          'CollectionPage',
-          'OrderedCollection',
-          'OrderedCollectionPage',
-          'Article',
-          'Audio',
-          'Document',
-          'Event',
-          'Image',
-          'Note',
-          'Page',
-          'Place',
-          'Profile',
-          'Relationship',
-          'Tombstone',
-          'Video',
-          'Application',
-          'Group',
-          'Organization',
-          'Person',
-          'Service',
-          'Accept',
-          'Add',
-          'Announce',
-          'Arrive',
-          'Block',
-          'Create',
-          'Delete',
-          'Dislike',
-          'Flag',
-          'Follow',
-          'Ignore',
-          'Invite',
-          'Join',
-          'Leave',
-          'Like',
-          'Listen',
-          'Move',
-          'Offer',
-          'Question',
-          'Reject',
-          'Read',
-          'Remove',
-          'TentativeReject',
-          'TentativeAccept',
-          'Travel',
-          'Undo',
-          'Update',
-          'View',
-          'PropertyValue',
-          'Emoji',
-        ],
-      },
-      propertyValue: {
-        type: 'object',
-        description: 'EXTENDS object, IMPLEMENTS org.schema.propertyValue',
-        required: ['type'],
-        properties: {
-          '@context': {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.defs#contextType',
-          },
-          id: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#id',
-          },
-          type: {
-            type: 'string',
-            const: 'PropertyValue',
-          },
-          attachment: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#attachment',
-          },
-          attributedTo: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
-          },
-          audience: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#audience',
-          },
-          content: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#content',
-          },
-          context: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#context',
-          },
-          name: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#name',
-          },
-          endTime: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#endTime',
-          },
-          generator: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#generator',
-          },
-          icon: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#icon',
-          },
-          image: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#image',
-          },
-          inReplyTo: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
-          },
-          location: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#location',
-          },
-          preview: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#preview',
-          },
-          published: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#published',
-          },
-          replies: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#replies',
-          },
-          startTime: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#startTime',
-          },
-          summary: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#summary',
-          },
-          tag: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#tag',
-          },
-          updated: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#updated',
-          },
-          url: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#url',
-          },
-          to: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#to',
-          },
-          bto: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#bto',
-          },
-          cc: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#cc',
-          },
-          bcc: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#bcc',
-          },
-          mediaType: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#mediaType',
-          },
-          duration: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#duration',
-          },
-          source: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitypub.properties#source',
-          },
-          value: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#value',
-          },
-        },
-      },
-    },
-  },
-  OrgJoinmastodonProperties: {
-    lexicon: 1,
-    id: 'org.joinmastodon.properties',
-    description: 'https://docs.joinmastodon.org/spec/activitypub/',
-    defs: {
-      attributionDomains: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#objectType',
-        description:
-          'http://joinmastodon.org/ns#attributionDomains; Domain: Actor; Range: ?',
-      },
-      blurhash: {
-        type: 'string',
-        description:
-          'http://joinmastodon.org/ns#blurhash; Domain: Image; Range: string',
-      },
-      discoverable: {
-        type: 'boolean',
-        description:
-          'http://joinmastodon.org/ns#discoverable; Domain: Object; Range: boolean',
-      },
-      featured: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#objectType',
-        description:
-          'http://joinmastodon.org/ns#featured; Domain: Actor; Range: Collection [Object]',
-      },
-      featuredTags: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#objectType',
-        description:
-          'http://joinmastodon.org/ns#featuredTags; Domain: Actor; Range: Collection [HashTag]',
-      },
-      focalPoint: {
-        type: 'unknown',
-        description:
-          'http://joinmastodon.org/ns#focalPoint; Domain: Image; Range: [float]; Note: Lexicon does not support floats',
-      },
-      indexable: {
-        type: 'boolean',
-        description:
-          'http://joinmastodon.org/ns#indexable; Domain: Object; Range: boolean',
-      },
-      memorial: {
-        type: 'boolean',
-        description:
-          'http://joinmastodon.org/ns#memorial; Domain: Object; Range: boolean',
-      },
-      suspended: {
-        type: 'boolean',
-        description:
-          'http://joinmastodon.org/ns#suspended; Domain: Object; Range: boolean',
-      },
-      value: {
-        type: 'string',
-        description:
-          'https://docs.joinmastodon.org/spec/activitypub/#PropertyValue; Domain: Object; Range: string',
-      },
-      publicKey: {
-        type: 'object',
-        description:
-          'https://docs.joinmastodon.org/spec/activitypub/#publicKey; https://w3id.org/security#publicKey; Domain: Actor',
-        properties: {
-          id: {
-            type: 'ref',
-            ref: 'lex:org.w3.activitystreams.properties#id',
-          },
-          owner: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#owner',
-          },
-          publicKeyPem: {
-            type: 'ref',
-            ref: 'lex:org.joinmastodon.properties#publicKeyPem',
-          },
-        },
-      },
-      owner: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.defs#objectType',
-        description:
-          'https://docs.joinmastodon.org/spec/activitypub/#publicKey; https://w3id.org/security#owner; Domain: PublicKey; Range: Actor',
-      },
-      publicKeyPem: {
-        type: 'string',
-        description:
-          'https://docs.joinmastodon.org/spec/activitypub/#publicKey; https://w3id.org/security#publicKeyPem; Domain: PublicKey; Range: string',
       },
     },
   },
@@ -20139,8 +19513,5 @@ export const ids = {
   OrgW3ActivitystreamsOrderedCollectionPage:
     'org.w3.activitystreams.orderedCollectionPage',
   OrgW3ActivitystreamsProperties: 'org.w3.activitystreams.properties',
-  OrgJoinmastodonActor: 'org.joinmastodon.actor',
-  OrgJoinmastodonLink: 'org.joinmastodon.link',
-  OrgJoinmastodonObject: 'org.joinmastodon.object',
-  OrgJoinmastodonProperties: 'org.joinmastodon.properties',
+  OrgJoinmastodonFeedPost: 'org.joinmastodon.feed.post',
 } as const
