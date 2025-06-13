@@ -1,14 +1,15 @@
 #!/bin/bash
+set -ue
 
 usage() {
-    echo "Usage: $0 [-chVq] [--no-lock|--lockfile <lockfile>] <output_dir> <input_dir>"
+    echo "Usage: $0 [-cVq] [--no-lock|--lockfile <lockfile>] <output_dir> <input_dir>"
     echo "  <output_dir>: the directory to output the processed files to"
     echo "  <input_dir>: the directory to process the files from, defaults to the current directory"
     echo "  -c, --clean: remove the output directory"
     echo "  -V, --verbose: print verbose output"
     echo "  -q, --quiet: print only errors and warnings"
-    echo "  --no-lock: do not use file locking"
-    echo "  --lockfile: the lockfile to use. Default: /tmp/`basename $0`.lock"
+    echo "      --no-lock: do not use file locking"
+    echo "      --lockfile: the lockfile to use. Default: /tmp/`basename $0`.lock"
     exit 0
 }
 
@@ -25,7 +26,7 @@ useFlock=true
 lockfile="/tmp/`basename $0`.lock"
 
 # parse the arguments
-while getopts "cfhl:Vq" opt; do
+while getopts "cVq" opt; do
     case $opt in
         c|clean) clean=true ;;
         V|verbose) verbose=true ;;
@@ -68,34 +69,31 @@ if [ "$1" == "$2" ]; then
 fi
 
 # get the current directory
-pwd=`pwd`
+pwd=$(pwd)
 
 # get the input and output directories, relative to the current directory
-input_dir=`realpath -m --relative-to=$pwd $2`
-output_dir=`realpath -m --relative-to=$pwd $1`
+input_dir=$(realpath -m --relative-to=$pwd $2)
+output_dir=$(realpath -m --relative-to=$pwd $1)
 
 # use flock to limit concurrent runs of this script
-if [ "$useFlock" != false ]; then
-    exec {lockfile_fd}<>$lockfile
-    flock -w 15 $lockfile_fd || {
-        >&2 echo "Failed to lock $lockfile ($lockfile_fd)"
+if [[ "$useFlock" != false ]]; then
+    exec {fd}<>$lockfile
+    flock -F -w 15 $fd || {
+        >&2 echo "Failed to lock $lockfile ($fd)"
         exit 1
     }
 
     if [ "$verbose" == true ] && [ "$quiet" != true ]; then
-        echo "Locking $lockfile ($lockfile_fd)"
+        echo "Locking $lockfile ($fd)"
     fi
 
-    onExit() {
-        if [ "$useFlock" != false ]; then
-            flock -u $lockfile_fd || {
-                >&2 echo "Failed to unlock $lockfile ($lockfile_fd)"
-                exit 1
-            }
-        fi
-    }
-
-    trap onExit EXIT
+#    onExit() {
+#        if [[ "$useFlock" != false ]]; then
+#            flock -F -u $fd
+#        fi
+#    }
+#
+#    trap onExit EXIT
 fi
 
 if [ "$verbose" == true ] && [ "$quiet" != true ]; then
@@ -105,16 +103,22 @@ fi
 # find all files in the input directory and store them in an array
 in_files=($(find $input_dir -type f))
 
+out_files=()
+
 if [ "$clean" == true ]; then
     if [ "$verbose" == true ] && [ "$quiet" != true ]; then
         echo "Removing $output_dir"
     fi
     rm -rf $output_dir
-    out_files=()
-else
+elif [[ -d "$output_dir" ]]; then
     # find all files in the output directory and store them in an array
     out_files=($(find $output_dir -type f))
 fi
+
+selected_in_files=
+ignored_in_files=
+skipped_in_files=
+omitted_in_files=
 
 # first pass, find all of the files that need to be converted or copied to $output_dir
 for file in "${in_files[@]}"; do
@@ -202,5 +206,7 @@ done
 
 # in this rare case, we want to print if verbose OR not quiet. That way we can print only the changes with -qV
 if [ "$verbose" == true ] || [ "$quiet" != true ]; then
-    echo "Finished generating \"$output_dir\". ${#selected_in_files[@]} file(s) changed."
+    # the total number of files are the sum of the selected and omitted files
+    total_files=(${selected_in_files[@]} ${omitted_in_files[@]})
+    echo "Finished generating $output_dir. ${#selected_in_files[@]} of ${#total_files[@]} file(s) changed."
 fi
