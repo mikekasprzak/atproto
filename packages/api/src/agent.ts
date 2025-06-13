@@ -16,7 +16,6 @@ import {
   ChatNS,
   ComAtprotoRepoPutRecord,
   ComNS,
-  OrgNS,
   ToolsNS,
 } from './client/index'
 import { schemas } from './client/lexicons'
@@ -98,7 +97,6 @@ export class Agent extends XrpcClient {
   app = new AppNS(this)
   chat = new ChatNS(this)
   tools = new ToolsNS(this)
-  org = new OrgNS(this)
 
   /** @deprecated use `this` instead */
   get xrpc(): XrpcClient {
