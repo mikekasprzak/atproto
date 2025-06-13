@@ -20,7 +20,7 @@
   },
   "scripts": {
     "prepare": "[ \"$npm_config_production\" = true ] || puppeteer browsers install chrome",
-    "codegen": "../../lexicons/generate.sh -qV ../../dist ../../lexicons && lex gen-server --yes ./src/lexicon ../../dist/lexicons/com/atproto/*/* ../../dist/lexicons/app/bsky/*/* ../../dist/lexicons/chat/bsky/*/* ../../dist/lexicons/tools/ozone/*/* ../../dist/lexicons/org/w3/*/* ../../dist/lexicons/org/joinmastodon/*/*",
+    "codegen": "ROOT=../.. && IN=$ROOT/dist/lexicons && $ROOT/lexicons/generate.sh -qV $IN $ROOT/lexicons && lex gen-server --yes ./src/lexicon $IN/com/atproto/*/* $IN/app/bsky/*/* $IN/chat/bsky/*/* $IN/tools/ozone/*/* $IN/org/w3/*/* $IN/org/joinmastodon/*/*",
     "build": "tsc --build tsconfig.build.json",
     "postbuild": "node ./build.templates.js",
     "dev": "node ./build.templates.js --watch",

@@ -68,13 +68,6 @@ if [ "$1" == "$2" ]; then
     exit 1
 fi
 
-# get the current directory
-pwd=$(pwd)
-
-# get the input and output directories, relative to the current directory
-input_dir=$(realpath -m --relative-to=$pwd $2)
-output_dir=$(realpath -m --relative-to=$pwd $1)
-
 # use flock to limit concurrent runs of this script
 if [[ "$useFlock" != false ]]; then
     exec {fd}<>$lockfile
@@ -96,7 +89,17 @@ if [[ "$useFlock" != false ]]; then
 #    trap onExit EXIT
 fi
 
+# get the current directory
+pwd=$(pwd)
+
+# get the input and output directories, relative to the current directory
+input_dir=$(realpath -m --relative-to=$pwd $2)
+output_dir=$(realpath -m --relative-to=$pwd $1)
+
 if [ "$verbose" == true ] && [ "$quiet" != true ]; then
+    echo "Current working directory: $pwd"
+    echo "Input directory: $input_dir"
+    echo "Output directory: $output_dir"
     echo "Args: $*"
 fi
 
@@ -119,30 +122,35 @@ selected_in_files=
 ignored_in_files=
 skipped_in_files=
 omitted_in_files=
+selected_out_files=
 
 # first pass, find all of the files that need to be converted or copied to $output_dir
 for file in "${in_files[@]}"; do
     # skip .schema.json files
     if [[ "$file" == *.schema.json ]]; then
         skipped_in_files="$skipped_in_files ${file}"
-    # use .json files
+    # keep file extensions
     elif [[ "$file" == *.json ]]; then
+        out_file="$output_dir/${file#$input_dir/}"
         # if a destination file exists and has a newer timestamp, add it to the omitted list
-        if [ $output_dir/${file} -nt $file ]; then
+        if [[ -f "$out_file" ]] && [[ "$out_file" -nt "$file" ]]; then
             omitted_in_files="$omitted_in_files ${file}"
             continue
         fi
         # add to the list of selected input files
         selected_in_files="$selected_in_files ${file}"
-     # use .jsonc files
+        selected_out_files="$selected_out_files ${out_file}"
+    # .jsonc files become .json files
     elif [[ "$file" == *.jsonc ]]; then
+        out_file="$output_dir/${file#$input_dir/%.jsonc}.json"
         # if a destination file with a .json extension exists and has a newer timestamp, add it to the omitted list
-        if [ $output_dir/${file%.jsonc}.json -nt $file ]; then
+        if [[ -f "$out_file" ]] && [[ "$out_file" -nt "$file" ]]; then
             omitted_in_files="$omitted_in_files ${file}"
             continue
         fi
         # add to the list of selected input files
         selected_in_files="$selected_in_files ${file}"
+        selected_out_files="$selected_out_files ${out_file}"
     else
         # add to the list of ignored input files
         ignored_in_files="$ignored_in_files ${file}"
@@ -154,29 +162,19 @@ selected_in_files=($selected_in_files)
 skipped_in_files=($skipped_in_files)
 omitted_in_files=($omitted_in_files)
 ignored_in_files=($ignored_in_files)
+selected_out_files=($selected_out_files)
 
 if [ "$verbose" == true ] && [ "$quiet" != true ]; then
     echo "Selected input files: ${selected_in_files[@]}"
     echo "Skipped input files: ${skipped_in_files[@]}"
     echo "Omitted input files: ${omitted_in_files[@]}"
     echo "Ignored input files: ${ignored_in_files[@]}"
+    echo "Selected output files: ${selected_out_files[@]}"
 fi
 
 # if input files were selected, get all the directories, sorting them by depth
-if [[ -n "${selected_in_files[@]}" ]]; then
-    selected_in_dirs=($(dirname ${selected_in_files[@]} | sort | uniq | sort -r))
-
-    if [ "$verbose" == true ] && [ "$quiet" != true ]; then
-        echo "Selected input directories: ${selected_in_dirs[@]}"
-    fi
-fi
-
-# create the output directories if any were found
-if [[ -n "${selected_in_dirs[@]}" ]]; then
-    selected_out_dirs=()
-    for dir in "${selected_in_dirs[@]}"; do
-        selected_out_dirs+=("$output_dir/$dir")
-    done
+if [[ -n "${selected_out_files[@]}" ]]; then
+    selected_out_dirs=($(dirname ${selected_out_files[@]} | sort | uniq | sort -r))
 
     if [ "$verbose" == true ] && [ "$quiet" != true ]; then
         echo "Creating output directories: ${selected_out_dirs[@]}"
@@ -187,20 +185,22 @@ fi
 
 # second pass, convert or copy the files to $output_dir
 for file in "${selected_in_files[@]}"; do
-    # convert .jsonc files and place them in their new directory under $output_dir
-    if [[ "$file" == *.jsonc ]]; then
-        path="$output_dir/${file%.jsonc}.json"
+    # copy files to their new directory under $output_dir
+    if [[ "$file" == *.json ]]; then
+        out_file="$output_dir/${file#$input_dir/}"
+        # if not quiet, print the file being copied
         if [ "$quiet" != true ]; then
-            echo "Converting `basename $file` to json and placing it in $path"
+            echo "Copying `basename $file` to $out_file"
         fi
-        pnpm exec jsonc-parser $file > $path
-    # copy .json files to their new directory under $output_dir
-    elif [[ "$file" == *.json ]]; then
-        path="$output_dir/${file}"
+        cp $file $out_file
+    # convert .jsonc files, rename them to .json, and place them in their new directory under $output_dir
+    elif [[ "$file" == *.jsonc ]]; then
+        out_file="$output_dir/${file#$input_dir/%.jsonc}.json"
+        # if not quiet, print the file being converted
         if [ "$quiet" != true ]; then
-            echo "Copying `basename $file` to $path"
+            echo "Converting `basename $file` to json and placing it in $out_file"
         fi
-        cp $file $path
+        pnpm exec jsonc-parser $file > $out_file
     fi
 done
 
