@@ -79,14 +79,6 @@ if [[ "$useFlock" != false ]]; then
     if [ "$verbose" == true ] && [ "$quiet" != true ]; then
         echo "Locking $lockfile ($fd)"
     fi
-
-#    onExit() {
-#        if [[ "$useFlock" != false ]]; then
-#            flock -F -u $fd
-#        fi
-#    }
-#
-#    trap onExit EXIT
 fi
 
 # get the current directory
