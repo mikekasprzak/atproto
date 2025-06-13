@@ -16,7 +16,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "codegen": "../../lexicon/generate.sh && lex gen-server --yes ./src/lexicon ../../dist/lexicons/com/atproto/*/* ../../dist/lexicons/app/bsky/*/* ../../dist/lexicons/chat/bsky/*/*",
+    "codegen": "../../lexicon/generate.sh -cqV ../../dist ../../lexicon && lex gen-server --yes ./src/lexicon ../../dist/lexicons/com/atproto/*/* ../../dist/lexicons/app/bsky/*/* ../../dist/lexicons/chat/bsky/*/*",
     "build": "tsc --build tsconfig.build.json",
     "start": "node --enable-source-maps dist/bin.js",
     "test": "../dev-infra/with-test-redis-and-db.sh jest",

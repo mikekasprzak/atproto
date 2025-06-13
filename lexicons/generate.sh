@@ -1,13 +1,14 @@
 #!/bin/bash
 
 usage() {
-    echo "Usage: $0 [-chVq] <output_dir> <input_dir>"
+    echo "Usage: $0 [-chVq] [--no-lock|--lockfile <lockfile>] <output_dir> <input_dir>"
     echo "  <output_dir>: the directory to output the processed files to"
     echo "  <input_dir>: the directory to process the files from, defaults to the current directory"
     echo "  -c, --clean: remove the output directory"
-    echo "  -h, --help: print this help message and exit"
     echo "  -V, --verbose: print verbose output"
     echo "  -q, --quiet: print only errors and warnings"
+    echo "  --no-lock: do not use file locking"
+    echo "  --lockfile: the lockfile to use. Default: /tmp/`basename $0`.lock"
     exit 0
 }
 
@@ -20,14 +21,19 @@ fi
 clean=false
 verbose=false
 quiet=false
+useFlock=true
+lockfile="/tmp/`basename $0`.lock"
+lockfile_fd=200
 
 # parse the arguments
-while getopts "chVq" opt; do
+while getopts "cfhl:Vq" opt; do
     case $opt in
         c|clean) clean=true ;;
-        h|help) usage ;;
         V|verbose) verbose=true ;;
         q|quiet) quiet=true ;;
+        no-lock) useFlock=false ;;
+        lockfile) lockfile="$2"; useFlock=true ;;
+        *) usage ;;
     esac
 done
 shift "$((OPTIND-1))"
@@ -62,10 +68,6 @@ if [ "$1" == "$2" ]; then
     exit 1
 fi
 
-if [ "$verbose" == true ] && [ "$quiet" != true ]; then
-    echo "Args: $*"
-fi
-
 # get the current directory
 pwd=`pwd`
 
@@ -73,23 +75,42 @@ pwd=`pwd`
 input_dir=`realpath -m --relative-to=$pwd $2`
 output_dir=`realpath -m --relative-to=$pwd $1`
 
+# use flock to limit concurrent runs of this script
+if [ "$useFlock" != false ]; then
+    if [ "$verbose" == true ] && [ "$quiet" != true ]; then
+        echo "Locking $lockfile ($lockfile_fd)"
+    fi
+
+    exec $lockfile_fd>$lockfile
+    flock -w 10 $lockfile_fd || {
+        >&2 echo "Failed to lock $lockfile ($lockfile_fd)"
+        exit 1
+    }
+
+    onExit() {
+        if [ "$useFlock" != false ]; then
+            flock -u $lockfile_fd || {
+                >&2 echo "Failed to unlock $lockfile ($lockfile_fd)"
+                exit 1
+            }
+        fi
+    }
+
+    trap onExit EXIT
+fi
+
 if [ "$verbose" == true ] && [ "$quiet" != true ]; then
-    echo "Input directory: $input_dir (`realpath -m $input_dir`)"
-    echo "Output directory: $output_dir (`realpath -m $output_dir`)"
+    echo "Args: $*"
 fi
 
 # find all files in the input directory and store them in an array
 in_files=($(find $input_dir -type f))
 
-# if clean is true, remove the output directory
 if [ "$clean" == true ]; then
     if [ "$verbose" == true ] && [ "$quiet" != true ]; then
         echo "Removing $output_dir"
     fi
-    # remove the output directory
     rm -rf $output_dir
-
-    # clear the output files array
     out_files=()
 else
     # find all files in the output directory and store them in an array
