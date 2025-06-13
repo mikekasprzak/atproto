@@ -17,7 +17,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "codegen": "node ./scripts/generate-code.mjs && ROOT=../.. && IN=$ROOT/dist/lexicons && $ROOT/lexicons/generate.sh -qV $IN $ROOT/lexicons && lex gen-api --yes ./src/client $IN/com/atproto/*/* $IN/app/bsky/*/* $IN/chat/bsky/*/* $IN/tools/ozone/*/*",
+    "codegen": "node ./scripts/generate-code.mjs && ROOT=../..; IN=$ROOT/dist/lexicons; $ROOT/lexicons/generate.sh -qV $IN $ROOT/lexicons && lex gen-api --yes ./src/client $IN/com/atproto/*/* $IN/app/bsky/*/* $IN/chat/bsky/*/* $IN/tools/ozone/*/*",
     "build": "tsc --build tsconfig.build.json",
     "test": "jest"
   },

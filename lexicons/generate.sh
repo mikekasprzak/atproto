@@ -1,15 +1,14 @@
 #!/bin/bash
-set -ue
+set -eo pipefail
 
 usage() {
-    echo "Usage: $0 [-cVq] [--no-lock|--lockfile <lockfile>] <output_dir> <input_dir>"
+    echo "Usage: $0 [-cVq] [--no-lock] <output_dir> <input_dir>"
     echo "  <output_dir>: the directory to output the processed files to"
     echo "  <input_dir>: the directory to process the files from, defaults to the current directory"
     echo "  -c, --clean: remove the output directory"
     echo "  -V, --verbose: print verbose output"
     echo "  -q, --quiet: print only errors and warnings"
-    echo "      --no-lock: do not use file locking"
-    echo "      --lockfile: the lockfile to use. Default: /tmp/`basename $0`.lock"
+    echo "      --no-lock: do not use file locking to limit concurrent runs of this script"
     exit 0
 }
 
@@ -23,7 +22,6 @@ clean=false
 verbose=false
 quiet=false
 useFlock=true
-lockfile="/tmp/`basename $0`.lock"
 
 # parse the arguments
 while getopts "cVq" opt; do
@@ -32,7 +30,6 @@ while getopts "cVq" opt; do
         V|verbose) verbose=true ;;
         q|quiet) quiet=true ;;
         no-lock) useFlock=false ;;
-        lockfile) lockfile="$2"; useFlock=true ;;
         *) usage ;;
     esac
 done
@@ -70,15 +67,46 @@ fi
 
 # use flock to limit concurrent runs of this script
 if [[ "$useFlock" != false ]]; then
-    exec {fd}<>$lockfile
-    flock -F -w 15 $fd || {
-        >&2 echo "Failed to lock $lockfile ($fd)"
+    hasFlock=$(which flock 2>/dev/null)
+    if [[ "$hasFlock" == "" ]]; then
+        >&2 echo "Error: flock not found! Please install it with your package manager, or run with --no-lock"
+        >&2 echo "  Ubuntu/Debian: sudo apt-get install flock"
+        >&2 echo "  Fedora/CentOS: sudo dnf install flock"
+        >&2 echo "  Arch Linux: sudo pacman -S flock"
+        >&2 echo "  macOS: brew install flock"
         exit 1
+    fi
+
+    #lockfile="/var/lock/`basename $0`.lock"
+    lockfile="/tmp/`basename $0`.lock"
+
+    exec {fd}<>$lockfile
+    flock -Fn $fd || {
+        if [ "$verbose" == true ] && [ "$quiet" != true ]; then
+            echo "Waiting for $lockfile ($fd)..."
+        fi
+        flock -Fw 15 $fd
+        flock -Fu $fd
+        if [ "$verbose" == true ] && [ "$quiet" != true ]; then
+            echo "Finished waiting for $lockfile ($fd)."
+        fi
+        exit 0
     }
 
     if [ "$verbose" == true ] && [ "$quiet" != true ]; then
-        echo "Locking $lockfile ($fd)"
+        echo "Locking $lockfile ($fd)..."
     fi
+
+    onExit() {
+        if [[ "$useFlock" != false ]]; then
+            if [ "$verbose" == true ] && [ "$quiet" != true ]; then
+                echo "Unlocking $lockfile ($fd)..."
+            fi
+            flock -Fu $fd
+        fi
+    }
+
+    trap onExit EXIT
 fi
 
 # get the current directory
