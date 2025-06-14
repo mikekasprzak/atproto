@@ -26,7 +26,7 @@ export const envToCfg = (env: ServerEnvironment): ServerConfig => {
     contactEmailAddress: env.contactEmailAddress,
     acceptingImports: env.acceptingImports ?? true,
     blobUploadLimit: env.blobUploadLimit ?? 5 * 1024 * 1024, // 5mb
-    hostnameAlt: env.hostnameAlt, // Used by ActivityPub
+    hostnameAlt: env.hostnameAlt, // used by ActivityPub
     devMode: env.devMode ?? false,
   }
 
@@ -226,6 +226,7 @@ export const envToCfg = (env: ServerEnvironment): ServerConfig => {
   const rateLimitsCfg: ServerConfig['rateLimits'] = env.rateLimitsEnabled
     ? {
         enabled: true,
+        mode: redisCfg !== null ? 'redis' : 'memory',
         bypassKey: env.rateLimitBypassKey,
         bypassIps: env.rateLimitBypassIps?.map((ipOrCidr) =>
           ipOrCidr.split('/')[0]?.trim(),
@@ -370,12 +371,12 @@ export type ServiceConfig = {
   publicUrl: string
   did: string
   version?: string
-  hostnameAlt?: string
   privacyPolicyUrl?: string
   termsOfServiceUrl?: string
   acceptingImports: boolean
   blobUploadLimit: number
   contactEmailAddress?: string
+  hostnameAlt?: string // used by ActivityPub
   devMode: boolean
 }
 
@@ -490,6 +491,7 @@ export type RedisScratchConfig = {
 export type RateLimitsConfig =
   | {
       enabled: true
+      mode: 'memory' | 'redis'
       bypassKey?: string
       bypassIps?: string[]
     }

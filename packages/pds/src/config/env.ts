@@ -16,7 +16,7 @@ export const readEnv = (): ServerEnvironment => {
     contactEmailAddress: envStr('PDS_CONTACT_EMAIL_ADDRESS'),
     acceptingImports: envBool('PDS_ACCEPTING_REPO_IMPORTS'),
     blobUploadLimit: envInt('PDS_BLOB_UPLOAD_LIMIT'),
-    hostnameAlt: envStr('PDS_HOSTNAME_ALT'),
+    hostnameAlt: envStr('PDS_HOSTNAME_ALT'), // Used by ActivityPub
     devMode: envBool('PDS_DEV_MODE'),
 
     // OAuth
