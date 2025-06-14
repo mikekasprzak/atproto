@@ -109,6 +109,7 @@ export const formatSeqAccountEvt = async (
   }
 }
 
+// @ts-ignore
 export const commitEvtOp = z.object({
   action: z.union([
     z.literal('create'),
@@ -130,11 +131,13 @@ export const commitEvt = z.object({
   since: z.string().nullable(),
   blocks: schema.bytes,
   ops: z.array(commitEvtOp),
+  // @ts-ignore
   blobs: z.array(schema.cid),
   prevData: schema.cid.optional(),
 })
 export type CommitEvt = z.infer<typeof commitEvt>
 
+// @ts-ignore
 export const syncEvt = z.object({
   did: z.string(),
   blocks: schema.bytes,

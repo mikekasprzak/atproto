@@ -18,10 +18,11 @@ import { ids } from '../../../../lexicon/lexicons'
 import { Record as ProfileRecord } from '../../../../lexicon/types/app/bsky/actor/profile'
 import { Record as FeedPostRecord } from '../../../../lexicon/types/app/bsky/feed/post'
 
+/*
 export default function (server: Server, ctx: AppContext) {
   server.org.w3.activitypub.getResource({
     //auth: ctx.authVerifier.accessStandard(),
-    handler: async ({ params, /*auth,*/ req }) => {
+    handler: async ({ params, req }) => {
       const { repo, page } = params
 
       const atUser = await ctx.accountManager.getAccount(repo)
@@ -81,3 +82,4 @@ export default function (server: Server, ctx: AppContext) {
     }
   })
 }
+*/

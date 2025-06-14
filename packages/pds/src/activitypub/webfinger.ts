@@ -1,7 +1,8 @@
 import { RequestHandler, Router, json } from 'express'
 //import { AuthScope } from '../auth-verifier'
 import { AppContext } from '../context'
-import { genDomainPrefix, inferPubHandle } from './util'
+import { genDomainPrefix, inferPubHandle, atDidToApDid, apDidToAtDid } from './util'
+import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
 
 export const pubRoutePrefix = '/activitypub'
 export const atRoutePrefix = '/atpub'
@@ -73,7 +74,17 @@ export const createRouter = (ctx: AppContext): Router => {
     return ret
   }
 
+  router.get('/.well-known/apgateway', async function (req, res) {
+    const responseType = 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"'
+
+    return res.type(responseType).json({
+      "message": "Hello AP world!"
+    })
+  })
+
   router.get('/.well-known/webfinger', async function (req, res) {
+    const responseType = 'application/jrd+json; charset=utf-8'
+
     if (typeof req.query.resource !== 'string') {
       return res.status(400).send() // Mastodon sends a blank 400
     }
@@ -98,19 +109,40 @@ export const createRouter = (ctx: AppContext): Router => {
       return res.status(404).send('Not Found') // Mastodon sends a blank 404
     }
 
+    // Get the profile so we can get the avatar
+    let profile: ProfileRecord | undefined
+    await ctx.actorStore.read(at.did, async (actor) => {
+      profile = (await actor.record.getProfileRecord()) as ProfileRecord
+    })
+
+    const apDid = atDidToApDid(at.did)
 
     const newSubject = inferPubHandle(ctx, req.hostname, at.handle, pubActor)
     const domPrefix = genDomainPrefix(ctx, req)
-    return res.type('application/jrd+json; charset=utf-8').json({
+    const xrpcHref = `${domPrefix}/xrpc/org.w3.activitypub.getActor?repo=${at.did}`
+
+    return res.type(responseType).json({
       subject: `acct:${newSubject}`,
+      aliases: [
+        `at://${at.handle}`,
+        `at://${at.did}`,
+        `ap://${apDid}`,
+        //`${domPrefix}/atpub/@${at.handle}`,
+        xrpcHref,
+      ],
       links: [
         {
           rel: 'self',
           type: 'application/activity+json',
-          href: `${domPrefix}/xrpc/org.w3.activitypub.getActor?repo=${at.did}`,
+          href: xrpcHref,
           //href: `${domPrefix}${atRoutePrefix}/${at.did}`,
           //href: `${domPrefix}${pubRoutePrefix}/${pubActor}`,
         },
+        profile?.avatar ? {
+          rel: 'http://webfinger.net/rel/avatar',
+          type: 'image/png',
+          href: `https://files.mastodon.social/accounts/avatars/000/023/804/original/media.png`,
+        } : undefined,
       ],
     })
   })

@@ -3,6 +3,7 @@ import {
   ContextType,
   ObjectType,
 } from '../lexicon/types/org/w3/activitystreams/defs'
+import { Multidid } from '@didtools/multidid'
 
 export const genDomainPrefix = (ctx, req) =>
   `${req.protocol}://${req.hostname}${ctx.cfg.service.devMode && ctx.cfg.service.port ? ':' + ctx.cfg.service.port : ''}`
@@ -50,6 +51,7 @@ export function makeLDContext(obj: any) {
   const secNamespace = 'https://w3id.org/security/v1'
   const atNamespace = 'https://atproto.com/specs/#' // Dummy
   const mastodonNamespace = 'http://joinmastodon.org/ns#'
+  const fepEF61Namespace = "https://w3id.org/fep/ef61"
   //const schemaNamespace = "http://schema.org#" // Incorrect version (used by Mastodon)
   //const schemaNamespace = "https://schema.org/" // Correction version
 
@@ -104,6 +106,8 @@ export function makeLDContext(obj: any) {
     dictionary.publicKeyPem = 'sec:publicKeyPem'
   }
 
+  let fepEF61Used = obj.id.startsWith('ap://') || ('gateways' in obj) || ('proof' in obj)
+
   if ('discoverable' in obj) {
     dictionary.toot = mastodonNamespace
     dictionary.discoverable = 'toot:discoverable'
@@ -140,6 +144,9 @@ export function makeLDContext(obj: any) {
 
   if (secUsed) {
     namespaces.push(secNamespace)
+  }
+  if (fepEF61Used) {
+    namespaces.push(fepEF61Namespace)
   }
 
   if (Object.entries(dictionary).length) {
@@ -252,3 +259,17 @@ export const makeNote = function (
     },
   }
 }
+
+
+  // FEP EF61 only supports did:key's (i.e. MUST). They recommend ids use Ed25519 encoded public keys in the Multikey format (i.e. SHOULD).
+  // I've decided to use the native atproto type (did:plc, did:web) re-encoded as a did:key in MultiDID format instead. Our endpoints will
+  // convert ap://did:key's back into atproto at://did's.
+
+  export const atDidToApDid = (did: string) => {
+    //return `did:key:${base58btc.encode(new TextEncoder().encode(Multidid.fromString(atDid).toString()))}`
+    return `did:key:z${Multidid.fromString(did).toMultibase('base58btc').toString()}`
+  }
+
+  export const apDidToAtDid = (did: string) => {
+    return Multidid.fromString(did.substring('did:key:z'.length)).toMultibase('base58btc').toString()
+  }

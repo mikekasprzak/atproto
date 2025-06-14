@@ -19121,41 +19121,7 @@ export const schemaDict = {
         key: 'tid',
         record: {
           type: 'object',
-          required: ['text', 'createdAt'],
-          properties: {
-            text: {
-              type: 'ref',
-              ref: 'lex:app.bsky.feed.post#main.record.text',
-            },
-            facets: {
-              type: 'ref',
-              ref: 'lex:app.bsky.feed.post#main.record.facets',
-            },
-            reply: {
-              type: 'ref',
-              ref: 'lex:app.bsky.feed.post#main.record.replyRef',
-            },
-            embed: {
-              type: 'ref',
-              ref: 'lex:app.bsky.feed.post#main.record.embed',
-            },
-            langs: {
-              type: 'ref',
-              ref: 'lex:app.bsky.feed.post#main.record.langs',
-            },
-            labels: {
-              type: 'ref',
-              ref: 'lex:app.bsky.feed.post#main.record.labels',
-            },
-            tags: {
-              type: 'ref',
-              ref: 'lex:app.bsky.feed.post#main.record.tags',
-            },
-            createdAt: {
-              type: 'ref',
-              ref: 'lex:app.bsky.feed.post#main.record.createdAt',
-            },
-          },
+          properties: {},
         },
       },
     },

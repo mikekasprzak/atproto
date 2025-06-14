@@ -9,7 +9,6 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
-import type * as AppBskyFeedPost from '../../../app/bsky/feed/post.js'
 
 const is$typed = _is$typed,
   validate = _validate
@@ -17,14 +16,6 @@ const id = 'org.joinmastodon.feed.post'
 
 export interface Record {
   $type: 'org.joinmastodon.feed.post'
-  text: AppBskyFeedPost.MainRecordText
-  facets?: AppBskyFeedPost.MainRecordFacets
-  reply?: AppBskyFeedPost.MainRecordReplyRef
-  embed?: AppBskyFeedPost.MainRecordEmbed
-  langs?: AppBskyFeedPost.MainRecordLangs
-  labels?: AppBskyFeedPost.MainRecordLabels
-  tags?: AppBskyFeedPost.MainRecordTags
-  createdAt: AppBskyFeedPost.MainRecordCreatedAt
   [k: string]: unknown
 }
 
