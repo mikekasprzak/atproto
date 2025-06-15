@@ -108,8 +108,8 @@ import * as AppBskyFeedGetFeedGenerators from './types/app/bsky/feed/getFeedGene
 import * as AppBskyFeedGetFeedSkeleton from './types/app/bsky/feed/getFeedSkeleton.js'
 import * as AppBskyFeedGetLikes from './types/app/bsky/feed/getLikes.js'
 import * as AppBskyFeedGetListFeed from './types/app/bsky/feed/getListFeed.js'
-import * as AppBskyFeedGetPosts from './types/app/bsky/feed/getPosts.js'
 import * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread.js'
+import * as AppBskyFeedGetPosts from './types/app/bsky/feed/getPosts.js'
 import * as AppBskyFeedGetQuotes from './types/app/bsky/feed/getQuotes.js'
 import * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy.js'
 import * as AppBskyFeedGetSuggestedFeeds from './types/app/bsky/feed/getSuggestedFeeds.js'
@@ -224,6 +224,9 @@ import * as ToolsOzoneTeamUpdateMember from './types/tools/ozone/team/updateMemb
 import * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
 import * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
 import * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
+import * as OrgW3ActivitypubGetActor from './types/org/w3/activitypub/getActor.js'
+import * as OrgW3ActivitypubGetOutbox from './types/org/w3/activitypub/getOutbox.js'
+import * as OrgW3ActivitypubPutInbox from './types/org/w3/activitypub/putInbox.js'
 
 export const COM_ATPROTO_MODERATION = {
   DefsReasonSpam: 'com.atproto.moderation.defs#reasonSpam',
@@ -281,6 +284,7 @@ export class Server {
   app: AppNS
   chat: ChatNS
   tools: ToolsNS
+  org: OrgNS
 
   constructor(options?: XrpcOptions) {
     this.xrpc = createXrpcServer(schemas, options)
@@ -288,6 +292,7 @@ export class Server {
     this.app = new AppNS(this)
     this.chat = new ChatNS(this)
     this.tools = new ToolsNS(this)
+    this.org = new OrgNS(this)
   }
 }
 
@@ -1551,17 +1556,6 @@ export class AppBskyFeedNS {
     return this._server.xrpc.method(nsid, cfg)
   }
 
-  getPosts<AV extends AuthVerifier>(
-    cfg: ConfigOf<
-      AV,
-      AppBskyFeedGetPosts.Handler<ExtractAuth<AV>>,
-      AppBskyFeedGetPosts.HandlerReqCtx<ExtractAuth<AV>>
-    >,
-  ) {
-    const nsid = 'app.bsky.feed.getPosts' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
-  }
-
   getPostThread<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
@@ -1570,6 +1564,17 @@ export class AppBskyFeedNS {
     >,
   ) {
     const nsid = 'app.bsky.feed.getPostThread' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getPosts<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetPosts.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetPosts.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getPosts' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 
@@ -3031,6 +3036,87 @@ export class ToolsOzoneVerificationNS {
   ) {
     const nsid = 'tools.ozone.verification.revokeVerifications' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class OrgNS {
+  _server: Server
+  w3: OrgW3NS
+  joinmastodon: OrgJoinmastodonNS
+
+  constructor(server: Server) {
+    this._server = server
+    this.w3 = new OrgW3NS(server)
+    this.joinmastodon = new OrgJoinmastodonNS(server)
+  }
+}
+
+export class OrgW3NS {
+  _server: Server
+  activitypub: OrgW3ActivitypubNS
+  activitystreams: OrgW3ActivitystreamsNS
+
+  constructor(server: Server) {
+    this._server = server
+    this.activitypub = new OrgW3ActivitypubNS(server)
+    this.activitystreams = new OrgW3ActivitystreamsNS(server)
+  }
+}
+
+export class OrgW3ActivitypubNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getActor<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      OrgW3ActivitypubGetActor.Handler<ExtractAuth<AV>>,
+      OrgW3ActivitypubGetActor.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'org.w3.activitypub.getActor' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getOutbox<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      OrgW3ActivitypubGetOutbox.Handler<ExtractAuth<AV>>,
+      OrgW3ActivitypubGetOutbox.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'org.w3.activitypub.getOutbox' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  putInbox<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      OrgW3ActivitypubPutInbox.Handler<ExtractAuth<AV>>,
+      OrgW3ActivitypubPutInbox.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'org.w3.activitypub.putInbox' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class OrgW3ActivitystreamsNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+}
+
+export class OrgJoinmastodonNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
   }
 }
 
