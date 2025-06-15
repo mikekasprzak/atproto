@@ -415,7 +415,7 @@ export class AppContext {
       sequencer,
       backgroundQueue,
       redisScratch,
-      rateLimitCreator,
+      ratelimitCreator,
       crawlers,
       bskyAppView,
       moderationAgent,

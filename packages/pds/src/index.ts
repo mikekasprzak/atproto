@@ -17,8 +17,8 @@ import {
   ResponseType,
   XRPCError,
 } from '@atproto/xrpc-server'
-import API from './api'
 import * as activityPub from './activitypub'
+import API from './api'
 import * as authRoutes from './auth-routes'
 import * as basicRoutes from './basic-routes'
 import { ServerConfig, ServerSecrets } from './config'
@@ -63,9 +63,6 @@ export class PDS {
   ): Promise<PDS> {
     const ctx = await AppContext.fromConfig(cfg, secrets, overrides)
 
-    const { rateLimits } = ctx.cfg
-
-    //const server = createServer({
     const xrpcOpts: XrpcServerOptions = {
       validateResponse: false,
       payload: {
@@ -142,8 +139,8 @@ export class PDS {
     app.use(basicRoutes.createRouter(ctx))
     app.use(wellKnown.createRouter(ctx))
     //if (ctx.cfg.service.activitypub) {
-      app.use(activityPub.oauthAuthorizationServer.createRouter(ctx))
-      app.use(activityPub.webfinger.createRouter(ctx))
+    app.use(activityPub.oauthAuthorizationServer.createRouter(ctx))
+    app.use(activityPub.webfinger.createRouter(ctx))
     //}
     app.use(server.xrpc.router)
     app.use(error.handler)
