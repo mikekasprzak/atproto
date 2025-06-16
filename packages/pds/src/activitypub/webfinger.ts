@@ -1,15 +1,19 @@
-import { RequestHandler, Router, json } from 'express'
+import { RequestHandler, Router } from 'express'
 //import { AuthScope } from '../auth-verifier'
 import { AppContext } from '../context'
-import { genDomainPrefix, inferPubHandle, atDidToApDid, apDidToAtDid } from './util'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
+import {
+  //apDidToAtDid,
+  atDidToApDid,
+  genDomainPrefix,
+  inferPubHandle,
+} from './util'
 
 export const pubRoutePrefix = '/activitypub'
 export const atRoutePrefix = '/atpub'
 
 export const createRouter = (ctx: AppContext): Router => {
   const router = Router()
-  router.use(json())
 
   type DIDByActorHost = {
     did?: string
@@ -75,10 +79,11 @@ export const createRouter = (ctx: AppContext): Router => {
   }
 
   router.get('/.well-known/apgateway', async function (req, res) {
-    const responseType = 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"'
+    const responseType =
+      'application/ld+json; profile="https://www.w3.org/ns/activitystreams"'
 
     return res.type(responseType).json({
-      "message": "Hello AP world!"
+      message: 'Hello AP world!',
     })
   })
 
@@ -138,11 +143,13 @@ export const createRouter = (ctx: AppContext): Router => {
           //href: `${domPrefix}${atRoutePrefix}/${at.did}`,
           //href: `${domPrefix}${pubRoutePrefix}/${pubActor}`,
         },
-        profile?.avatar ? {
-          rel: 'http://webfinger.net/rel/avatar',
-          type: 'image/png',
-          href: `https://files.mastodon.social/accounts/avatars/000/023/804/original/media.png`,
-        } : undefined,
+        profile?.avatar
+          ? {
+              rel: 'http://webfinger.net/rel/avatar',
+              type: 'image/png',
+              href: `https://files.mastodon.social/accounts/avatars/000/023/804/original/media.png`,
+            }
+          : undefined,
       ],
     })
   })
