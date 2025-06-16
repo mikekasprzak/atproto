@@ -7992,7 +7992,7 @@ packages:
     dependencies:
       '@jest/create-cache-key-function': 27.5.1
       '@swc/core': 1.11.18
-      jsonc-parser: 3.3.1
+      jsonc-parser: 3.2.0
     dev: true
 
   /@swc/jest@0.2.24(@swc/core@1.11.29):
