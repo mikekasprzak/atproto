@@ -284,7 +284,5 @@ export const atDidToApDid = (did: string) => {
 }
 
 export const apDidToAtDid = (did: string) => {
-  return Multidid.fromString(did.substring('did:key:'.length))
-    .toMultibase('base58btc')
-    .toString()
+  return Multidid.fromMultibase(did.substring('did:key:'.length)).toString()
 }

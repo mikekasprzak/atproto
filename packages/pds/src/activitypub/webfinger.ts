@@ -3,7 +3,7 @@ import { RequestHandler, Router } from 'express'
 import { AppContext } from '../context'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
 import {
-  //apDidToAtDid,
+  apDidToAtDid,
   atDidToApDid,
   genDomainPrefix,
   inferPubHandle,
@@ -80,14 +80,19 @@ export const createRouter = (ctx: AppContext): Router => {
     return ret
   }
 
-  router.get('/.well-known/apgateway', async function (req, res) {
-    const responseType =
-      'application/ld+json; profile="https://www.w3.org/ns/activitystreams"'
+  router.get(
+    ['/.well-known/apgateway/:did', '/.well-known/apgateway/:did/*'],
+    async function (req, res) {
+      const responseType =
+        'application/ld+json; profile="https://www.w3.org/ns/activitystreams"'
 
-    return res.type(responseType).json({
-      message: 'Hello AP world!',
-    })
-  })
+      return res.type(responseType).json({
+        apDid: req.params.did,
+        atDid: apDidToAtDid(req.params.did),
+        request: req.params[0] ?? '',
+      })
+    },
+  )
 
   router.get('/.well-known/webfinger', async function (req, res) {
     const responseType = 'application/jrd+json; charset=utf-8'
