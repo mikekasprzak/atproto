@@ -1,6 +1,7 @@
 import { InvalidRequestError } from '@atproto/oauth-provider'
 //import { AtUri } from '@atproto/syntax'
 import {
+  atDidToApDid,
   genDomainPrefix,
   inferPubHandle,
   makeImageURL,
@@ -39,15 +40,21 @@ export default function (server: Server, ctx: AppContext) {
         )
       }
 
-      const uriPrefix = `${genDomainPrefix(ctx, req)}/xrpc`
+      const domainPrefix = genDomainPrefix(ctx, req)
+      const xrpcPrefix = `${domainPrefix}/xrpc/org.w3.activitypub.`
+      const xrpcSuffix = `?repo=${did}`
+      const apPrefix = `ap://${atDidToApDid(did)}/`
+      const apSuffix = ''
+      const uriPrefix = req.query.fep ? apPrefix : xrpcPrefix
+      const uriSuffix = req.query.fep ? apSuffix : xrpcSuffix
       const pubHandle = inferPubHandle(ctx, req.hostname, atUser.handle)
 
       const apResponse = {
         type: 'Person',
-        id: `${uriPrefix}/org.w3.activitypub.getActor?repo=${did}`,
+        id: `${uriPrefix}getActor${uriSuffix}`,
         //atUri: `at://${did}/org.w3.activitypub.actor`,
-        inbox: `${uriPrefix}/org.w3.activitypub.putInbox?repo=${did}`,
-        outbox: `${uriPrefix}/org.w3.activitypub.getOutbox?repo=${did}`,
+        inbox: `${uriPrefix}putInbox${uriSuffix}`,
+        outbox: `${uriPrefix}getOutbox${uriSuffix}`,
         //followers: `${uriPrefix}/org.w3.activitypub.getFollowers?repo=${did}`,
         //following: `${uriPrefix}/org.w3.activitypub.getFollowing?repo=${did}`,
         preferredUsername: pubHandle.split('@')[0],
@@ -77,6 +84,10 @@ export default function (server: Server, ctx: AppContext) {
               ),
             })
           : undefined,
+      }
+
+      if (req.query.fep) {
+        ;(apResponse as any).gateways = [domainPrefix]
       }
 
       return {
