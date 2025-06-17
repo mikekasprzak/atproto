@@ -27,22 +27,20 @@
 
 ### Extension: AT Protocol DID's as Multidid keys
 
-AT Protocol DID's and FEP ef61 DID's are not directly compatible. That said, the novel `Multidid` spec
-provides a way to encode an arbitrary DID for use in a `did:key`.
+AT Protocol DID's and FEP ef61 DID's are not directly compatible. That said, the novel
+[`Multidid`](https://github.com/ChainAgnostic/multidid) spec provides a way to encode an arbitrary DID
+for use in a `did:key`.
 
-- [Multidid](https://github.com/ChainAgnostic/multidid)
-
-Our implementation uses the `@didtools/multidid` package to convert native AT Protocol DID's into `Multidid`,
-as Base58 encoded strings (similar to the Multikey recommendation in FEP-ef61).
-
-- [@didtools/multidid](https://did.js.org/docs/api/modules/didtools_multidid/)
+Our implementation uses the [`@didtools/multidid`](https://did.js.org/docs/api/modules/didtools_multidid/)
+package to convert native AT Protocol DID's into `Multidid`, as Base58 encoded strings (similar to the
+Multikey recommendation in FEP-ef61).
 
 TODO: Should we insert an `at:` or other binary prefix to identify the key as an AT Protocol DID?
 
 
 ## WebFinger
 
-<!-- Describe -->
+<!-- Describe things -->
 
 
 ### Extension: AT Protocol WebFinger aliases
