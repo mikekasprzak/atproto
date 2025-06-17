@@ -7,6 +7,7 @@ import {
   atDidToApDid,
   genDomainPrefix,
   inferPubHandle,
+  makeLDContext,
 } from './util'
 
 export const pubRoutePrefix = '/activitypub'
@@ -57,6 +58,7 @@ export const createRouter = (ctx: AppContext): Router => {
       const atUser = await ctx.accountManager.getAccount(atHandle)
       ret.did = atUser?.did
       if (ret.did) {
+        makeLDContext
         ret.didFoundBy = 'hostname'
         ret.handle = atHandle // prefer the handle we made
       }
@@ -124,33 +126,52 @@ export const createRouter = (ctx: AppContext): Router => {
 
     const newSubject = inferPubHandle(ctx, req.hostname, at.handle, pubActor)
     const domPrefix = genDomainPrefix(ctx, req)
-    const xrpcHref = `${domPrefix}/xrpc/org.w3.activitypub.getActor?repo=${at.did}`
+    const getActorNSID = 'org.w3.activitypub.getActor'
+    const xrpcHref = `${domPrefix}/xrpc/${getActorNSID}?repo=${at.did}`
+
+    const ldContext = makeLDContext(profile, false, true)
+
+    const links: any[] = [
+      {
+        rel: 'self',
+        type: 'application/activity+json',
+        href: xrpcHref,
+        //href: `${domPrefix}${atRoutePrefix}/${at.did}`,
+        //href: `${domPrefix}${pubRoutePrefix}/${pubActor}`,
+      },
+      {
+        rel: 'canonical',
+        type: 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
+        href: `ap://${apDid}/getActor`,
+      },
+      {
+        rel: 'alterntaive',
+        type: 'application/json; profile="https://atproto.com/specs/lexicon"',
+        href: `at://${at.did}/${getActorNSID}`,
+      },
+    ]
+
+    if (profile?.avatar) {
+      links.push({
+        rel: 'http://webfinger.net/rel/avatar',
+        type: 'image/png',
+        href: `https://files.mastodon.social/accounts/avatars/000/023/804/original/media.png`,
+      })
+    }
 
     return res.type(responseType).json({
+      '@context': ldContext,
       subject: `acct:${newSubject}`,
       aliases: [
         `at://${at.handle}`,
-        `at://${at.did}`,
-        `ap://${apDid}`,
-        //`${domPrefix}/atpub/@${at.handle}`,
+        at.did,
+        `at://${at.did}/${getActorNSID}`,
         xrpcHref,
+        apDid,
+        `ap://${apDid}/getActor`,
+        `${domPrefix}/.well-known/apgateway/${apDid}/getActor`,
       ],
-      links: [
-        {
-          rel: 'self',
-          type: 'application/activity+json',
-          href: xrpcHref,
-          //href: `${domPrefix}${atRoutePrefix}/${at.did}`,
-          //href: `${domPrefix}${pubRoutePrefix}/${pubActor}`,
-        },
-        profile?.avatar
-          ? {
-              rel: 'http://webfinger.net/rel/avatar',
-              type: 'image/png',
-              href: `https://files.mastodon.social/accounts/avatars/000/023/804/original/media.png`,
-            }
-          : undefined,
-      ],
+      links,
     })
   })
 
