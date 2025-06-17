@@ -95,6 +95,8 @@ export const createRouter = (ctx: AppContext): Router => {
   )
 
   router.get('/.well-known/webfinger', async function (req, res) {
+    // WebFinger spec: https://swicg.github.io/activitypub-webfinger/
+    // WebFinger responses conform to RFC-6415 https://www.rfc-editor.org/rfc/rfc6415#appendix-A
     const responseType = 'application/jrd+json; charset=utf-8'
 
     if (typeof req.query.resource !== 'string') {
@@ -134,7 +136,7 @@ export const createRouter = (ctx: AppContext): Router => {
     const getActorNSID = 'org.w3.activitypub.getActor'
     const xrpcHref = `${domPrefix}/xrpc/${getActorNSID}?repo=${at.did}`
 
-    const ldContext = makeLDContext(profile, false, true)
+    //const ldContext = makeLDContext(profile, false, true)
 
     const links: any[] = [
       {
@@ -165,7 +167,7 @@ export const createRouter = (ctx: AppContext): Router => {
     }
 
     return res.type(responseType).json({
-      '@context': ldContext,
+      //'@context': ldContext,
       subject: `acct:${newSubject}`,
       aliases: [
         `at://${at.handle}`,
