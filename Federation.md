@@ -17,7 +17,7 @@
 ## Non-standard extensions
 
 - [AT Protocol DID's as Multidid keys](#extension-at-protocol-dids-as-multidid-keys)
-- [AT Protocol WebFinger aliases](#at-protocol-webfinger-aliases)
+- [AT Protocol WebFinger aliases](#extension-at-protocol-webfinger-aliases)
 
 
 ## ActivityPub
@@ -25,10 +25,7 @@
 <!-- Describe activities and extensions. -->
 
 
-## Extension:
-
-
-## Extension: AT Protocol DID's as Multidid keys
+### Extension: AT Protocol DID's as Multidid keys
 
 AT Protocol DID's and FEP ef61 DID's are not directly compatible. That said, the novel `Multidid` spec
 provides a way to encode an arbitrary DID for use in a `did:key`.
