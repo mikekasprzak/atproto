@@ -1,5 +1,4 @@
 import { RequestHandler, Router } from 'express'
-//import { AuthScope } from '../auth-verifier'
 import { AppContext } from '../context'
 import { Record as ProfileRecord } from '../lexicon/types/app/bsky/actor/profile'
 import {
@@ -153,8 +152,8 @@ export const createRouter = (ctx: AppContext): Router => {
       },
       {
         rel: 'alterntaive',
-        type: 'application/json; profile="https://atproto.com/specs/lexicon"',
-        href: `at://${at.did}/${getActorNSID}`,
+        type: 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
+        href: `ap://${at.did}/getActor`,
       },
     ]
 
@@ -170,13 +169,15 @@ export const createRouter = (ctx: AppContext): Router => {
       //'@context': ldContext,
       subject: `acct:${newSubject}`,
       aliases: [
-        `at://${at.handle}`,
         at.did,
-        `at://${at.did}/${getActorNSID}`,
-        xrpcHref,
         apDid,
+        `ap://${at.did}/getActor`,
         `ap://${apDid}/getActor`,
+        `${domPrefix}/.well-known/apgateway/${at.did}/getActor`,
         `${domPrefix}/.well-known/apgateway/${apDid}/getActor`,
+        xrpcHref,
+        `at://${at.handle}`,
+        `at://${at.did}/${getActorNSID}`,
       ],
       links,
     })
