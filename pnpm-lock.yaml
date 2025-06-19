@@ -1605,6 +1605,9 @@ importers:
       '@atproto/bsky':
         specifier: workspace:*
         version: link:../bsky
+      '@atproto/bsync':
+        specifier: workspace:*
+        version: link:../bsync
       '@atproto/lexicon':
         specifier: workspace:*
         version: link:../lexicon
@@ -1620,6 +1623,9 @@ importers:
       express:
         specifier: ^4.17.2
         version: 4.18.2
+      kysely:
+        specifier: ^0.22.0
+        version: 0.22.0
       multiformats:
         specifier: ^9.9.0
         version: 9.9.0

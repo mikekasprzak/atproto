@@ -27,10 +27,12 @@
     },
     "dependencies": {
       "@atproto/bsky": "workspace:*",
+      "@atproto/bsync": "workspace:*",
       "@atproto/lexicon": "workspace:*",
       "@atproto/oauth-provider": "workspace:*",
       "@atproto/xrpc-server": "workspace:*",
       "express": "^4.17.2",
+      "kysely": "^0.22.0",
       "multiformats": "^9.9.0",
       "@didtools/multidid": "^0.1.0"
     },
