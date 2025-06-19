@@ -37,6 +37,7 @@
     "devDependencies": {
       "@atproto/lex-cli": "workspace:^",
       "@atproto/pds": "workspace:@mikekasprzak/pds@*",
+      "ts-node": "^10.8.2",
       "typescript": "^5.6.3"
     }
   }
