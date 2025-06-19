@@ -16572,6 +16572,20 @@ export const schemaDict = {
       },
     },
   },
+  OrgJoinmastodonFeedPost: {
+    lexicon: 1,
+    id: 'org.joinmastodon.feed.post',
+    defs: {
+      main: {
+        type: 'record',
+        key: 'tid',
+        record: {
+          type: 'object',
+          properties: {},
+        },
+      },
+    },
+  },
   OrgW3ActivitypubActivity: {
     lexicon: 1,
     id: 'org.w3.activitypub.activity',
@@ -19112,20 +19126,6 @@ export const schemaDict = {
       },
     },
   },
-  OrgJoinmastodonFeedPost: {
-    lexicon: 1,
-    id: 'org.joinmastodon.feed.post',
-    defs: {
-      main: {
-        type: 'record',
-        key: 'tid',
-        record: {
-          type: 'object',
-          properties: {},
-        },
-      },
-    },
-  },
 } as const satisfies Record<string, LexiconDoc>
 export const schemas = Object.values(schemaDict) satisfies LexiconDoc[]
 export const lexicons: Lexicons = new Lexicons(schemas)
@@ -19455,6 +19455,7 @@ export const ids = {
     'tools.ozone.verification.listVerifications',
   ToolsOzoneVerificationRevokeVerifications:
     'tools.ozone.verification.revokeVerifications',
+  OrgJoinmastodonFeedPost: 'org.joinmastodon.feed.post',
   OrgW3ActivitypubActivity: 'org.w3.activitypub.activity',
   OrgW3ActivitypubActor: 'org.w3.activitypub.actor',
   OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
@@ -19479,5 +19480,4 @@ export const ids = {
   OrgW3ActivitystreamsOrderedCollectionPage:
     'org.w3.activitystreams.orderedCollectionPage',
   OrgW3ActivitystreamsProperties: 'org.w3.activitystreams.properties',
-  OrgJoinmastodonFeedPost: 'org.joinmastodon.feed.post',
 } as const

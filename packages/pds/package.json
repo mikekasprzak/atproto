@@ -20,7 +20,7 @@
   },
   "scripts": {
     "prepare": "[ \"$npm_config_production\" = true ] || puppeteer browsers install chrome",
-    "codegen": "ROOT=../..; IN=$ROOT/dist/lexicons; $ROOT/lexicons/generate.sh -qV $IN $ROOT/lexicons && lex gen-server --yes ./src/lexicon $IN/com/atproto/*/* $IN/app/bsky/*/* $IN/chat/bsky/*/* $IN/tools/ozone/*/* $IN/org/w3/*/* $IN/org/joinmastodon/*/*",
+    "codegen": "ROOT=../..; IN=$ROOT/dist/lexicons; $ROOT/lexicons/generate.sh -qV $IN $ROOT/lexicons && lex gen-server --yes ./src/lexicon $IN/com/atproto/*/* $IN/app/bsky/*/* $IN/chat/bsky/*/* $IN/tools/ozone/*/* $IN/org/*/*/*",
     "build": "tsc --build tsconfig.build.json",
     "postbuild": "node ./build.templates.js",
     "dev": "node ./build.templates.js --watch",
@@ -73,7 +73,7 @@
     "uint8arrays": "3.0.0",
     "undici": "^6.19.8",
     "zod": "^3.24.2",
-    "@didtools/multidid": "^0.1.0"
+    "@atproto/pds-activitypub": "workspace:@mikekasprzak/pds-activitypub@*"
   },
   "devDependencies": {
     "@atproto/api": "workspace:^",

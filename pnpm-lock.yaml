@@ -1442,6 +1442,9 @@ importers:
       '@atproto/oauth-provider':
         specifier: workspace:^
         version: link:../oauth/oauth-provider
+      '@atproto/pds-activitypub':
+        specifier: workspace:@mikekasprzak/pds-activitypub@*
+        version: link:../pds-activitypub
       '@atproto/repo':
         specifier: workspace:^
         version: link:../repo
@@ -1457,9 +1460,6 @@ importers:
       '@did-plc/lib':
         specifier: ^0.0.4
         version: 0.0.4
-      '@didtools/multidid':
-        specifier: ^0.1.0
-        version: 0.1.0
       '@hapi/address':
         specifier: ^5.1.1
         version: 5.1.1

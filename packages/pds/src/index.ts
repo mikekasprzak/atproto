@@ -11,8 +11,8 @@ import cors from 'cors'
 import express from 'express'
 import { HttpTerminator, createHttpTerminator } from 'http-terminator'
 import { DAY, HOUR, MINUTE, SECOND } from '@atproto/common'
+import { wellKnown as apWellKnown } from '@atproto/pds-activitypub'
 import { RateLimiter, ResponseType, XRPCError } from '@atproto/xrpc-server'
-import * as webfinger from './activitypub/webfinger'
 import apiRoutes from './api'
 import * as authRoutes from './auth-routes'
 import * as basicRoutes from './basic-routes'
@@ -148,7 +148,7 @@ export class PDS {
     app.use(cors({ maxAge: DAY / SECOND }))
     app.use(basicRoutes.createRouter(ctx))
     app.use(wellKnown.createRouter(ctx))
-    app.use(webfinger.createRouter(ctx))
+    app.use(apWellKnown.createRouter(ctx))
     app.use(server.xrpc.router)
     app.use(error.handler)
 
