@@ -12,7 +12,7 @@ import {
 import type * as OrgW3ActivitystreamsDefs from '../activitystreams/defs.js'
 import type * as OrgW3ActivitystreamsProperties from '../activitystreams/properties.js'
 import type * as OrgW3ActivitypubProperties from './properties.js'
-import type * as OrgW3ActivitystreamsObject from '../activitystreams/object.js'
+import type * as OrgW3idFep8b32Properties from '../../w3id/fep/8b32/properties.js'
 
 const is$typed = _is$typed,
   validate = _validate
@@ -51,6 +51,7 @@ export interface Main {
   mediaType?: OrgW3ActivitystreamsProperties.MediaType
   duration?: OrgW3ActivitystreamsProperties.Duration
   source?: OrgW3ActivitypubProperties.Source
+  proof?: OrgW3idFep8b32Properties.Proof
 }
 
 const hashMain = 'main'
@@ -63,4 +64,57 @@ export function validateMain<V>(v: V) {
   return validate<Main & V>(v, id, hashMain)
 }
 
-export type ObjectTypes = OrgW3ActivitystreamsObject.ObjectTypes
+export type ObjectTypes =
+  | 'Activity'
+  | 'Collection'
+  | 'CollectionPage'
+  | 'OrderedCollection'
+  | 'OrderedCollectionPage'
+  | 'Article'
+  | 'Audio'
+  | 'Document'
+  | 'Event'
+  | 'Image'
+  | 'Note'
+  | 'Page'
+  | 'Place'
+  | 'Profile'
+  | 'Relationship'
+  | 'Tombstone'
+  | 'Video'
+  | 'Application'
+  | 'Group'
+  | 'Organization'
+  | 'Person'
+  | 'Service'
+  | 'Accept'
+  | 'Add'
+  | 'Announce'
+  | 'Arrive'
+  | 'Block'
+  | 'Create'
+  | 'Delete'
+  | 'Dislike'
+  | 'Flag'
+  | 'Follow'
+  | 'Ignore'
+  | 'Invite'
+  | 'Join'
+  | 'Leave'
+  | 'Like'
+  | 'Listen'
+  | 'Move'
+  | 'Offer'
+  | 'Question'
+  | 'Reject'
+  | 'Read'
+  | 'Remove'
+  | 'TentativeReject'
+  | 'TentativeAccept'
+  | 'Travel'
+  | 'Undo'
+  | 'Update'
+  | 'View'
+  | 'PropertyValue'
+  | 'Emoji'
+  | (string & {})

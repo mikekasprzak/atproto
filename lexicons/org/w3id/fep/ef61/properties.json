@@ -1,0 +1,15 @@
+{
+  "lexicon": 1,
+  "id": "org.w3id.fep.ef61.properties",
+  "description": "https://w3id.org/fep/ef61#portable-actors",
+  "defs": {
+    "gateways": {
+      "type": "array",
+      "description": "",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    }
+  }
+}

@@ -149,6 +149,10 @@ export function validateInput(
     }
   }
 
+  if (nsid === 'org.w3.activitypub.putInbox') {
+    console.log('ITS ME innnit')
+  }
+
   // if middleware already got the body, we pass that along as input
   // otherwise, we pass along a decoded readable stream
   let body

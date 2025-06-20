@@ -12,6 +12,9 @@ import {
 import type * as OrgW3ActivitystreamsDefs from '../activitystreams/defs.js'
 import type * as OrgW3ActivitystreamsProperties from '../activitystreams/properties.js'
 import type * as OrgW3ActivitypubProperties from './properties.js'
+import type * as OrgJoinmastodonProperties from '../../joinmastodon/properties.js'
+import type * as OrgW3idFepEf61Properties from '../../w3id/fep/ef61/properties.js'
+import type * as OrgW3idFep8b32Properties from '../../w3id/fep/8b32/properties.js'
 import type * as OrgW3ActivitystreamsActor from '../activitystreams/actor.js'
 
 const is$typed = _is$typed,
@@ -59,6 +62,15 @@ export interface Main {
   streams?: Streams
   preferredUsername?: PreferredUsername
   endpoints?: Endpoints
+  publicKey?: OrgJoinmastodonProperties.PublicKey
+  featured?: OrgJoinmastodonProperties.Featured
+  featuredTags?: OrgJoinmastodonProperties.FeaturedTags
+  discoverable?: OrgJoinmastodonProperties.Discoverable
+  indexable?: OrgJoinmastodonProperties.Indexable
+  suspended?: OrgJoinmastodonProperties.Suspended
+  memorial?: OrgJoinmastodonProperties.Memorial
+  gateways?: OrgW3idFepEf61Properties.Gateways
+  proof?: OrgW3idFep8b32Properties.Proof
 }
 
 const hashMain = 'main'

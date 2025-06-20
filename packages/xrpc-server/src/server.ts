@@ -168,6 +168,11 @@ export class Server {
     def: LexXrpcQuery | LexXrpcProcedure,
     config: XRPCHandlerConfig,
   ) {
+    //if (nsid === 'org.w3.activitypub.putInbox')
+    {
+      console.log('addRoute +', nsid)
+    }
+
     const verb: 'post' | 'get' = def.type === 'procedure' ? 'post' : 'get'
     const middleware: RequestHandler[] = []
     middleware.push(createLocalsMiddleware(nsid))
@@ -247,6 +252,9 @@ export class Server {
 
     return async function (req, res, next) {
       try {
+        if (nsid === 'org.w3.activitypub.putInbox') {
+          console.log('ITS ME -', nsid)
+        }
         // validate request
         let params = decodeQueryParams(def, req.query)
         try {
@@ -254,9 +262,22 @@ export class Server {
         } catch (e) {
           throw new InvalidRequestError(String(e))
         }
+
+        if (nsid === 'org.w3.activitypub.putInbox') {
+          console.log('ITS ME params', params)
+        }
+
         const input = validateReqInput(req)
 
+        if (nsid === 'org.w3.activitypub.putInbox') {
+          console.log('ITS ME input', input)
+        }
+
         const locals: RequestLocals = req[kRequestLocals]
+
+        if (nsid === 'org.w3.activitypub.putInbox') {
+          console.log('ITS ME locals', locals)
+        }
 
         const reqCtx: XRPCReqContext = {
           params,
@@ -270,8 +291,16 @@ export class Server {
         // handle rate limits
         if (routeLimiter) await routeLimiter.handle(reqCtx)
 
+        if (nsid === 'org.w3.activitypub.putInbox') {
+          console.log('ITS ME routeLimiter')
+        }
+
         // run the handler
         const output = await routeCfg.handler(reqCtx)
+
+        if (nsid === 'org.w3.activitypub.putInbox') {
+          console.log('ITS ME output', output)
+        }
 
         if (!output) {
           validateResOutput?.(output)

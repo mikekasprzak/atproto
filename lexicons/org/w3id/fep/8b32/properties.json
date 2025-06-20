@@ -1,0 +1,20 @@
+{
+  "lexicon": 1,
+  "id": "org.w3id.fep.8b32.properties",
+  "description": "Object Integrity Proofs: https://w3id.org/fep/8b32#integrity-proofs",
+  "defs": {
+    "proof": {
+      "type": "object",
+      "description": "",
+      "properties": {
+        "@context": { "type": "ref", "ref": "org.w3.activitystreams.defs#contextType" },
+        "type": { "type": "string", "const": "DataIntegrityProof" },
+        "cryptosuite": { "type": "string", "knownValues": ["eddsa-jcs-2022"] },
+        "verificationMethod": { "type": "string", "format": "uri" },
+        "proofPurpose": { "type": "string", "knownValues": ["assertionMethod", "authentication"] },
+        "proofValue": { "type": "string", "format": "uri" },
+        "created": { "type": "string", "format": "datetime" }
+      }
+    }
+  }
+}

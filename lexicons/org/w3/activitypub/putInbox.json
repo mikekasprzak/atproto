@@ -5,21 +5,33 @@
     "main": {
       "type": "procedure",
       "description": "ActivityPub Inbox",
-      "input": {
-        "encoding": "application/json",
-        "schema": {
-          "type": "object",
-          "properties": {
-            "priority": { "type": "boolean" }
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "repo": {
+            "type": "string",
+            "description": "The optional repository the message is for, otherwise this is the shared inbox"
           }
         }
-
-    },
+      },
+      "input": {
+        "encoding": [
+          "application/json",
+          "application/activity+json",
+          "application/ld+json; profile=\"https://www.w3.org/ns/activitystreams\""
+        ],
+        "description": "Request body",
+        "schema": {
+          "type": "ref",
+           "ref": "org.w3.activitypub.object"
+        }
+      },
       "output": {
         "encoding": "application/json",
+        "description": "Response body",
         "schema": {
-          "type": "object",
-          "properties": {}
+          "type": "ref",
+          "ref": "org.w3.activitypub.object"
         }
       },
       "errors": []

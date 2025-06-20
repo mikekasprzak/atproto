@@ -11,18 +11,19 @@ import {
   type OmitKey,
 } from '../../../../util'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
+import type * as OrgW3ActivitypubObject from './object.js'
 
 const is$typed = _is$typed,
   validate = _validate
 const id = 'org.w3.activitypub.putInbox'
 
-export interface QueryParams {}
-
-export interface InputSchema {
-  priority?: boolean
+export interface QueryParams {
+  /** The optional repository the message is for, otherwise this is the shared inbox */
+  repo?: string
 }
 
-export interface OutputSchema {}
+export type InputSchema = OrgW3ActivitypubObject.Main
+export type OutputSchema = OrgW3ActivitypubObject.Main
 
 export interface HandlerInput {
   encoding: 'application/json'

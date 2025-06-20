@@ -9734,9 +9734,9 @@ export const schemaDict = {
       },
       chatPreference: {
         type: 'object',
-        required: ['filter', 'push'],
+        required: ['include', 'push'],
         properties: {
-          filter: {
+          include: {
             type: 'string',
             knownValues: ['all', 'accepted'],
           },
@@ -9747,9 +9747,9 @@ export const schemaDict = {
       },
       filterablePreference: {
         type: 'object',
-        required: ['filter', 'list', 'push'],
+        required: ['include', 'list', 'push'],
         properties: {
-          filter: {
+          include: {
             type: 'string',
             knownValues: ['all', 'follows'],
           },
@@ -11641,20 +11641,6 @@ export const schemaDict = {
       },
     },
   },
-  OrgJoinmastodonFeedPost: {
-    lexicon: 1,
-    id: 'org.joinmastodon.feed.post',
-    defs: {
-      main: {
-        type: 'record',
-        key: 'tid',
-        record: {
-          type: 'object',
-          properties: {},
-        },
-      },
-    },
-  },
   OrgW3ActivitypubActivity: {
     lexicon: 1,
     id: 'org.w3.activitypub.activity',
@@ -11827,6 +11813,42 @@ export const schemaDict = {
           endpoints: {
             type: 'ref',
             ref: 'lex:org.w3.activitypub.actor#endpoints',
+          },
+          publicKey: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#publicKey',
+          },
+          featured: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#featured',
+          },
+          featuredTags: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#featuredTags',
+          },
+          discoverable: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#discoverable',
+          },
+          indexable: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#indexable',
+          },
+          suspended: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#suspended',
+          },
+          memorial: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#memorial',
+          },
+          gateways: {
+            type: 'ref',
+            ref: 'lex:org.w3id.fep.ef61.properties#gateways',
+          },
+          proof: {
+            type: 'ref',
+            ref: 'lex:org.w3id.fep.8b32.properties#proof',
           },
         },
       },
@@ -12021,9 +12043,58 @@ export const schemaDict = {
     id: 'org.w3.activitypub.link',
     defs: {
       main: {
-        type: 'ref',
+        type: 'object',
         description: 'EXTENDS org.w3.activitystreams.link, IMPLEMENTS link',
-        ref: 'lex:org.w3.activitystreams.link',
+        properties: {
+          '@context': {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#contextType',
+          },
+          id: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#id',
+          },
+          type: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.link#linkTypes',
+          },
+          href: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#href',
+          },
+          rel: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#rel',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          hreflang: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#hreflang',
+          },
+          height: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#height',
+          },
+          width: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#width',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+        },
+      },
+      linkTypes: {
+        type: 'string',
+        knownValues: ['Link', 'Mention', 'Hashtag'],
       },
     },
   },
@@ -12155,11 +12226,68 @@ export const schemaDict = {
             type: 'ref',
             ref: 'lex:org.w3.activitypub.properties#source',
           },
+          proof: {
+            type: 'ref',
+            ref: 'lex:org.w3id.fep.8b32.properties#proof',
+          },
         },
       },
       objectTypes: {
-        type: 'ref',
-        ref: 'lex:org.w3.activitystreams.object#objectTypes',
+        type: 'string',
+        knownValues: [
+          'Activity',
+          'Collection',
+          'CollectionPage',
+          'OrderedCollection',
+          'OrderedCollectionPage',
+          'Article',
+          'Audio',
+          'Document',
+          'Event',
+          'Image',
+          'Note',
+          'Page',
+          'Place',
+          'Profile',
+          'Relationship',
+          'Tombstone',
+          'Video',
+          'Application',
+          'Group',
+          'Organization',
+          'Person',
+          'Service',
+          'Accept',
+          'Add',
+          'Announce',
+          'Arrive',
+          'Block',
+          'Create',
+          'Delete',
+          'Dislike',
+          'Flag',
+          'Follow',
+          'Ignore',
+          'Invite',
+          'Join',
+          'Leave',
+          'Like',
+          'Listen',
+          'Move',
+          'Offer',
+          'Question',
+          'Reject',
+          'Read',
+          'Remove',
+          'TentativeReject',
+          'TentativeAccept',
+          'Travel',
+          'Undo',
+          'Update',
+          'View',
+          'PropertyValue',
+          'Emoji',
+        ],
       },
     },
   },
@@ -12183,22 +12311,30 @@ export const schemaDict = {
       main: {
         type: 'procedure',
         description: 'ActivityPub Inbox',
+        parameters: {
+          type: 'params',
+          properties: {
+            repo: {
+              type: 'string',
+              description:
+                'The optional repository the message is for, otherwise this is the shared inbox',
+            },
+          },
+        },
         input: {
           encoding: 'application/json',
+          description: 'Request body',
           schema: {
-            type: 'object',
-            properties: {
-              priority: {
-                type: 'boolean',
-              },
-            },
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.object',
           },
         },
         output: {
           encoding: 'application/json',
+          description: 'Response body',
           schema: {
-            type: 'object',
-            properties: {},
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.object',
           },
         },
         errors: [],
@@ -14195,6 +14331,290 @@ export const schemaDict = {
       },
     },
   },
+  OrgW3idFep8b32Properties: {
+    lexicon: 1,
+    id: 'org.w3id.fep.8b32.properties',
+    description:
+      'Object Integrity Proofs: https://w3id.org/fep/8b32#integrity-proofs',
+    defs: {
+      proof: {
+        type: 'object',
+        description: '',
+        properties: {
+          '@context': {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#contextType',
+          },
+          type: {
+            type: 'string',
+            const: 'DataIntegrityProof',
+          },
+          cryptosuite: {
+            type: 'string',
+            knownValues: ['eddsa-jcs-2022'],
+          },
+          verificationMethod: {
+            type: 'string',
+            format: 'uri',
+          },
+          proofPurpose: {
+            type: 'string',
+            knownValues: ['assertionMethod', 'authentication'],
+          },
+          proofValue: {
+            type: 'string',
+            format: 'uri',
+          },
+          created: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+    },
+  },
+  OrgW3idFepEf61Properties: {
+    lexicon: 1,
+    id: 'org.w3id.fep.ef61.properties',
+    description: 'https://w3id.org/fep/ef61#portable-actors',
+    defs: {
+      gateways: {
+        type: 'array',
+        description: '',
+        items: {
+          type: 'string',
+          format: 'uri',
+        },
+      },
+    },
+  },
+  OrgJoinmastodonObject: {
+    lexicon: 1,
+    id: 'org.joinmastodon.object',
+    defs: {
+      propertyValue: {
+        type: 'object',
+        description: 'EXTENDS object, IMPLEMENTS org.schema.propertyValue',
+        required: ['type'],
+        properties: {
+          '@context': {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.defs#contextType',
+          },
+          id: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#id',
+          },
+          type: {
+            type: 'string',
+            const: 'PropertyValue',
+          },
+          attachment: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attachment',
+          },
+          attributedTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#attributedTo',
+          },
+          audience: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#audience',
+          },
+          content: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#content',
+          },
+          context: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#context',
+          },
+          name: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#name',
+          },
+          endTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#endTime',
+          },
+          generator: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#generator',
+          },
+          icon: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#icon',
+          },
+          image: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#image',
+          },
+          inReplyTo: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#inReplyTo',
+          },
+          location: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#location',
+          },
+          preview: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#preview',
+          },
+          published: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#published',
+          },
+          replies: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#replies',
+          },
+          startTime: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#startTime',
+          },
+          summary: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#summary',
+          },
+          tag: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#tag',
+          },
+          updated: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#updated',
+          },
+          url: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#url',
+          },
+          to: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#to',
+          },
+          bto: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bto',
+          },
+          cc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#cc',
+          },
+          bcc: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#bcc',
+          },
+          mediaType: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#mediaType',
+          },
+          duration: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#duration',
+          },
+          source: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitypub.properties#source',
+          },
+          value: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#value',
+          },
+        },
+      },
+    },
+  },
+  OrgJoinmastodonProperties: {
+    lexicon: 1,
+    id: 'org.joinmastodon.properties',
+    description: 'https://docs.joinmastodon.org/spec/activitypub/',
+    defs: {
+      attributionDomains: {
+        type: 'ref',
+        ref: 'lex:org.w3.activitystreams.defs#objectType',
+        description:
+          'http://joinmastodon.org/ns#attributionDomains; Domain: Actor; Range: ?',
+      },
+      blurhash: {
+        type: 'string',
+        description:
+          'http://joinmastodon.org/ns#blurhash; Domain: Image; Range: string',
+      },
+      discoverable: {
+        type: 'boolean',
+        description:
+          'http://joinmastodon.org/ns#discoverable; Domain: Object; Range: boolean',
+      },
+      featured: {
+        type: 'ref',
+        ref: 'lex:org.w3.activitystreams.defs#objectType',
+        description:
+          'http://joinmastodon.org/ns#featured; Domain: Actor; Range: Collection [Object]',
+      },
+      featuredTags: {
+        type: 'ref',
+        ref: 'lex:org.w3.activitystreams.defs#objectType',
+        description:
+          'http://joinmastodon.org/ns#featuredTags; Domain: Actor; Range: Collection [HashTag]',
+      },
+      focalPoint: {
+        type: 'unknown',
+        description:
+          'http://joinmastodon.org/ns#focalPoint; Domain: Image; Range: [float]; Note: Lexicon does not support floats',
+      },
+      indexable: {
+        type: 'boolean',
+        description:
+          'http://joinmastodon.org/ns#indexable; Domain: Object; Range: boolean',
+      },
+      memorial: {
+        type: 'boolean',
+        description:
+          'http://joinmastodon.org/ns#memorial; Domain: Object; Range: boolean',
+      },
+      suspended: {
+        type: 'boolean',
+        description:
+          'http://joinmastodon.org/ns#suspended; Domain: Object; Range: boolean',
+      },
+      value: {
+        type: 'string',
+        description:
+          'https://docs.joinmastodon.org/spec/activitypub/#PropertyValue; Domain: Object; Range: string',
+      },
+      publicKey: {
+        type: 'object',
+        description:
+          'https://docs.joinmastodon.org/spec/activitypub/#publicKey; https://w3id.org/security#publicKey; Domain: Actor',
+        properties: {
+          id: {
+            type: 'ref',
+            ref: 'lex:org.w3.activitystreams.properties#id',
+          },
+          owner: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#owner',
+          },
+          publicKeyPem: {
+            type: 'ref',
+            ref: 'lex:org.joinmastodon.properties#publicKeyPem',
+          },
+        },
+      },
+      owner: {
+        type: 'ref',
+        ref: 'lex:org.w3.activitystreams.defs#objectType',
+        description:
+          'https://docs.joinmastodon.org/spec/activitypub/#publicKey; https://w3id.org/security#owner; Domain: PublicKey; Range: Actor',
+      },
+      publicKeyPem: {
+        type: 'string',
+        description:
+          'https://docs.joinmastodon.org/spec/activitypub/#publicKey; https://w3id.org/security#publicKeyPem; Domain: PublicKey; Range: string',
+      },
+    },
+  },
 } as const satisfies Record<string, LexiconDoc>
 export const schemas = Object.values(schemaDict) satisfies LexiconDoc[]
 export const lexicons: Lexicons = new Lexicons(schemas)
@@ -14447,7 +14867,6 @@ export const ids = {
   AppBskyVideoGetJobStatus: 'app.bsky.video.getJobStatus',
   AppBskyVideoGetUploadLimits: 'app.bsky.video.getUploadLimits',
   AppBskyVideoUploadVideo: 'app.bsky.video.uploadVideo',
-  OrgJoinmastodonFeedPost: 'org.joinmastodon.feed.post',
   OrgW3ActivitypubActivity: 'org.w3.activitypub.activity',
   OrgW3ActivitypubActor: 'org.w3.activitypub.actor',
   OrgW3ActivitypubDefs: 'org.w3.activitypub.defs',
@@ -14472,4 +14891,8 @@ export const ids = {
   OrgW3ActivitystreamsOrderedCollectionPage:
     'org.w3.activitystreams.orderedCollectionPage',
   OrgW3ActivitystreamsProperties: 'org.w3.activitystreams.properties',
+  OrgW3idFep8b32Properties: 'org.w3id.fep.8b32.properties',
+  OrgW3idFepEf61Properties: 'org.w3id.fep.ef61.properties',
+  OrgJoinmastodonObject: 'org.joinmastodon.object',
+  OrgJoinmastodonProperties: 'org.joinmastodon.properties',
 } as const

@@ -4,7 +4,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
     .createTable('ap_actor_kv')
     .addColumn('id', 'bigserial', (col) => col.primaryKey())
-    .addColumn('did', 'varchar', (col) => col.notNull())
+    .addColumn('actorDid', 'varchar', (col) => col.notNull())
     .addColumn('key', 'varchar(32)', (col) => col.notNull())
     .addColumn('value', 'varchar', (col) => col.notNull())
     .addColumn('updatedAt', 'timestamptz', (col) =>

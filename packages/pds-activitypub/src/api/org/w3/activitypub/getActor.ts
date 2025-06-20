@@ -13,8 +13,7 @@ import {
 
 export default function (server: Server, ctx: AppContext) {
   server.org.w3.activitypub.getActor({
-    //auth: ctx.authVerifier.accessStandard(),
-    handler: async ({ params, /*auth,*/ req }) => {
+    handler: async ({ params, req }) => {
       const { repo } = params
 
       const atUser = await ctx.accountManager.getAccount(repo)

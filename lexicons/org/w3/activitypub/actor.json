@@ -46,7 +46,18 @@
         "liked": { "type": "ref", "ref": "org.w3.activitypub.actor#liked" },
         "streams": { "type": "ref", "ref": "org.w3.activitypub.actor#streams" },
         "preferredUsername": { "type": "ref", "ref": "org.w3.activitypub.actor#preferredUsername" },
-        "endpoints": { "type": "ref", "ref": "org.w3.activitypub.actor#endpoints" }
+        "endpoints": { "type": "ref", "ref": "org.w3.activitypub.actor#endpoints" },
+
+        "publicKey": {"type": "ref", "ref": "org.joinmastodon.properties#publicKey"},
+        "featured": {"type": "ref", "ref": "org.joinmastodon.properties#featured"},
+        "featuredTags": {"type": "ref", "ref": "org.joinmastodon.properties#featuredTags"},
+        "discoverable": {"type": "ref", "ref": "org.joinmastodon.properties#discoverable"},
+        "indexable": {"type": "ref", "ref": "org.joinmastodon.properties#indexable"},
+        "suspended": {"type": "ref", "ref": "org.joinmastodon.properties#suspended"},
+        "memorial": {"type": "ref", "ref": "org.joinmastodon.properties#memorial"},
+
+        "gateways": { "type": "ref", "ref": "org.w3id.fep.ef61.properties#gateways" },
+        "proof": { "type": "ref", "ref": "org.w3id.fep.8b32.properties#proof" }
       }
     },
     "actorTypes": {

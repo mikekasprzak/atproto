@@ -48,9 +48,12 @@ export const makeImageURL = function (
 /** Used to generate the JSON-LD `@context` section of an ActivityPub object or link */
 export function makeLDContext(
   obj: any,
-  useActivityStreams: boolean = true,
-  useFepEF61: boolean = false,
+  includeActivityStreams: boolean = true,
 ) {
+  if (typeof obj !== 'object') {
+    throw new Error('makeLDContext: obj is not an object')
+  }
+
   const asNamespace = 'https://www.w3.org/ns/activitystreams'
   const secNamespace = 'https://w3id.org/security/v1'
   const atNamespace = 'https://atproto.com/specs/#' // Dummy
@@ -112,10 +115,7 @@ export function makeLDContext(
   }
 
   const fepEF61Used =
-    useFepEF61 ||
-    obj.id.startsWith('ap://') ||
-    'gateways' in obj ||
-    'proof' in obj
+    obj?.id?.startsWith('ap://') || 'gateways' in obj || 'proof' in obj
 
   if ('discoverable' in obj) {
     dictionary.toot = mastodonNamespace
@@ -152,7 +152,7 @@ export function makeLDContext(
   }
 
   // TODO: Scan for any org.w3.activitystreams.object|link properties
-  if (useActivityStreams) {
+  if (includeActivityStreams) {
     namespaces.push(asNamespace)
   }
   if (secUsed) {
