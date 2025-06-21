@@ -252,9 +252,6 @@ export class Server {
 
     return async function (req, res, next) {
       try {
-        if (nsid === 'org.w3.activitypub.putInbox') {
-          console.log('ITS ME -', nsid)
-        }
         // validate request
         let params = decodeQueryParams(def, req.query)
         try {
@@ -263,21 +260,9 @@ export class Server {
           throw new InvalidRequestError(String(e))
         }
 
-        if (nsid === 'org.w3.activitypub.putInbox') {
-          console.log('ITS ME params', params)
-        }
-
         const input = validateReqInput(req)
 
-        if (nsid === 'org.w3.activitypub.putInbox') {
-          console.log('ITS ME input', input)
-        }
-
         const locals: RequestLocals = req[kRequestLocals]
-
-        if (nsid === 'org.w3.activitypub.putInbox') {
-          console.log('ITS ME locals', locals)
-        }
 
         const reqCtx: XRPCReqContext = {
           params,
@@ -291,16 +276,8 @@ export class Server {
         // handle rate limits
         if (routeLimiter) await routeLimiter.handle(reqCtx)
 
-        if (nsid === 'org.w3.activitypub.putInbox') {
-          console.log('ITS ME routeLimiter')
-        }
-
         // run the handler
         const output = await routeCfg.handler(reqCtx)
-
-        if (nsid === 'org.w3.activitypub.putInbox') {
-          console.log('ITS ME output', output)
-        }
 
         if (!output) {
           validateResOutput?.(output)
@@ -326,7 +303,9 @@ export class Server {
 
           if (
             output.encoding === 'application/json' ||
-            output.encoding === 'json'
+            output.encoding === 'json' ||
+            (output.encoding.startsWith('application/') &&
+              output.encoding.indexOf('json', 'application/'.length) !== -1)
           ) {
             const json = lexToJson(output.body)
             res.json(json)

@@ -12322,7 +12322,11 @@ export const schemaDict = {
           },
         },
         input: {
-          encoding: 'application/json',
+          encoding: [
+            'application/json',
+            'application/activity+json',
+            'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
+          ],
           description: 'Request body',
           schema: {
             type: 'ref',

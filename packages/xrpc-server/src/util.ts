@@ -224,8 +224,10 @@ export function normalizeMime(v: string) {
   return shortType
 }
 
-function isValidEncoding(possibleStr: string, value: string) {
-  const possible = possibleStr.split(',').map((v) => v.trim())
+function isValidEncoding(possibleStr: string | string[], value: string) {
+  const possible = Array.isArray(possibleStr)
+    ? possibleStr
+    : possibleStr.split(',').map((v) => v.trim())
   const normalized = normalizeMime(value)
   if (!normalized) return false
   if (possible.includes('*/*')) return true

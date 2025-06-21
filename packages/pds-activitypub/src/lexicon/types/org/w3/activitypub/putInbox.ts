@@ -26,7 +26,10 @@ export type InputSchema = OrgW3ActivitypubObject.Main
 export type OutputSchema = OrgW3ActivitypubObject.Main
 
 export interface HandlerInput {
-  encoding: 'application/json'
+  encoding:
+    | 'application/json'
+    | 'application/activity+json'
+    | 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"'
   body: InputSchema
 }
 

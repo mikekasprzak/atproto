@@ -7,9 +7,9 @@ import {
   type LexCidLink,
   type LexIpldType,
   type LexObject,
+  type LexPrimitive,
   type LexRef,
   type LexRefUnion,
-  type LexPrimitive,
   type LexToken,
   type LexUserType,
   Lexicons,
@@ -128,11 +128,6 @@ export function genUserType(
     case 'token':
       genToken(file, lexUri, def)
       break
-    case 'ref': {
-      const ifaceName: string = toTitleCase(getHash(lexUri))
-      genRef(file, imports, lexUri, def, ifaceName)
-      break;
-    }
     case 'object': {
       const ifaceName: string = toTitleCase(getHash(lexUri))
       genObject(file, imports, lexUri, def, ifaceName, {
@@ -176,13 +171,12 @@ function genRef(
   imports: Set<string>,
   lexUri: string,
   def: LexRef,
-  ifaceName: string
-)
-{
+  ifaceName: string,
+) {
   const type = refToType(def.ref, stripScheme(stripHash(lexUri)), imports)
   const iface = file.addTypeAlias({
     name: ifaceName,
-    type: makeType(type, {nullable: false}),
+    type: makeType(type, { nullable: false }),
     isExported: true,
   })
   genComment(iface, def)
@@ -193,13 +187,12 @@ function genRefUnion(
   imports: Set<string>,
   lexUri: string,
   def: LexRefUnion,
-  ifaceName: string
-)
-{
+  ifaceName: string,
+) {
   const types = def.refs.map((ref) => refToUnionType(ref, lexUri, imports))
   const iface = file.addTypeAlias({
     name: ifaceName,
-    type: makeType(types, {nullable: false}),
+    type: makeType(types, { nullable: false }),
     isExported: true,
   })
   genComment(iface, def)
