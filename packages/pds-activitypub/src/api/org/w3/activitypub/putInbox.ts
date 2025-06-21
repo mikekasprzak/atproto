@@ -61,7 +61,7 @@ export default function (server: Server, ctx: AppContext) {
       }
 
       return {
-        encoding: 'application/json', // 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
+        encoding: 'application/activity+json', // 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
         body: {
           '@context': makeLDContext(apResponse),
           ...apResponse,

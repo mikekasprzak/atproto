@@ -17254,7 +17254,6 @@ export const schemaDict = {
         },
         input: {
           encoding: [
-            'application/json',
             'application/activity+json',
             'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
           ],
@@ -17265,7 +17264,7 @@ export const schemaDict = {
           },
         },
         output: {
-          encoding: 'application/json',
+          encoding: 'application/activity+json',
           description: 'Response body',
           schema: {
             type: 'ref',

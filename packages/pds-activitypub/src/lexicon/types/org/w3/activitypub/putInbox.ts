@@ -27,14 +27,13 @@ export type OutputSchema = OrgW3ActivitypubObject.Main
 
 export interface HandlerInput {
   encoding:
-    | 'application/json'
     | 'application/activity+json'
     | 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"'
   body: InputSchema
 }
 
 export interface HandlerSuccess {
-  encoding: 'application/json'
+  encoding: 'application/activity+json'
   body: OutputSchema
   headers?: { [key: string]: string }
 }
