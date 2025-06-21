@@ -118,10 +118,13 @@ export function validateInput(
   }
 
   // mimetype
-  const inputEncoding = normalizeMime(req.headers['content-type'] || '')
+  const contentType = req.headers['content-type'] || ''
+  const inputEncoding = normalizeMime(contentType)
   if (
     def.input?.encoding &&
-    (!inputEncoding || !isValidEncoding(def.input?.encoding, inputEncoding))
+    (!inputEncoding ||
+      (!isValidEncoding(def.input?.encoding, inputEncoding) &&
+        !isValidEncoding(def.input?.encoding, contentType)))
   ) {
     if (!inputEncoding) {
       throw new InvalidRequestError(
@@ -129,7 +132,7 @@ export function validateInput(
       )
     } else {
       throw new InvalidRequestError(
-        `Wrong request encoding (Content-Type): ${inputEncoding}`,
+        `Wrong request encoding (Content-Type): ${contentType}\nExpected: ${Array.isArray(def.input?.encoding) ? def.input?.encoding.join(' | ') : def.input?.encoding}`,
       )
     }
   }
@@ -147,10 +150,6 @@ export function validateInput(
     } catch (e) {
       throw new InvalidRequestError(e instanceof Error ? e.message : String(e))
     }
-  }
-
-  if (nsid === 'org.w3.activitypub.putInbox') {
-    console.log('ITS ME innnit')
   }
 
   // if middleware already got the body, we pass that along as input
@@ -215,7 +214,7 @@ export function validateOutput(
   }
 }
 
-export function normalizeMime(v: string) {
+export function normalizeMime(v: string): string | false {
   if (!v) return false
   const fullType = mime.contentType(v)
   if (!fullType) return false
@@ -224,14 +223,17 @@ export function normalizeMime(v: string) {
   return shortType
 }
 
-function isValidEncoding(possibleStr: string | string[], value: string) {
+export function isValidEncoding(
+  possibleStr: string | string[],
+  value: string,
+): boolean {
   const possible = Array.isArray(possibleStr)
     ? possibleStr
     : possibleStr.split(',').map((v) => v.trim())
   const normalized = normalizeMime(value)
   if (!normalized) return false
   if (possible.includes('*/*')) return true
-  return possible.includes(normalized)
+  return possible.includes(normalized) || possible.includes(value)
 }
 
 type BodyPresence = 'missing' | 'empty' | 'present'
