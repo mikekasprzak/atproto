@@ -171,10 +171,7 @@ export class Server {
     def: LexXrpcQuery | LexXrpcProcedure,
     config: XRPCHandlerConfig,
   ) {
-    //if (nsid === 'org.w3.activitypub.putInbox')
-    {
-      console.log('addRoute +', nsid)
-    }
+    //console.log('addRoute +', nsid)
 
     const verb: 'post' | 'get' = def.type === 'procedure' ? 'post' : 'get'
     const middleware: RequestHandler[] = []
