@@ -13,11 +13,23 @@
     "url": "https://github.com/bluesky-social/atproto",
     "directory": "packages/lexicon"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "type": "module",
+  "exports": {
+    "types": "./dist/types/index.d.ts",
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
   "scripts": {
     "test": "jest",
-    "build": "tsc --build tsconfig.build.json"
+    "build": "$npm_execpath run build:node && $npm_execpath run build:browser",
+    "build:clean": "rm -rf ./dist",
+    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "build:cjs": "tsc --build tsconfig.cjs.json",
+    "build:esm": "tsc --build tsconfig.esm.json",
+    "build:types": "tsc --build tsconfig.types.json",
+    "build:browser": "esbuild src/index.ts --platform=browser --bundle --minify --keep-names --sourcemap --format=esm --target=es2020 --outfile=./dist/lexicon.js"
   },
   "dependencies": {
     "@atproto/common-web": "workspace:^",
@@ -28,6 +40,7 @@
   },
   "devDependencies": {
     "jest": "^28.1.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "esbuild": "^0.25.0"
   }
 }

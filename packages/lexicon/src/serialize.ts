@@ -6,7 +6,7 @@ import {
   ipldToJson,
   jsonToIpld,
 } from '@atproto/common-web'
-import { BlobRef, jsonBlobRef } from './blob-refs'
+import { BlobRef, jsonBlobRef } from './blob-refs.js'
 
 export type LexValue =
   | IpldValue
