@@ -12,21 +12,23 @@
     "url": "https://github.com/bluesky-social/atproto",
     "directory": "packages/common"
   },
-  "main": "dist/node/index.js",
-  "types": "dist/types/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/types/index.d.ts",
   "type": "module",
   "exports": {
-    "types": "dist/types/index.d.ts",
-    "require": "dist/node/index.js",
-    "import": "dist/nodenext/index.js",
-    "default": "dist/nodenext/index.js"
+    "types": "./dist/types/index.d.ts",
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
   },
   "scripts": {
     "test": "jest",
-    "build": "$npm_execpath run build:nodenext",
-    "build:node": "tsc --build tsconfig.node.json",
-    "build:nodenext": "tsc --build tsconfig.nodenext.json",
-    "build:all": "tsc --build tsconfig.json"
+    "build": "$npm_execpath run build:all",
+    "build:clean": "rm -fr ./dist",
+    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "build:cjs": "tsc --build tsconfig.cjs.json",
+    "build:esm": "tsc --build tsconfig.esm.json",
+    "build:types": "tsc --build tsconfig.types.json",
+    "build:all": "$npm_execpath run build:node"
   },
   "engines": {
     "node": ">=18.7.0"

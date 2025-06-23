@@ -2,7 +2,7 @@
   "extends": "../../tsconfig/base.nodenext.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist/nodenext"
+    "outDir": "./dist/esm"
   },
   "include": ["./src"]
 }
