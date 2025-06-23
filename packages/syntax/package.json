@@ -15,6 +15,11 @@
     "url": "https://github.com/bluesky-social/atproto",
     "directory": "packages/syntax"
   },
+  "config": {
+    "outfile": "./dist/syntax.js",
+    "infile": "src/index.ts",
+    "esbuild_browser_options": "--platform=browser --bundle --minify --keep-names --sourcemap --format=esm --target=es2020"
+  },
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.ts",
   "type": "module",
@@ -31,7 +36,7 @@
     "build:cjs": "tsc --build tsconfig.cjs.json",
     "build:esm": "tsc --build tsconfig.esm.json",
     "build:types": "tsc --build tsconfig.types.json",
-    "build:browser": "esbuild src/index.ts --platform=browser --bundle --minify --keep-names --sourcemap --format=esm --target=es2020 --outfile=./dist/syntax.js"
+    "build:browser": "esbuild ${npm_package_config_infile} ${npm_package_config_esbuild_browser_options} --outfile=${npm_package_config_outfile}"
   },
   "devDependencies": {
     "jest": "^28.1.2",

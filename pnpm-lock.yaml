@@ -782,6 +782,9 @@ importers:
         specifier: ^3.23.8
         version: 3.24.2
     devDependencies:
+      esbuild:
+        specifier: ^0.25.0
+        version: 0.25.0
       jest:
         specifier: ^28.1.2
         version: 28.1.2(@types/node@18.19.67)(ts-node@10.8.2)

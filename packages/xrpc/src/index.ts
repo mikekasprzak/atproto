@@ -1,8 +1,8 @@
-export * from './client'
-export * from './fetch-handler'
-export * from './types'
-export * from './util'
-export * from './xrpc-client'
+export * from './client.js'
+export * from './fetch-handler.js'
+export * from './types.js'
+export * from './util.js'
+export * from './xrpc-client.js'
 
 /* eslint-disable import/no-deprecated */
 import { Client } from './client'
