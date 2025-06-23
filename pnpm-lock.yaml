@@ -453,9 +453,9 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
     devDependencies:
-      '@atproto/common':
+      '@atproto/common-web':
         specifier: workspace:^
-        version: link:../common
+        version: link:../common-web
       jest:
         specifier: ^28.1.2
         version: 28.1.2(@types/node@18.19.67)(ts-node@10.8.2)

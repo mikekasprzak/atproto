@@ -1,7 +1,7 @@
 import * as noble from '@noble/hashes/utils'
 import * as uint8arrays from 'uint8arrays'
 import { SupportedEncodings } from 'uint8arrays/to-string'
-import { sha256 } from './sha'
+import { sha256 } from './sha.js'
 
 export const randomBytes = noble.randomBytes
 
@@ -19,7 +19,7 @@ export const randomIntFromSeed = async (
   low = 0,
 ): Promise<number> => {
   const hash = await sha256(seed)
-  const number = Buffer.from(hash).readUintBE(0, 6)
+  const number = Buffer.from(hash).readUintBE(0, 6) // MK: This "Buffer" is the only NodeJS dependency. Use a different LE to BE code please!!
   const range = high - low
   const normalized = number % range
   return normalized + low
