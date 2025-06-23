@@ -14,12 +14,30 @@
     "url": "https://github.com/bluesky-social/atproto",
     "directory": "packages/api"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "config": {
+    "outfile": "./dist/common-web.js",
+    "infile": "src/index.ts",
+    "esbuild_browser_options": "--platform=browser --bundle --minify --keep-names --sourcemap --format=esm --target=es2020"
+  },
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/types/index.d.ts",
+  "type": "module",
+  "exports": {
+    "types": "./dist/types/index.d.ts",
+    "browser": "./dist/common-web.js",
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
   "scripts": {
     "codegen": "node ./scripts/generate-code.mjs && lex gen-api --yes ./src/client ../../lexicons/com/atproto/*/* ../../lexicons/app/bsky/*/* ../../lexicons/chat/bsky/*/* ../../lexicons/tools/ozone/*/*",
-    "build": "tsc --build tsconfig.build.json",
-    "test": "jest"
+    "test": "jest",
+    "build": "$npm_execpath run build:node && $npm_execpath run build:browser",
+    "build:clean": "rm -rf ./dist",
+    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "build:cjs": "tsc --build tsconfig.cjs.json",
+    "build:esm": "tsc --build tsconfig.esm.json",
+    "build:types": "tsc --build tsconfig.types.json",
+    "build:browser": "esbuild ${npm_package_config_infile} ${npm_package_config_esbuild_browser_options} --outfile=${npm_package_config_outfile}"
   },
   "dependencies": {
     "@atproto/common-web": "workspace:^",
@@ -35,6 +53,7 @@
     "@atproto/lex-cli": "workspace:^",
     "jest": "^28.1.2",
     "prettier": "^3.2.5",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "esbuild": "^0.25.0"
   }
 }

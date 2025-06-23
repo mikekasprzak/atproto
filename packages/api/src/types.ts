@@ -1,5 +1,5 @@
-import { AppBskyActorDefs } from './client'
-import { ModerationPrefs } from './moderation/types'
+import { AppBskyActorDefs } from './client/index.js'
+import { ModerationPrefs } from './moderation/types.js'
 
 /**
  * Supported proxy targets

@@ -17,20 +17,20 @@ import {
   ComAtprotoRepoPutRecord,
   ComNS,
   ToolsNS,
-} from './client/index'
-import { schemas } from './client/lexicons'
-import { MutedWord, Nux } from './client/types/app/bsky/actor/defs'
-import { $Typed, Un$Typed } from './client/util'
-import { BSKY_LABELER_DID } from './const'
-import { interpretLabelValueDefinitions } from './moderation'
-import { DEFAULT_LABEL_SETTINGS } from './moderation/const/labels'
+} from './client/index.js'
+import { schemas } from './client/lexicons.js'
+import { MutedWord, Nux } from './client/types/app/bsky/actor/defs.js'
+import { $Typed, Un$Typed } from './client/util.js'
+import { BSKY_LABELER_DID } from './const.js'
+import { interpretLabelValueDefinitions } from './moderation/index.js'
+import { DEFAULT_LABEL_SETTINGS } from './moderation/const/labels.js'
 import {
   InterpretedLabelValueDefinition,
   LabelPreference,
   ModerationPrefs,
-} from './moderation/types'
-import * as predicate from './predicate'
-import { SessionManager } from './session-manager'
+} from './moderation/types.js'
+import * as predicate from './predicate.js'
+import { SessionManager } from './session-manager.js'
 import {
   AtpAgentGlobalOpts,
   AtprotoServiceType,
@@ -38,7 +38,7 @@ import {
   BskyInterestsPreference,
   BskyPreferences,
   BskyThreadViewPreference,
-} from './types'
+} from './types.js'
 import {
   Did,
   asDid,
@@ -48,7 +48,7 @@ import {
   savedFeedsToUriArrays,
   validateNux,
   validateSavedFeed,
-} from './util'
+} from './util.js'
 
 const FEED_VIEW_PREF_DEFAULTS = {
   hideReplies: false,

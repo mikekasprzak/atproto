@@ -108,6 +108,9 @@ importers:
       '@atproto/lex-cli':
         specifier: workspace:^
         version: link:../lex-cli
+      esbuild:
+        specifier: ^0.25.0
+        version: 0.25.0
       jest:
         specifier: ^28.1.2
         version: 28.1.2(@types/node@18.19.67)(ts-node@10.8.2)
@@ -453,9 +456,9 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
     devDependencies:
-      '@atproto/common-web':
+      '@atproto/common':
         specifier: workspace:^
-        version: link:../common-web
+        version: link:../common
       jest:
         specifier: ^28.1.2
         version: 28.1.2(@types/node@18.19.67)(ts-node@10.8.2)
