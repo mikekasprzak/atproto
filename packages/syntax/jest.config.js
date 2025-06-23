@@ -1,5 +1,6 @@
 /** @type {import('jest').Config} */
 module.exports = {
+//export module = {
   displayName: 'Syntax',
   transform: { '^.+\\.(t|j)s$': '@swc/jest' },
   setupFiles: ['<rootDir>/../../jest.setup.ts'],

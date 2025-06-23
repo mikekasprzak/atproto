@@ -21,7 +21,7 @@
     "esbuild_browser_options": "--platform=browser --bundle --minify --keep-names --sourcemap --format=esm --target=es2020"
   },
   "main": "dist/cjs/index.js",
-  "types": "dist/cjs/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "type": "module",
   "exports": {
     "types": "./dist/types/index.d.ts",
@@ -40,7 +40,8 @@
   },
   "devDependencies": {
     "jest": "^28.1.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "esbuild": "^0.25.0"
   },
   "browser": {
     "dns/promises": false
