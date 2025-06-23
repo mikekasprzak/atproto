@@ -1,7 +1,6 @@
 {
-  "extends": "../../tsconfig/base.node.json",
+  "extends": "../../tsconfig/base.cjs.json",
   "compilerOptions": {
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "rootDir": "./src",
     "outDir": "./dist/cjs"
   },
