@@ -145,8 +145,8 @@ importers:
         specifier: ^1.7.0
         version: 1.8.0
       key-encoder:
-        specifier: ^2.0.3
-        version: 2.0.3
+        specifier: npm:@mikekasprzak/key-encoder@^2.1.1
+        version: /@mikekasprzak/key-encoder@2.1.1
       multiformats:
         specifier: ^9.9.0
         version: 9.9.0
@@ -6717,6 +6717,15 @@ packages:
 
   /@mikekasprzak/graphemer@1.4.1:
     resolution: {integrity: sha512-cnv9AgXw6XPcPeLs6AwVJkhbAmfAPIdBuSwb9vyjU2nTVf0dvTsDuW8ORh+HPUAnVhY1ipyJ/btZodYdrVA02w==}
+    dev: false
+
+  /@mikekasprzak/key-encoder@2.1.1:
+    resolution: {integrity: sha512-dp9AGL+so96+lnWYAc8nZff7IPGI394BX5b3LTZaB9QRCxF5U+30hP/bHt7l+xsK4uTfeAVCBZepbmhNh3cKdA==}
+    dependencies:
+      '@types/elliptic': 6.4.14
+      asn1.js: 5.4.1
+      bn.js: 4.12.0
+      elliptic: 6.5.4
     dev: false
 
   /@noble/curves@1.8.0:

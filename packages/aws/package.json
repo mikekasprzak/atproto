@@ -13,10 +13,22 @@
     "url": "https://github.com/bluesky-social/atproto",
     "directory": "packages/aws"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/types/index.d.ts",
+  "type": "module",
+  "exports": {
+    "types": "./dist/types/index.d.ts",
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
   "scripts": {
-    "build": "tsc --build tsconfig.build.json"
+    "build": "$npm_execpath run build:all",
+    "build:clean": "rm -fr ./dist",
+    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "build:cjs": "tsc --build tsconfig.cjs.json",
+    "build:esm": "tsc --build tsconfig.esm.json",
+    "build:types": "tsc --build tsconfig.types.json",
+    "build:all": "$npm_execpath run build:node"
   },
   "engines": {
     "node": ">=18.7.0"
@@ -30,7 +42,7 @@
     "@aws-sdk/client-s3": "^3.224.0",
     "@aws-sdk/lib-storage": "^3.226.0",
     "@noble/curves": "^1.7.0",
-    "key-encoder": "^2.0.3",
+    "key-encoder": "npm:@mikekasprzak/key-encoder@^2.1.1",
     "multiformats": "^9.9.0",
     "uint8arrays": "3.0.0"
   },
