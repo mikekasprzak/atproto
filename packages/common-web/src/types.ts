@@ -1,6 +1,6 @@
 import { CID } from 'multiformats/cid'
 import { z } from 'zod'
-import { Def } from './check'
+import { Def } from './check.js'
 
 const cidSchema = z.unknown().transform((obj, ctx): CID => {
   const cid = CID.asCID(obj)

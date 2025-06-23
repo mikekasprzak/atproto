@@ -12,11 +12,21 @@
     "url": "https://github.com/bluesky-social/atproto",
     "directory": "packages/common"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/node/index.js",
+  "types": "dist/types/index.d.ts",
+  "type": "module",
+  "exports": {
+    "types": "dist/types/index.d.ts",
+    "require": "dist/node/index.js",
+    "import": "dist/nodenext/index.js",
+    "default": "dist/nodenext/index.js"
+  },
   "scripts": {
     "test": "jest",
-    "build": "tsc --build tsconfig.build.json"
+    "build": "$npm_execpath run build:nodenext",
+    "build:node": "tsc --build tsconfig.node.json",
+    "build:nodenext": "tsc --build tsconfig.nodenext.json",
+    "build:all": "tsc --build tsconfig.json"
   },
   "engines": {
     "node": ">=18.7.0"

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "declarationMap": true,
+
+    "moduleResolution": "node",
+    "module": "CommonJS",
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM"]
+  }
+}

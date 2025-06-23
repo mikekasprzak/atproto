@@ -12,20 +12,39 @@
     "url": "https://github.com/bluesky-social/atproto",
     "directory": "packages/common-web"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/types/index.d.ts",
+  "type": "module",
+  "exports": {
+    "types": "./dist/types/index.d.ts",
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
+  "config": {
+    "esbuild": "src/index.ts --bundle --sourcemap --minify --keep-names"
+  },
   "scripts": {
     "test": "jest",
-    "build": "tsc --build tsconfig.build.json"
+    "build": "$npm_execpath run build:node",
+    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "build:cjs": "tsc --build tsconfig.cjs.json",
+    "build:esm": "tsc --build tsconfig.esm.json",
+    "build:types": "tsc --build tsconfig.types.json",
+    "build:browser": "esbuild src/index.ts --platform=browser --bundle --minify --keep-names --sourcemap --format=esm --target=es2020 --outfile=./dist/common-web.js",
+
+    "esbuild": "esbuild $npm_package_config_esbuild --platform=browser --outfile=dist/common-web.mjs --format=esm --tsconfig=tsconfig.esm.json",
+    "build:esm2": "esbuild src/**.ts  --platform=node --sourcemap --outdir=dist/esm2/ --format=esm --tsconfig=tsconfig.esm.json --target=es2023",
+    "build:esm3": "esbuild src/index.ts --bundle --platform=node --sourcemap --outfile=dist/esm/index.mjs --format=esm --tsconfig=tsconfig.esm.json --external:uint8arrays --external:multiformats --external:zod"
   },
   "dependencies": {
-    "graphemer": "^1.4.0",
+    "graphemer": "npm:@mikekasprzak/graphemer@^1.4.1",
     "multiformats": "^9.9.0",
     "uint8arrays": "3.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "jest": "^28.1.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "esbuild": "^0.25.0"
   }
 }

@@ -1,7 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "./base.nodenext.json",
+  "extends": "./base.json",
   "compilerOptions": {
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "target": "ES2023",
     "lib": ["ES2023", "ScriptHost"],
     "types": ["node"]
   }

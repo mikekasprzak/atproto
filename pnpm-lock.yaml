@@ -419,8 +419,8 @@ importers:
   packages/common-web:
     dependencies:
       graphemer:
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: npm:@mikekasprzak/graphemer@^1.4.1
+        version: /@mikekasprzak/graphemer@1.4.1
       multiformats:
         specifier: ^9.9.0
         version: 9.9.0
@@ -431,6 +431,9 @@ importers:
         specifier: ^3.23.8
         version: 3.24.2
     devDependencies:
+      esbuild:
+        specifier: ^0.25.0
+        version: 0.25.0
       jest:
         specifier: ^28.1.2
         version: 28.1.2(@types/node@18.19.67)(ts-node@10.8.2)
@@ -6712,6 +6715,10 @@ packages:
       moo: 0.5.2
     dev: true
 
+  /@mikekasprzak/graphemer@1.4.1:
+    resolution: {integrity: sha512-cnv9AgXw6XPcPeLs6AwVJkhbAmfAPIdBuSwb9vyjU2nTVf0dvTsDuW8ORh+HPUAnVhY1ipyJ/btZodYdrVA02w==}
+    dev: false
+
   /@noble/curves@1.8.0:
     resolution: {integrity: sha512-j84kjAbzEnQHaSIhRPUmB3/eVXu2k3dKPl2LOrR8fSOIL+89U+7lV117EWHtq/GHM3ReGHM46iRBdZfpc4HRUQ==}
     engines: {node: ^14.21.3 || >=16}
@@ -12320,6 +12327,7 @@ packages:
 
   /graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
+    dev: true
 
   /handlebars@4.7.7:
     resolution: {integrity: sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==}

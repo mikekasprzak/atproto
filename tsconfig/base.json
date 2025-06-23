@@ -16,23 +16,16 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
     "preserveSymlinks": false,
     "useDefineForClassFields": true,
 
     "lib": [],
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "types": [],
 
     "noErrorTruncation": true,
-    "declaration": true,
-    "declarationMap": true,
     "sourceMap": true,
-    "jsx": "preserve",
-    "module": "CommonJS",
-    "target": "ES2020"
+    "jsx": "preserve"
   },
   "typeAcquisition": {
     "enable": false
