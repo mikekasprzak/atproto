@@ -1,6 +1,6 @@
-import { ensureValidDid, ensureValidDidRegex } from './did'
-import { ensureValidHandle, ensureValidHandleRegex } from './handle'
-import { ensureValidNsid, ensureValidNsidRegex } from './nsid'
+import { ensureValidDid, ensureValidDidRegex } from './did.js'
+import { ensureValidHandle, ensureValidHandleRegex } from './handle.js'
+import { ensureValidNsid, ensureValidNsidRegex } from './nsid.js'
 
 // Human-readable constraints on ATURI:
 //   - following regular URLs, a 8KByte hard total length limit

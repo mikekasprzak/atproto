@@ -1,4 +1,4 @@
-export * from './aturi_validation'
+export * from './aturi_validation.js'
 
 export const ATP_URI_REGEX =
   // proto-    --did--------------   --name----------------   --path----   --query--   --hash--
