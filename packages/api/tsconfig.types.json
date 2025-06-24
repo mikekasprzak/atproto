@@ -5,7 +5,8 @@
     "outDir": "./dist/types",
     "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "noUnusedLocals": false
   },
   "include": ["./src"]
 }

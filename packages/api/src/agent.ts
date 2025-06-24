@@ -22,8 +22,8 @@ import { schemas } from './client/lexicons.js'
 import { MutedWord, Nux } from './client/types/app/bsky/actor/defs.js'
 import { $Typed, Un$Typed } from './client/util.js'
 import { BSKY_LABELER_DID } from './const.js'
-import { interpretLabelValueDefinitions } from './moderation/index.js'
 import { DEFAULT_LABEL_SETTINGS } from './moderation/const/labels.js'
+import { interpretLabelValueDefinitions } from './moderation/index.js'
 import {
   InterpretedLabelValueDefinition,
   LabelPreference,

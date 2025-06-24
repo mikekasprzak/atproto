@@ -13,7 +13,7 @@ import {
   ComAtprotoServerCreateSession,
   ComAtprotoServerGetSession,
   ComAtprotoServerNS,
-} from './client'
+} from './client/index.js'
 import { schemas } from './client/lexicons.js'
 import { SessionManager } from './session-manager.js'
 import {

@@ -37,9 +37,9 @@
 
     "prebuild": "../../tsconfig/makedist.sh",
     "build:cjs": "tsc --build tsconfig.cjs.json",
-    "build:esm": "tsc --build tsconfig.esm.json",
+    "_build:esm": "tsc --build tsconfig.esm.json",
     "build:types": "tsc --build tsconfig.types.json",
-    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "build:node": "tsc --build tsconfig.cjs.json tsconfig.types.json",
     "build:browser": "esbuild ${npm_package_config_infile} ${npm_package_config_esbuild_browser_options} --outfile=${npm_package_config_outfile}",
 
     "prepublishOnly": "$npm_execpath run build:all"
