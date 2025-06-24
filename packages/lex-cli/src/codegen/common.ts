@@ -1,7 +1,7 @@
 import { Options as PrettierOptions, format } from 'prettier'
 import { Project, SourceFile, VariableDeclarationKind } from 'ts-morph'
 import { type LexiconDoc } from '@atproto/lexicon'
-import { type GeneratedFile } from '../types'
+import { type GeneratedFile } from '../types.js'
 
 const PRETTIER_OPTS: PrettierOptions = {
   parser: 'typescript',

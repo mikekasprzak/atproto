@@ -22,13 +22,17 @@
     "import": "./dist/esm/index.js"
   },
   "scripts": {
-    "build": "$npm_execpath run build:all",
-    "build:clean": "rm -fr ./dist",
-    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "clean": "rm -rf ./dist",
+    "build": "$npm_execpath run build:node",
+    "build:all": "$npm_execpath run clean && $npm_execpath run prebuild &&$npm_execpath run build:node",
+
+    "prebuild": "../../tsconfig/makedist.sh",
     "build:cjs": "tsc --build tsconfig.cjs.json",
     "build:esm": "tsc --build tsconfig.esm.json",
     "build:types": "tsc --build tsconfig.types.json",
-    "build:all": "$npm_execpath run build:node"
+    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+
+    "prepublishOnly": "$npm_execpath run build:all"
   },
   "engines": {
     "node": ">=18.7.0"
@@ -42,7 +46,7 @@
     "@aws-sdk/client-s3": "^3.224.0",
     "@aws-sdk/lib-storage": "^3.226.0",
     "@noble/curves": "^1.7.0",
-    "key-encoder": "npm:@mikekasprzak/key-encoder@^2.1.1",
+    "key-encoder": "npm:@mikekasprzak/key-encoder@^2.1.2",
     "multiformats": "^9.9.0",
     "uint8arrays": "3.0.0"
   },

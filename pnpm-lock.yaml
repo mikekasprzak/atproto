@@ -148,8 +148,8 @@ importers:
         specifier: ^1.7.0
         version: 1.8.0
       key-encoder:
-        specifier: npm:@mikekasprzak/key-encoder@^2.1.1
-        version: /@mikekasprzak/key-encoder@2.1.1
+        specifier: npm:@mikekasprzak/key-encoder@^2.1.2
+        version: /@mikekasprzak/key-encoder@2.1.2
       multiformats:
         specifier: ^9.9.0
         version: 9.9.0
@@ -422,8 +422,8 @@ importers:
   packages/common-web:
     dependencies:
       graphemer:
-        specifier: npm:@mikekasprzak/graphemer@^1.4.1
-        version: /@mikekasprzak/graphemer@1.4.1
+        specifier: npm:@mikekasprzak/graphemer@^1.4.2
+        version: /@mikekasprzak/graphemer@1.4.2
       multiformats:
         specifier: ^9.9.0
         version: 9.9.0
@@ -6729,12 +6729,12 @@ packages:
       moo: 0.5.2
     dev: true
 
-  /@mikekasprzak/graphemer@1.4.1:
-    resolution: {integrity: sha512-cnv9AgXw6XPcPeLs6AwVJkhbAmfAPIdBuSwb9vyjU2nTVf0dvTsDuW8ORh+HPUAnVhY1ipyJ/btZodYdrVA02w==}
+  /@mikekasprzak/graphemer@1.4.2:
+    resolution: {integrity: sha512-q+AFfBjBrYwmhdje7DWGEEN90Ny/0q/RschPaW1AYRYfC9wk+6tIIMY04paud5qhxONR1a1HwqqvXPvV9hI7EQ==}
     dev: false
 
-  /@mikekasprzak/key-encoder@2.1.1:
-    resolution: {integrity: sha512-dp9AGL+so96+lnWYAc8nZff7IPGI394BX5b3LTZaB9QRCxF5U+30hP/bHt7l+xsK4uTfeAVCBZepbmhNh3cKdA==}
+  /@mikekasprzak/key-encoder@2.1.2:
+    resolution: {integrity: sha512-6V+Cc/MIMUVWwKy8AK0lORK6X4NF9X+Kp8U8gz3wJe4lR43gfiVnxEkvQMbLRE+0yj/jVuW2xzwDgyIkVylICg==}
     dependencies:
       '@types/elliptic': 6.4.14
       asn1.js: 5.4.1

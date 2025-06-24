@@ -30,13 +30,18 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "$npm_execpath run build:node && $npm_execpath run build:browser",
-    "build:clean": "rm -rf ./dist",
-    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "clean": "rm -rf ./dist",
+    "build": "$npm_execpath run build:node",
+    "build:all": "$npm_execpath run clean && $npm_execpath run prebuild && $npm_execpath run build:node && $npm_execpath run build:browser",
+
+    "prebuild": "../../tsconfig/makedist.sh",
     "build:cjs": "tsc --build tsconfig.cjs.json",
     "build:esm": "tsc --build tsconfig.esm.json",
     "build:types": "tsc --build tsconfig.types.json",
-    "build:browser": "esbuild ${npm_package_config_infile} ${npm_package_config_esbuild_browser_options} --outfile=${npm_package_config_outfile}"
+    "build:node": "tsc --build tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "build:browser": "esbuild ${npm_package_config_infile} ${npm_package_config_esbuild_browser_options} --outfile=${npm_package_config_outfile}",
+
+    "prepublishOnly": "$npm_execpath run build:all"
   },
   "devDependencies": {
     "jest": "^28.1.2",
