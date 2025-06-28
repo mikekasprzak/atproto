@@ -19549,6 +19549,97 @@ export const schemaDict = {
       },
     },
   },
+  PubFeatGoal: {
+    lexicon: 1,
+    id: 'pub.feat.goal',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'AtProto record containing a FeatPub goal.',
+        key: 'nsid',
+        record: {
+          type: 'object',
+          required: ['displayName', 'type', 'createdAt'],
+          properties: {
+            displayName: {
+              type: 'string',
+              maxGraphemes: 64,
+              maxLength: 640,
+            },
+            description: {
+              type: 'string',
+              maxGraphemes: 256,
+              maxLength: 2560,
+            },
+            type: {
+              type: 'string',
+              enum: ['feat', 'score', 'time'],
+              description:
+                'What type of goal is this? If its a feat (AKA an achievement), then the FeatPub Record value is unused.',
+            },
+            order: {
+              type: 'string',
+              enum: ['ascending', 'descending'],
+              description:
+                'Where applicable, in what order should the items be presented?',
+            },
+            icon: {
+              type: 'blob',
+              accept: ['image/*'],
+              maxSize: 1000000,
+              description:
+                'An optional square icon that represents the goal. Similar to an avatar.',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  PubFeatRecord: {
+    lexicon: 1,
+    id: 'pub.feat.record',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'AtProto record containing a FeatPub record.',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'ref',
+              ref: 'lex:com.atproto.repo.strongRef',
+              description:
+                'Sample: at://did:yourgame/pub.feat.goal/game.your.goals.goalName',
+            },
+            value: {
+              type: 'string',
+              maxGraphemes: 64,
+              maxLength: 640,
+              description:
+                'Value is flexible, able to hold a number, a time, or a small string.',
+            },
+            signature: {
+              type: 'string',
+              description:
+                "Cryptographic signature given by did:yourgame's validator",
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+              description:
+                'When signed, this *MUST* match the createdAt value given by the validator',
+            },
+          },
+        },
+      },
+    },
+  },
 } as const satisfies Record<string, LexiconDoc>
 export const schemas = Object.values(schemaDict) satisfies LexiconDoc[]
 export const lexicons: Lexicons = new Lexicons(schemas)
@@ -19906,4 +19997,6 @@ export const ids = {
   OrgW3idFepEf61Properties: 'org.w3id.fep.ef61.properties',
   OrgJoinmastodonObject: 'org.joinmastodon.object',
   OrgJoinmastodonProperties: 'org.joinmastodon.properties',
+  PubFeatGoal: 'pub.feat.goal',
+  PubFeatRecord: 'pub.feat.record',
 } as const

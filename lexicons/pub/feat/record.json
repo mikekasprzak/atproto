@@ -1,0 +1,37 @@
+{
+  "lexicon": 1,
+  "id": "pub.feat.record",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "AtProto record containing a FeatPub record.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "ref",
+            "ref": "com.atproto.repo.strongRef",
+            "description": "Sample: at://did:yourgame/pub.feat.goal/game.your.goals.goalName"
+          },
+          "value": {
+            "type": "string",
+            "maxGraphemes": 64,
+            "maxLength": 640,
+            "description": "Value is flexible, able to hold a number, a time, or a small string."
+          },
+          "signature": {
+            "type": "string",
+            "description": "Cryptographic signature given by did:yourgame's validator"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When signed, this *MUST* match the createdAt value given by the validator"
+          }
+        }
+      }
+    }
+  }
+}

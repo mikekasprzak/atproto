@@ -286,6 +286,7 @@ export class Server {
   chat: ChatNS
   tools: ToolsNS
   org: OrgNS
+  pub: PubNS
 
   constructor(options?: XrpcOptions) {
     this.xrpc = createXrpcServer(schemas, options)
@@ -294,6 +295,7 @@ export class Server {
     this.chat = new ChatNS(this)
     this.tools = new ToolsNS(this)
     this.org = new OrgNS(this)
+    this.pub = new PubNS(this)
   }
 }
 
@@ -3115,6 +3117,24 @@ export class OrgW3ActivitypubNS {
 }
 
 export class OrgW3ActivitystreamsNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+}
+
+export class PubNS {
+  _server: Server
+  feat: PubFeatNS
+
+  constructor(server: Server) {
+    this._server = server
+    this.feat = new PubFeatNS(server)
+  }
+}
+
+export class PubFeatNS {
   _server: Server
 
   constructor(server: Server) {
